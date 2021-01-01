@@ -63,6 +63,21 @@ const createPersonHandler = (request, response) => {
     .then(savedPerson => response.json(savedPerson));
 };
 
+const updatePersonHandler = (request, response, next) => {
+  const id = request.params.id;
+  const { name, number } = request.body;
+  const updateObject = { name, number };
+  const opts = {
+    new: true,
+    runValidators: true
+  };
+
+  Person
+    .findByIdAndUpdate(id, updateObject, opts)
+    .then(result => response.json(result))
+    .catch(error => next(error));
+};
+
 const getInfoHandler = (request, response) => {
   const time = new Date;
   const personsLength = persons.length;
@@ -88,6 +103,7 @@ app.use(morgan(morganTokens));
 app.get('/api/persons', getPersonsHandler);
 app.post('/api/persons', createPersonHandler);
 app.delete('/api/persons/:id', deletePersonHandler);
+app.put('/api/persons/:id', updatePersonHandler);
 // app.get('/api/persons/:id', getPersonHandler);
 // app.get('/info', getInfoHandler);
 
