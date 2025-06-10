@@ -1,26 +1,4 @@
-const Header = (props) => 
-  <h1>{
-    props.course.name
-  }</h1>
-
-const Part = (props) => 
-  <p>{props.part} {props.exercises}</p>;
-
-const Content = (props) => {
-  const [one, two, three] = props.parts;
-
-  return (
-    <div>
-      <Part part={one.name} exercises={one.exercises} />
-      <Part part={two.name} exercises={two.exercises} />
-      <Part part={three.name} exercises={three.exercises} />
-    </div>
-  );
-};
-
-const Total = (props) => 
-  <p>{props.total}</p>;
-
+import Course from './components/course/Course'
 
 const App = () => {
   const course = {
@@ -41,17 +19,7 @@ const App = () => {
     ]
   };
 
-  const reducer = (accumulator, currentValue) => 
-    accumulator + currentValue.exercises;
-
-  const total = course.parts.reduce(reducer, 0);
-  return (
-    <div>
-      <Header course={course} />
-      <Content parts={course.parts} />
-      <Total total={total} />
-    </div>
-  );
+  return <Course course={course} />
 };
 
 export default App;
