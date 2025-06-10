@@ -1,4 +1,5 @@
-import Part from './part/Part'
+import Part from './part/Part';
+import Total from './total/Total';
 
 const Content = ({ parts }) => {
   return (
@@ -6,6 +7,7 @@ const Content = ({ parts }) => {
       {parts.map((part, index) => 
         <Part key={index} part={part} />
       )}
+      <Total parts={parts} />
     </div>
   );
 };
