@@ -6,11 +6,20 @@ const App = () => {
   ]);
   const [newName, setNewName] = useState('');
 
+  const hasSameName = (persons, newName) => {
+    return persons.some(person => person.name === newName);
+  }; 
+
   const addName = (event) => {
     event.preventDefault();
 
-    const newPerson = { name: newName };
-    setPersons(persons.concat(newPerson))
+    // Prevent user to add exited person
+    if (hasSameName(persons, newName)) {
+      alert(`${newName} is already added to phonebook`);
+    } else {
+      const newPerson = { name: newName };
+      setPersons(persons.concat(newPerson))
+    }
 
     setNewName('');
   };
