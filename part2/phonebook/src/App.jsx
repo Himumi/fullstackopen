@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import personsServices from './services/personsServices';
 
 import Filter from './components/filter/Filter';
 import Persons from './components/persons/Persons';
@@ -11,17 +11,13 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('');
 
   // Hooker
-  const baseUrl = 'http://localhost:3001/persons';
   const hook = () => {
     console.log('effect');
     
     // GET: Getting all persons (initialPersons) from server
-    axios
-      .get(baseUrl)
-      .then(response => {
-        console.log('promise fulfilled');
-        setPersons(response.data);
-      });
+    personsServices
+      .getAll()
+      .then(initialPersons => setPersons(initialPersons));
   };
 
   // Effect: fetching persons from server
@@ -42,11 +38,10 @@ const App = () => {
       const newPerson = { name: newName, number: newNumber, id: persons.length + 1 };
       
       // POST: Adding a new person to server
-      axios
-        .post(baseUrl, newPerson)
-        .then(response => {
-          console.log('created a new person');
-          setPersons(persons.concat(response.data));
+      personsServices
+        .create(newPerson)
+        .then(createdPerson => { 
+          setPersons(persons.concat(createdPerson))
         });
     }
 
