@@ -1,17 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+
 import Filter from './components/filter/Filter';
 import Persons from './components/persons/Persons';
 import PersonForm from './components/personForm/PersonForm';
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
+
+  // Hooker
+  const baseUrl = 'http://localhost:3001/persons';
+  const hook = () => {
+    console.log('effect');
+    
+    // GET: Getting all persons (initialPersons) from server
+    axios
+      .get(baseUrl)
+      .then(response => {
+        console.log('promise fulfilled');
+        setPersons(response.data);
+      });
+  };
+
+  // Effect: fetching persons from server
+  useEffect(hook, []);
 
   // Checking if a new person is already exist in persons
   const isExisted = (persons, newName) =>
@@ -26,7 +40,14 @@ const App = () => {
       alert(`${newName} is already added to phonebook`);
     } else {
       const newPerson = { name: newName, number: newNumber, id: persons.length + 1 };
-      setPersons(persons.concat(newPerson));
+      
+      // POST: Adding a new person to server
+      axios
+        .post(baseUrl, newPerson)
+        .then(response => {
+          console.log('created a new person');
+          setPersons(persons.concat(response.data));
+        });
     }
 
     // Reset values
@@ -34,7 +55,7 @@ const App = () => {
     setNewNumber('');
   };
 
-  // Handle functions
+  // Handler functions
   const handleNewName = (event) => setNewName(event.target.value);
   const handleNewNumber = (event) => setNewNumber(event.target.value);
 
