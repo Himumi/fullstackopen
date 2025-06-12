@@ -35,7 +35,7 @@ const App = () => {
     if (isExisted(persons, newName)) {
       alert(`${newName} is already added to phonebook`);
     } else {
-      const newPerson = { name: newName, number: newNumber, id: persons.length + 1 };
+      const newPerson = { name: newName, number: newNumber };
       
       // POST: Adding a new person to server
       personsServices
@@ -48,6 +48,25 @@ const App = () => {
     // Reset values
     setNewName('');
     setNewNumber('');
+  };
+
+  // Delete person
+  const removePerson = (id) => {
+    // finding person for confirmation
+    const person = persons.find(person => person.id === id);
+    const confirmation = window.confirm(`Delete ${person.name}`);
+
+    if (!confirmation) {
+      return;
+    }
+
+    // DELETE: removing person from database
+    personsServices
+      .remove(id)
+      .then(removed => {
+        const filterer = person => person.id !== removed.id;
+        setPersons(persons.filter(filterer));
+      });
   };
 
   // Handler functions
@@ -67,7 +86,10 @@ const App = () => {
         numberValue={newNumber}
       />
       <h2>Numbers</h2>
-      <Persons persons={persons} />
+      <Persons 
+        persons={persons}
+        onRemovePerson={removePerson} 
+      />
     </div>
   );
 };
