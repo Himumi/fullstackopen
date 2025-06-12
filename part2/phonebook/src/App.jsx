@@ -11,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [succesMessage, setSuccesMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   // Hooker
   const hook = () => {
@@ -30,20 +31,37 @@ const App = () => {
     persons.find(person =>  
       person.name.toLowerCase() === name.toLowerCase());
 
-  // Create a new person and update setPersons
-  const createNewPerson = (newPerson) => 
+  // Handling error message
+  const errorMessageHandler = (errPerson) => {
+    setErrorMessage(
+      `Information of ${errPerson.name} has already been removed from server`
+    );
+    setPersons(persons.filter(p => p.id !== errPerson.id));
+
+    setTimeout(() => {
+      setErrorMessage(null);
+    }, 3000);
+  };
+
+  // Handling succes message
+  const succesMessageHandler = (message) => {
+    setSuccesMessage(message);
+    setTimeout(() => setSuccesMessage(null), 3000);
+  };
+
+  // Create a new person and update setPersons (API)
+  const createNewPersonAPI = (newPerson) => 
     personsServices
       .create(newPerson)
       .then(createdPerson => { 
         setPersons(persons.concat(createdPerson));
         
         // sending a succes message
-        setSuccesMessage(`Added ${createdPerson.name}`);
-        setTimeout(() => setSuccesMessage(null), 3000);
+        succesMessageHandler(`Added ${createdPerson.name}`);
       });
 
-  // Update person and update setPersons
-  const updatePersons = (target) =>
+  // Update person and update setPersons (API)
+  const updatePersonsAPI = (target) =>
     personsServices
       .update(target.id, target)
       .then(updated => {
@@ -53,19 +71,40 @@ const App = () => {
         setPersons(updatedPersons);
 
         // sending a succes message
-        setSuccesMessage(`Updated ${updated.name}`);
-        setTimeout(() => setSuccesMessage(null), 3000);
+        succesMessageHandler(`Updated ${updated.name}`);
+      })
+      .catch(err => {
+        // Sending error message
+        errorMessageHandler(target);
       });
 
+  // Removing person and update setPersons (API)
+  const removedPersonAPI = (target) =>  
+    personsServices
+      .remove(target.id)
+      .then(removed => {
+        const filterer = person => person.id !== removed.id;
+        setPersons(persons.filter(filterer));
+
+        // Sending succes message
+        succesMessageHandler(`Removed ${removed.name}`);
+      })
+      .catch(err => {
+        // Sending error message
+       errorMessageHandler(target); 
+      });
+
+  //// Handler functions
+
   // Add a new person  
-  const addPerson = (event) => {
+  const addPersonHandler = (event) => {
     event.preventDefault();
     const person = findPerson(persons, newName);
 
     if (person === undefined) {
     // POST: Adding a new person to server
     const newPerson = { name: newName, number: newNumber };
-    createNewPerson(newPerson);
+    createNewPersonAPI(newPerson);
     } else {
       // Person is already existed
       const confirmation = window.confirm(
@@ -76,7 +115,7 @@ const App = () => {
       if (confirmation) {
         // PUT: updating person's number
         const updatedPerson = { ...person, number: newNumber };
-        updatePersons(updatedPerson);
+        updatePersonsAPI(updatedPerson);
       }
     }
 
@@ -86,25 +125,19 @@ const App = () => {
   };
 
   // Delete person
-  const removePerson = (id) => {
+  const removePersonHandler = (id) => {
     // finding person for confirmation
-    const person = persons.find(person => person.id === id);
-    const confirmation = window.confirm(`Delete ${person.name}`);
+    const target = persons.find(person => person.id === id);
+    const confirmation = window.confirm(`Delete ${target.name}`);
 
     if (!confirmation) {
       return;
     }
 
     // DELETE: removing person from database
-    personsServices
-      .remove(id)
-      .then(removed => {
-        const filterer = person => person.id !== removed.id;
-        setPersons(persons.filter(filterer));
-      });
+    removedPersonAPI(target);
   };
 
-  // Handler functions
   const handleNewName = (event) => setNewName(event.target.value);
   const handleNewNumber = (event) => setNewNumber(event.target.value);
 
@@ -112,13 +145,13 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification 
-        className='succes'
-        message={succesMessage}
+        className={succesMessage ? 'succes' : 'error'}
+        message={succesMessage || errorMessage}
       />
       <Filter persons={persons} />
       <h2>Add a new</h2>
       <PersonForm 
-        onAddPerson={addPerson}
+        onAddPerson={addPersonHandler}
         onNewName={handleNewName}
         onNewNumber={handleNewNumber}
         nameValue={newName}
@@ -127,7 +160,7 @@ const App = () => {
       <h2>Numbers</h2>
       <Persons 
         persons={persons}
-        onRemovePerson={removePerson} 
+        onRemovePerson={removePersonHandler} 
       />
 
     </div>
