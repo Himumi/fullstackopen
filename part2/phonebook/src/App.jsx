@@ -4,11 +4,13 @@ import personsServices from './services/personsServices';
 import Filter from './components/filter/Filter';
 import Persons from './components/persons/Persons';
 import PersonForm from './components/personForm/PersonForm';
+import Notification from './components/notification/notification';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
+  const [succesMessage, setSuccesMessage] = useState(null);
 
   // Hooker
   const hook = () => {
@@ -33,7 +35,11 @@ const App = () => {
     personsServices
       .create(newPerson)
       .then(createdPerson => { 
-        setPersons(persons.concat(createdPerson))
+        setPersons(persons.concat(createdPerson));
+        
+        // sending a succes message
+        setSuccesMessage(`Added ${createdPerson.name}`);
+        setTimeout(() => setSuccesMessage(null), 3000);
       });
 
   // Update person and update setPersons
@@ -45,6 +51,10 @@ const App = () => {
           persons.map(person => 
             person.id === updated.id ? updated : person);
         setPersons(updatedPersons);
+
+        // sending a succes message
+        setSuccesMessage(`Updated ${updated.name}`);
+        setTimeout(() => setSuccesMessage(null), 3000);
       });
 
   // Add a new person  
@@ -101,6 +111,10 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification 
+        className='succes'
+        message={succesMessage}
+      />
       <Filter persons={persons} />
       <h2>Add a new</h2>
       <PersonForm 
@@ -115,6 +129,7 @@ const App = () => {
         persons={persons}
         onRemovePerson={removePerson} 
       />
+
     </div>
   );
 };
