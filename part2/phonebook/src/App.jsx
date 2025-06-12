@@ -24,25 +24,50 @@ const App = () => {
   useEffect(hook, []);
 
   // Checking if a new person is already exist in persons
-  const isExisted = (persons, newName) =>
-     persons.some(person => person.name === newName);
+  const findPerson = (persons, name) => 
+    persons.find(person =>  
+      person.name.toLowerCase() === name.toLowerCase());
+
+  // Create a new person and update setPersons
+  const createNewPerson = (newPerson) => 
+    personsServices
+      .create(newPerson)
+      .then(createdPerson => { 
+        setPersons(persons.concat(createdPerson))
+      });
+
+  // Update person and update setPersons
+  const updatePersons = (target) =>
+    personsServices
+      .update(target.id, target)
+      .then(updated => {
+        const updatedPersons = 
+          persons.map(person => 
+            person.id === updated.id ? updated : person);
+        setPersons(updatedPersons);
+      });
 
   // Add a new person  
   const addPerson = (event) => {
     event.preventDefault();
+    const person = findPerson(persons, newName);
 
-    // Prevent user to add exited person
-    if (isExisted(persons, newName)) {
-      alert(`${newName} is already added to phonebook`);
+    if (person === undefined) {
+    // POST: Adding a new person to server
+    const newPerson = { name: newName, number: newNumber };
+    createNewPerson(newPerson);
     } else {
-      const newPerson = { name: newName, number: newNumber };
-      
-      // POST: Adding a new person to server
-      personsServices
-        .create(newPerson)
-        .then(createdPerson => { 
-          setPersons(persons.concat(createdPerson))
-        });
+      // Person is already existed
+      const confirmation = window.confirm(
+        `${person.name} is already added to phonebook, replace the old number with a new one?`
+      );
+
+      // Update number if user agrees to change 
+      if (confirmation) {
+        // PUT: updating person's number
+        const updatedPerson = { ...person, number: newNumber };
+        updatePersons(updatedPerson);
+      }
     }
 
     // Reset values
