@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'; 
-import axios from 'axios';
+import weatherServices from '../../services/weatherServices';
 
 const kelvinToCelsius = (kelvin) => {
   return kelvin - 273.15;
@@ -7,27 +7,23 @@ const kelvinToCelsius = (kelvin) => {
 
 const Weather = ({ country }) => {
   const [weather, setWeather] = useState([]);
-  const API_KEY = import.meta.env.VITE_WEATHER_KEY;
+
+  // Get specific coordinate (latitude and longitude)
   const lat = country.capitalInfo.latlng[0];
   const lon = country.capitalInfo.latlng[1];
-  const baseUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
 
   // Hooker for weather API
   const weatherHooker = () => {
-    
     console.log('fetching weather');
 
     // fetching weather data from API
-    axios
-      .get(baseUrl)
-      .then(response => {
-        console.log(response.data);
-        setWeather(response.data);
-      });
+    weatherServices
+      .getWeatherOn(lat, lon)
+      .then(data => setWeather(data));    
   };
 
   // useEffect
-  useEffect(weatherHooker, [baseUrl])
+  useEffect(weatherHooker, [lat, lon])
 
   // Prevent component to render before gettting response from API
   if (weather.length < 1) return null;
