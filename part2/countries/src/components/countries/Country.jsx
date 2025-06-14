@@ -1,3 +1,5 @@
+import Weather from '../weather/Weather';
+
 const Country = ({ country }) => {
   const imgStyles = {
     border: '2px solid black',
@@ -24,6 +26,7 @@ const Country = ({ country }) => {
       </ul>
     </div>
     <img src={country.flags.png} style={imgStyles} />
+    <Weather country={country} />
    </div>
   );
 };
