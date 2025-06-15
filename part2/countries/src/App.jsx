@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import countriesServices from './services/countriesServices';
+
 import Countries from './components/countries/Countries';
 
 // Filter countries based on query
@@ -17,16 +18,14 @@ const App = () => {
   const [countries, setCountries] = useState([]);
   const [query, setQuery] = useState('');
 
-  const allCountriesAPI = 'https://studies.cs.helsinki.fi/restcountries/api/all';
-
   // Hooker for fetching all countries
   const countriesHooker = () => {
     console.log('countries hook');
-
-    axios
-      .get(allCountriesAPI)
-      .then(Response => { 
-        setAllCountries(Response.data);
+    countriesServices
+      .getAllCountries()
+      .then(allCountries => {
+        console.log(allCountries);
+        setAllCountries(allCountries);
       });
   };
   
