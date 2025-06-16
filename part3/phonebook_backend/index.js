@@ -99,9 +99,13 @@ const getInfoHandler = (request, response) => {
   response.send(text);
 };
 
+morgan.token('body', (req, res) => JSON.stringify(req.body));
+const morganTokens = ':method :url :status - :response-time ms :body';
+const customMorgan = morgan(morganTokens);
+
 // middlewares
 app.use(express.json());
-app.use(morgan('dev'));
+app.use(morgan(morganTokens));
 
 // Routes
 app.get('/api/persons', getPersonsHandler);
