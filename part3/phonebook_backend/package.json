@@ -13,5 +13,8 @@
   },
   "dependencies": {
     "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0"
   }
 }
