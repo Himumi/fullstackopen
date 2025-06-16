@@ -33,6 +33,18 @@ const getPersonsHandler = (request, response) => {
   response.json(persons);
 };
 
+const getPersonHandler = (request, response) => {
+  const id = request.params.id; 
+  const person = persons.find(n => n.id === id);
+
+  if (!person) {
+    const errorMessage = { error: 'person is not found' };
+    return response.status(404).json(errorMessage);
+  }
+
+  return response.json(person);
+};
+
 const getInfoHandler = (request, response) => {
   const time = new Date;
   const personsLength = persons.length;
@@ -47,6 +59,7 @@ const getInfoHandler = (request, response) => {
 
 // Routes
 app.get('/api/persons', getPersonsHandler);
+app.get('/api/persons/:id', getPersonHandler);
 app.get('/info', getInfoHandler);
 
 const PORT = 3001;

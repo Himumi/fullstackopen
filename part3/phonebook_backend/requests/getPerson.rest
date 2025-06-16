@@ -1,0 +1,6 @@
+# This is a success request
+get http://localhost:3001/api/persons/1
+
+###
+# This is a error request
+get http://localhost:3001/api/persons/100
