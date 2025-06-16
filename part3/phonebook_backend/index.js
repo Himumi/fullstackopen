@@ -59,13 +59,26 @@ const deletePersonHandler = (request, response) => {
 };
 
 const generateId = () =>  Math.floor(Math.random() * 1000);
+const hasSameName = (persons, name) => {
+  return persons.some(person => person.name.toLowerCase() === name.toLowerCase());
+};
 
 const createPersonHandler = (request, response) => {
-  const body = request.body;
-  console.log(body);
+  const { name, number } = request.body;
+
+  if (!name || !number) {
+    const error = 'name or number are missing';
+    return response.status(404).json(error);
+  }
+
+  if (hasSameName(persons, name)) {
+    const error = 'name must be unique';
+    return response.status(404).json(error);
+  }
 
   const person = {
-    ...body,
+    name,
+    number,
     id: String(generateId()) 
   };
 

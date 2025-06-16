@@ -5,3 +5,22 @@ Content-Type: application/json
   "name": "Erliansyah",
   "number": "1111111111"
 }
+
+###
+# missing one of contents
+post http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "number": "2222222"
+}
+
+###
+# name is already existed
+post http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "himumi",
+  "number": "3333333333"
+}
