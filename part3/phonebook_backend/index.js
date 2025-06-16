@@ -1,4 +1,5 @@
 const express = require('express');
+const morgan = require('morgan');
 const app = express();
 
 // Persons data
@@ -100,6 +101,7 @@ const getInfoHandler = (request, response) => {
 
 // middlewares
 app.use(express.json());
+app.use(morgan('dev'));
 
 // Routes
 app.get('/api/persons', getPersonsHandler);
@@ -109,6 +111,7 @@ app.get('/info', getInfoHandler);
 app.delete('/api/persons/:id', deletePersonHandler);
 
 app.post('/api/persons', createPersonHandler);
+
 
 const PORT = 3001;
 app.listen(PORT, () => console.log(`Server listening to ${PORT}`));
