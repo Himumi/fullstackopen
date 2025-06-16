@@ -22,6 +22,11 @@ let persons = [
     "id": "4",
     "name": "Mary Poppendieck", 
     "number": "39-23-6423122"
+  },
+  {
+    "id": "5",
+    "name": "Himumi",
+    "number": "00000000000"
   }
 ];
 
@@ -45,6 +50,14 @@ const getPersonHandler = (request, response) => {
   return response.json(person);
 };
 
+const deletePersonHandler = (request, response) => {
+  const id = request.params.id;
+
+  persons = persons.filter(p => p.id !== id);
+
+  response.status(204).end();
+};
+
 const getInfoHandler = (request, response) => {
   const time = new Date;
   const personsLength = persons.length;
@@ -61,6 +74,8 @@ const getInfoHandler = (request, response) => {
 app.get('/api/persons', getPersonsHandler);
 app.get('/api/persons/:id', getPersonHandler);
 app.get('/info', getInfoHandler);
+
+app.delete('/api/persons/:id', deletePersonHandler);
 
 const PORT = 3001;
 app.listen(PORT, () => console.log(`Server listening to ${PORT}`));
