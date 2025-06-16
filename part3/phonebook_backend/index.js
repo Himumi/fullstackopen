@@ -33,8 +33,21 @@ const getPersonsHandler = (request, response) => {
   response.json(persons);
 };
 
+const getInfoHandler = (request, response) => {
+  const time = new Date;
+  const personsLength = persons.length;
+
+  const text = `
+    <p>Phonebook has info for ${personsLength} people</p> 
+    <p>${time.toString()}</p>
+  `;
+
+  response.send(text);
+};
+
 // Routes
 app.get('/api/persons', getPersonsHandler);
+app.get('/info', getInfoHandler);
 
 const PORT = 3001;
 app.listen(PORT, () => console.log(`Server listening to ${PORT}`));
