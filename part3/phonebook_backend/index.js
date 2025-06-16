@@ -58,6 +58,21 @@ const deletePersonHandler = (request, response) => {
   response.status(204).end();
 };
 
+const generateId = () =>  Math.floor(Math.random() * 1000);
+
+const createPersonHandler = (request, response) => {
+  const body = request.body;
+  console.log(body);
+
+  const person = {
+    ...body,
+    id: String(generateId()) 
+  };
+
+  persons = persons.concat(person);
+  response.json(person);
+};
+
 const getInfoHandler = (request, response) => {
   const time = new Date;
   const personsLength = persons.length;
@@ -70,12 +85,17 @@ const getInfoHandler = (request, response) => {
   response.send(text);
 };
 
+// middlewares
+app.use(express.json());
+
 // Routes
 app.get('/api/persons', getPersonsHandler);
 app.get('/api/persons/:id', getPersonHandler);
 app.get('/info', getInfoHandler);
 
 app.delete('/api/persons/:id', deletePersonHandler);
+
+app.post('/api/persons', createPersonHandler);
 
 const PORT = 3001;
 app.listen(PORT, () => console.log(`Server listening to ${PORT}`));
