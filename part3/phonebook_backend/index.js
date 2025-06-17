@@ -4,24 +4,24 @@ const app = express();
 
 // Persons data
 let persons = [
-  { 
+  {
     "id": "1",
-    "name": "Arto Hellas", 
+    "name": "Arto Hellas",
     "number": "040-123456"
   },
-  { 
+  {
     "id": "2",
-    "name": "Ada Lovelace", 
+    "name": "Ada Lovelace",
     "number": "39-44-5323523"
   },
-  { 
+  {
     "id": "3",
-    "name": "Dan Abramov", 
+    "name": "Dan Abramov",
     "number": "12-43-234345"
   },
-  { 
+  {
     "id": "4",
-    "name": "Mary Poppendieck", 
+    "name": "Mary Poppendieck",
     "number": "39-23-6423122"
   },
   {
@@ -32,7 +32,7 @@ let persons = [
 ];
 
 // Example route
-app.get('/', (request, response) => response.send('Hello World'));
+// app.get('/', (request, response) => response.send('Hello World'));
 
 // Route Handlers
 const getPersonsHandler = (request, response) => {
@@ -40,7 +40,7 @@ const getPersonsHandler = (request, response) => {
 };
 
 const getPersonHandler = (request, response) => {
-  const id = request.params.id; 
+  const id = request.params.id;
   const person = persons.find(n => n.id === id);
 
   if (!person) {
@@ -59,7 +59,7 @@ const deletePersonHandler = (request, response) => {
   response.status(204).end();
 };
 
-const generateId = () =>  Math.floor(Math.random() * 1000);
+const generateId = () => Math.floor(Math.random() * 1000);
 const hasSameName = (persons, name) => {
   return persons.some(person => person.name.toLowerCase() === name.toLowerCase());
 };
@@ -80,7 +80,7 @@ const createPersonHandler = (request, response) => {
   const person = {
     name,
     number,
-    id: String(generateId()) 
+    id: String(generateId())
   };
 
   persons = persons.concat(person);
@@ -104,6 +104,7 @@ const morganTokens = ':method :url :status - :response-time ms :body';
 const customMorgan = morgan(morganTokens);
 
 // middlewares
+app.use(express.static('dist'));
 app.use(express.json());
 app.use(morgan(morganTokens));
 
@@ -117,5 +118,5 @@ app.delete('/api/persons/:id', deletePersonHandler);
 app.post('/api/persons', createPersonHandler);
 
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server listening to ${PORT}`));
