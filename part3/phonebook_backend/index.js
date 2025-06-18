@@ -1,42 +1,20 @@
+require('dotenv').config();
+
 const express = require('express');
 const morgan = require('morgan');
 const app = express();
 
-// Persons data
-let persons = [
-  {
-    "id": "1",
-    "name": "Arto Hellas",
-    "number": "040-123456"
-  },
-  {
-    "id": "2",
-    "name": "Ada Lovelace",
-    "number": "39-44-5323523"
-  },
-  {
-    "id": "3",
-    "name": "Dan Abramov",
-    "number": "12-43-234345"
-  },
-  {
-    "id": "4",
-    "name": "Mary Poppendieck",
-    "number": "39-23-6423122"
-  },
-  {
-    "id": "5",
-    "name": "Himumi",
-    "number": "00000000000"
-  }
-];
+const Person = require('./models/person');
+
 
 // Example route
 // app.get('/', (request, response) => response.send('Hello World'));
 
 // Route Handlers
 const getPersonsHandler = (request, response) => {
-  response.json(persons);
+  Person
+    .find({})
+    .then(notes => response.json(notes));
 };
 
 const getPersonHandler = (request, response) => {
@@ -118,5 +96,5 @@ app.delete('/api/persons/:id', deletePersonHandler);
 app.post('/api/persons', createPersonHandler);
 
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server listening to ${PORT}`));
