@@ -14,7 +14,7 @@ const Person = require('./models/person');
 const getPersonsHandler = (request, response) => {
   Person
     .find({})
-    .then(notes => response.json(notes));
+    .then(persons => response.json(persons));
 };
 
 const getPersonHandler = (request, response) => {
@@ -44,25 +44,23 @@ const hasSameName = (persons, name) => {
 
 const createPersonHandler = (request, response) => {
   const { name, number } = request.body;
+  console.log('name:', name, 'number', number);
 
   if (!name || !number) {
     const error = 'name or number are missing';
     return response.status(404).json(error);
   }
 
-  if (hasSameName(persons, name)) {
-    const error = 'name must be unique';
-    return response.status(404).json(error);
-  }
+  // if (hasSameName(persons, name)) {
+  //   const error = 'name must be unique';
+  //   return response.status(404).json(error);
+  // }
 
-  const person = {
-    name,
-    number,
-    id: String(generateId())
-  };
+  const newPerson = new Person({ name, number });
 
-  persons = persons.concat(person);
-  response.json(person);
+  newPerson
+    .save()
+    .then(savedPerson => response.json(savedPerson));
 };
 
 const getInfoHandler = (request, response) => {
@@ -88,12 +86,13 @@ app.use(morgan(morganTokens));
 
 // Routes
 app.get('/api/persons', getPersonsHandler);
-app.get('/api/persons/:id', getPersonHandler);
-app.get('/info', getInfoHandler);
-
-app.delete('/api/persons/:id', deletePersonHandler);
-
 app.post('/api/persons', createPersonHandler);
+
+// app.get('/api/persons/:id', getPersonHandler);
+// app.get('/info', getInfoHandler);
+// 
+// app.delete('/api/persons/:id', deletePersonHandler);
+
 
 
 const PORT = process.env.PORT;
