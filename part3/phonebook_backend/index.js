@@ -29,12 +29,11 @@ const getPersonHandler = (request, response) => {
   return response.json(person);
 };
 
-const deletePersonHandler = (request, response) => {
-  const id = request.params.id;
-
-  persons = persons.filter(p => p.id !== id);
-
-  response.status(204).end();
+const deletePersonHandler = (request, response, next) => {
+  Person
+    .findByIdAndDelete(request.params.id)
+    .then(result => response.status(204).end())
+    .catch(error => next());
 };
 
 const generateId = () => Math.floor(Math.random() * 1000);
@@ -87,13 +86,9 @@ app.use(morgan(morganTokens));
 // Routes
 app.get('/api/persons', getPersonsHandler);
 app.post('/api/persons', createPersonHandler);
-
+app.delete('/api/persons/:id', deletePersonHandler);
 // app.get('/api/persons/:id', getPersonHandler);
 // app.get('/info', getInfoHandler);
-// 
-// app.delete('/api/persons/:id', deletePersonHandler);
-
-
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server listening to ${PORT}`));

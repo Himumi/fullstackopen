@@ -1,1 +1,12 @@
-delete http://localhost:3001/api/persons/5
+# Create note for deleting
+post http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "test person",
+  "number": "000000000"
+}
+
+###
+# Delete person
+delete http://localhost:3001/api/persons/"replace with above id"
