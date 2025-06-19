@@ -11,10 +11,11 @@ const Person = require('./models/person');
 // app.get('/', (request, response) => response.send('Hello World'));
 
 // Route Handlers
-const getPersonsHandler = (request, response) => {
+const getPersonsHandler = (request, response, next) => {
   Person
     .find({})
-    .then(persons => response.json(persons));
+    .then(persons => response.json(persons))
+    .catch(error => next(error));
 };
 
 const getPersonHandler = (request, response) => {
@@ -33,7 +34,7 @@ const deletePersonHandler = (request, response, next) => {
   Person
     .findByIdAndDelete(request.params.id)
     .then(result => response.status(204).end())
-    .catch(error => next());
+    .catch(error => next(error));
 };
 
 const generateId = () => Math.floor(Math.random() * 1000);
@@ -89,6 +90,20 @@ app.post('/api/persons', createPersonHandler);
 app.delete('/api/persons/:id', deletePersonHandler);
 // app.get('/api/persons/:id', getPersonHandler);
 // app.get('/info', getInfoHandler);
+
+// Middleware's Handlers
+const errorHandler = (error,request, response, next) => {
+  console.log(error);
+
+  if (error.name === 'CastError') {
+    return response.status(404).json({ error: 'malformated id' });
+  }
+
+  next(error);
+};
+
+// Middlewares
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => console.log(`Server listening to ${PORT}`));
