@@ -32,15 +32,12 @@ const App = () => {
       person.name.toLowerCase() === name.toLowerCase());
 
   // Handling error message
-  const errorMessageHandler = (errPerson) => {
-    setErrorMessage(
-      `Information of ${errPerson.name} has already been removed from server`
-    );
-    setPersons(persons.filter(p => p.id !== errPerson.id));
+  const errMsgTemplate = (target) => 
+    `Information of ${target}.name} has already been removed from server`;
 
-    setTimeout(() => {
-      setErrorMessage(null);
-    }, 3000);
+  const errorMessageHandler = (message) => {
+    setErrorMessage(message);
+    setTimeout(() => setErrorMessage(null), 3000);
   };
 
   // Handling succes message
@@ -58,6 +55,10 @@ const App = () => {
         
         // sending a succes message
         succesMessageHandler(`Added ${createdPerson.name}`);
+      })
+      .catch(error => {
+        console.log(error.response.data.error);
+        errorMessageHandler(error.response.data.error);
       });
 
   // Update person and update setPersons (API)
@@ -75,7 +76,8 @@ const App = () => {
       })
       .catch(err => {
         // Sending error message
-        errorMessageHandler(target);
+        errorMessageHandler(err.response.data.error);
+        setPersons(persons.filter(p => p.id !== target.id));
       });
 
   // Removing person and update setPersons (API)
@@ -83,7 +85,7 @@ const App = () => {
     personsServices
       .remove(target.id)
       .then(removed => {
-        const filterer = person => person.id !== removed.id;
+        const filterer = person => person.id !== target.id;
         setPersons(persons.filter(filterer));
 
         // Sending succes message
@@ -91,7 +93,7 @@ const App = () => {
       })
       .catch(err => {
         // Sending error message
-       errorMessageHandler(target); 
+        errorMessageHandler(err.response.data.error); 
       });
 
   //// Handler functions

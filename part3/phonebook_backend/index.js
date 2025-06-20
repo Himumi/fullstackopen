@@ -33,20 +33,15 @@ const hasSameName = (persons, name) => {
   return persons.some(person => person.name.toLowerCase() === name.toLowerCase());
 };
 
-const createPersonHandler = (request, response) => {
+const createPersonHandler = (request, response, next) => {
   const { name, number } = request.body;
-  console.log('name:', name, 'number', number);
-
-  if (!name || !number) {
-    const error = 'name or number are missing';
-    return response.status(404).json(error);
-  }
 
   const newPerson = new Person({ name, number });
 
   newPerson
     .save()
-    .then(savedPerson => response.json(savedPerson));
+    .then(savedPerson => response.json(savedPerson))
+    .catch(error => next(error));
 };
 
 const updatePersonHandler = (request, response, next) => {
@@ -103,7 +98,11 @@ const errorHandler = (error,request, response, next) => {
   console.log(error);
 
   if (error.name === 'CastError') {
-    return response.status(404).json({ error: 'malformated id' });
+    return response.status(400).json({ error: 'malformated id' });
+  }
+
+  if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message });
   }
 
   next(error);
