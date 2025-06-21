@@ -10,7 +10,7 @@ const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
-  const [succesMessage, setSuccesMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
 
   // Hooker
@@ -40,11 +40,14 @@ const App = () => {
     setTimeout(() => setErrorMessage(null), 3000);
   };
 
-  // Handling succes message
-  const succesMessageHandler = (message) => {
-    setSuccesMessage(message);
-    setTimeout(() => setSuccesMessage(null), 3000);
+  // Handling success message
+  const successMessageHandler = (message) => {
+    setSuccessMessage(message);
+    setTimeout(() => setSuccessMessage(null), 3000);
   };
+
+  const getValidationError = (message, string) => 
+    message.slice(message.indexOf(string) + string.length);
 
   // Create a new person and update setPersons (API)
   const createNewPersonAPI = (newPerson) => 
@@ -53,12 +56,22 @@ const App = () => {
       .then(createdPerson => { 
         setPersons(persons.concat(createdPerson));
         
-        // sending a succes message
-        succesMessageHandler(`Added ${createdPerson.name}`);
+        // sending a success message
+        successMessageHandler(`Added ${createdPerson.name}`);
       })
       .catch(error => {
-        console.log(error.response.data.error);
-        errorMessageHandler(error.response.data.error);
+        const rawError = error.response.data.error;
+        console.log(rawError);
+
+        let msg = '';
+        if (rawError.includes('name: ')) {
+          msg = getValidationError(rawError, 'name: ');
+        } else if (rawError.includes('number: ')) {
+          msg = getValidationError(rawError, 'number: ');
+        }
+
+        console.log(msg);
+        errorMessageHandler(msg);
       });
 
   // Update person and update setPersons (API)
@@ -72,7 +85,7 @@ const App = () => {
         setPersons(updatedPersons);
 
         // sending a succes message
-        succesMessageHandler(`Updated ${updated.name}`);
+        successMessageHandler(`Updated ${updated.name}`);
       })
       .catch(err => {
         // Sending error message
@@ -88,8 +101,8 @@ const App = () => {
         const filterer = person => person.id !== target.id;
         setPersons(persons.filter(filterer));
 
-        // Sending succes message
-        succesMessageHandler(`Removed ${removed.name}`);
+        // Sending success message
+        successMessageHandler(`Removed ${removed.name}`);
       })
       .catch(err => {
         // Sending error message
@@ -147,8 +160,8 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification 
-        className={succesMessage ? 'succes' : 'error'}
-        message={succesMessage || errorMessage}
+        className={successMessage ? 'succes' : 'error'}
+        message={successMessage || errorMessage}
       />
       <Filter persons={persons} />
       <h2>Add a new</h2>
