@@ -1,29 +1,15 @@
-require('dotenv').config();
-
 const express = require('express');
+
+const blogsRouter = require('./controllers/blogs');
 const Blog = require('./models/blog');
 
 const app = express();
 
-const getBlogsHandler = (request, response) => {
-  Blog
-    .find({})
-    .then(blogs => response.json(blogs));
-};
-
-const createBlogHandler = (request, response) => {
-  console.log(request.body);
-  const blog = new Blog(request.body);
-
-  blog
-    .save()
-    .then(result => response.status(201).json(result));
-};
-
+// Middlewares
 app.use(express.json());
 
-app.get('/api/blogs', getBlogsHandler);
-app.post('/api/blogs', createBlogHandler);
+// Routes
+app.use('/api/blogs', blogsRouter);
 
 const PORT = 3003;
 app.listen(
