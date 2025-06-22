@@ -16,8 +16,7 @@ const favoriteBlog = blogs => {
 
 const mostBlogs = blogs => {
   const mapper = (value, key) => new Object({ author: key, blogs: value });
-  const filtered = _.map(_.countBy(blogs, 'author'), mapper);
-  return _.maxBy(filtered, 'blogs');
+  return _.maxBy(_.map(_.countBy(blogs, 'author'), mapper), 'blogs');
 };
 
 const mostLikes = blogs => {
