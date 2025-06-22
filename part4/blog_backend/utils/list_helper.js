@@ -20,9 +20,19 @@ const mostBlogs = blogs => {
   return _.maxBy(filtered, 'blogs');
 };
 
+const mostLikes = blogs => {
+  const reducer = (result, value, key) => {
+    result[value.author] = (result[value.author] || 0) + value.likes;
+    return result;
+  };
+  const mapper = (value, key) => new Object({ author: key, likes: value });
+  return _.maxBy(_.map(_.reduce(blogs, reducer, {}), mapper), 'likes');
+};
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 };
