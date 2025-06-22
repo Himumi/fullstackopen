@@ -2,14 +2,6 @@ const { test, describe } = require('node:test');
 const assert = require('node:assert');
 const listHelper = require('../utils/list_helper');
 
-test('dummy returns one', () => {
-  const blogs = [];
-
-  const result = listHelper.dummy(blogs);
-  assert.strictEqual(result, 1);
-});
-
-describe('total likes', () => {
   const listWithOneBlog = [
     {
       _id: '5a422aa71b54a676234d17f8',
@@ -72,6 +64,14 @@ describe('total likes', () => {
     }  
   ];
 
+test('dummy returns one', () => {
+  const blogs = [];
+
+  const result = listHelper.dummy(blogs);
+  assert.strictEqual(result, 1);
+});
+
+describe('total likes', () => {
   test('of empty list, equals zero', () => {
     assert.strictEqual(listHelper.totalLikes([]), 0);
   });
@@ -84,5 +84,12 @@ describe('total likes', () => {
   test('of many list, equals right calculated', () => {
     const result = listHelper.totalLikes(blogs);
     assert.strictEqual(result, 36);
+  });
+});
+
+describe('favorite blog', () => {
+  test('favorite blogs returns most liked blog', () => {
+    const result = listHelper.favoriteBlog(blogs);
+    assert.deepStrictEqual(result, blogs[2]);
   });
 });
