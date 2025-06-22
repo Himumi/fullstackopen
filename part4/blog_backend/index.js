@@ -1,24 +1,9 @@
 require('dotenv').config();
 
 const express = require('express');
-const mongoose = require('mongoose');
+const Blog = require('./models/blog');
 
 const app = express();
-
-const blogSchema = new mongoose.Schema({
-  title: String,
-  author: String,
-  url: String,
-  likes: Number,
-});
-
-const Blog = mongoose.model('Blog', blogSchema);
-
-const mongoUrl = process.env.MONGODB_URI;
-mongoose
-  .connect(mongoUrl)
-  .then(() => console.log('connected to DB'))
-  .catch(error => console.error(error));
 
 const getBlogsHandler = (request, response) => {
   Blog
