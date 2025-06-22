@@ -1,13 +1,14 @@
 require('dotenv').config();
 
 const mongoose = require('mongoose');
+const logger = require('../utils/logger');
 
 const MONGODB_URI = process.env.MONGODB_URI;
 mongoose
   .connect(MONGODB_URI)
-  .then(() => console.log('connected to DB'))
+  .then(() => logger.info('connected to DB'))
   .catch(error => 
-    console.error('something happened with DB connection', error)
+    logger.error('something happened with DB connection', error)
   );
 
 const blogSchema = new mongoose.Schema({
