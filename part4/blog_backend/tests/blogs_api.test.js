@@ -13,7 +13,7 @@ const api = supertest(app);
 describe('blogs api', () => {
   beforeEach(async () => await helper.resetDB());
 
-  describe('getNoteshandler', () => {
+  describe('getBlogshandler', () => {
     test('api returns all notes', async () => {
       const result = await api
         .get('/api/blogs')
@@ -32,7 +32,7 @@ describe('blogs api', () => {
     });
   });
 
-  describe('createNoteHandler', () => {
+  describe('createBlogHandler', () => {
     test('returns status 400 when data is incorrect', async () => {
       const newBlog = { 
         title: 'test title',
@@ -84,7 +84,7 @@ describe('blogs api', () => {
     });
   });
 
-  describe('deleteNoteHandler', () => {
+  describe('deleteBlogHandler', () => {
     test('succeeds deleting Blog if id is correct', async () => {
       const blogsAtBegin = await helper.getBlogs();
       const id = blogsAtBegin[0]._id;
