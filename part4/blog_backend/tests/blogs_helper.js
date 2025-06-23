@@ -60,8 +60,23 @@ const getBlogs = async () => {
   return await Blog.find({});
 };
 
+const nonExistingId = async () => {
+  const blog = new Blog({
+    title: 'test',
+    author: 'test',
+    url: 'test',
+    likes: 0
+  });
+
+  await blog.save();
+  await blog.deleteOne();
+
+  return blog._id;
+};
+
 module.exports = {
   initialBlogs,
   resetDB,
   getBlogs,
+  nonExistingId,
 };

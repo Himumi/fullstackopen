@@ -21,7 +21,18 @@ const createBlogHandler = (request, response) => {
     });
 };
 
+const deleteBlogHandler = async (request, response) => {
+  try {
+    await Blog.findByIdAndDelete(request.params.id);
+    response.status(204).end();
+  } catch (error) {
+    console.error(error);
+    response.status(400).end();
+  }
+};
+
 blogsRouter.get('/', getBlogsHandler);
 blogsRouter.post('/', createBlogHandler);
+blogsRouter.delete('/:id', deleteBlogHandler);
 
 module.exports = blogsRouter;
