@@ -57,8 +57,7 @@ const resetDB = async () => {
 };
 
 const getBlogs = async () => {
-  const result = Blog.find({});
-  return result.body.map(note => note.toJSON());
+  return await Blog.find({});
 };
 
 module.exports = {
