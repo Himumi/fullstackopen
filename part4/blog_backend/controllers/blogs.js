@@ -15,7 +15,10 @@ const createBlogHandler = (request, response) => {
 
   blog
     .save()
-    .then(result => response.status(201).json(result));
+    .then(result => response.status(201).json(result))
+    .catch(error => {
+      response.status(400).json({ error });
+    });
 };
 
 blogsRouter.get('/', getBlogsHandler);
