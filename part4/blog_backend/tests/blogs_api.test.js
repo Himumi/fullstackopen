@@ -20,5 +20,13 @@ describe('blog router', async () => {
     assert.strictEqual(result.body.length, helper.initialBlogs.length);
   });
 
+  test.only('returned blogs with id property instead _id', async () => {
+    const result = await api.get('/api/blogs');
+    const blog = result.body[0];
+
+    assert(blog.hasOwnProperty('id'));
+    assert(!blog.hasOwnProperty('_id'));
+  });
+
   after(async () => mongoose.connection.close());
 });
