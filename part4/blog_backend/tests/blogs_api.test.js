@@ -50,26 +50,6 @@ describe('blog router', async () => {
 
   });
 
-  test('does not create blog when data is incorrect', async () => {
-    const blogsAtBegin = await helper.getBlogs();
-    const newBlog = { 
-      title: 'test title',
-      url: 'test url',
-      likes: 0
-    };
-
-    await api
-      .post('/api/blogs')
-      .send(newBlog)
-      .expect(400);
-
-    const blogsAtEnd = await helper.getBlogs();
-    const titles = blogsAtEnd.map(blog => blog.title);
-
-    assert.strictEqual(blogsAtBegin.length, blogsAtEnd.length);
-    assert(!titles.includes(newBlog.title));
-  });
-
   test('creates blog with likes 0 when likes property is missing', async () => {
     const newBlog = {
       title: 'test title',
@@ -87,6 +67,37 @@ describe('blog router', async () => {
 
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1);
     assert.strictEqual(result.body.likes, 0);
+  });
+
+  test('returns status 400 when data is incorrect', async () => {
+    const newBlog = { 
+      title: 'test title',
+      author: 'test author',
+      likes: 0
+    };
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400);
+  });
+
+  test('does not create blog when data is incorrect', async () => {
+    const newBlog = { 
+      title: 'test title',
+      author: 'test author',
+      likes: 0
+    };
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog);
+
+    const blogsAtEnd = await helper.getBlogs();
+    const titles = blogsAtEnd.map(blog => blog.title);
+
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length);
+    assert(!titles.includes(newBlog.title));
   });
 
   after(async () => mongoose.connection.close());
