@@ -85,7 +85,7 @@ describe('blogs api', () => {
   });
 
   describe('deleteNoteHandler', () => {
-    test.only('succeeds deleting Blog if id is correct', async () => {
+    test('succeeds deleting Blog if id is correct', async () => {
       const blogsAtBegin = await helper.getBlogs();
       const id = blogsAtBegin[0]._id;
 
