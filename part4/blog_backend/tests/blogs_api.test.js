@@ -20,7 +20,7 @@ describe('blog router', async () => {
     assert.strictEqual(result.body.length, helper.initialBlogs.length);
   });
 
-  test.only('returned blogs with id property instead _id', async () => {
+  test('returned blogs with id property instead _id', async () => {
     const result = await api.get('/api/blogs');
     const blog = result.body[0];
 
