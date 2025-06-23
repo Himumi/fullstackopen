@@ -11,7 +11,7 @@ const api = supertest(app);
 describe('blog router', async () => {
   beforeEach(async () => await helper.resetDB());
 
-  test.only('api returns all notes', async () => {
+  test('api returns all notes', async () => {
     const result = await api
       .get('/api/blogs')
       .expect(200)
