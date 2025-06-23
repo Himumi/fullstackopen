@@ -28,5 +28,27 @@ describe('blog router', async () => {
     assert(!blog.hasOwnProperty('_id'));
   });
 
+  test('creates blog when data is correct', async () => {
+    const newBlog = {
+      title: 'test title',
+      author: 'test author',
+      url: 'test url',
+      likes: 0
+    };
+
+    const result = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+    
+    const blogsAtEnd = await helper.getBlogs();
+    const titles = blogsAtEnd.map(note => note.title);
+
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1);
+    assert(titles.includes(result.body.title));
+
+  });
+
   after(async () => mongoose.connection.close());
 });
