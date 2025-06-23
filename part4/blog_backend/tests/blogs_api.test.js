@@ -50,5 +50,25 @@ describe('blog router', async () => {
 
   });
 
+  test.only('does not create blog when data is incorrect', async () => {
+    const blogsAtBegin = await helper.getBlogs();
+    const newBlog = { 
+      title: 'test title',
+      url: 'test url',
+      likes: 0
+    };
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(400);
+
+    const blogsAtEnd = await helper.getBlogs();
+    const titles = blogsAtEnd.map(blog => blog.title);
+
+    assert.strictEqual(blogsAtBegin.length, blogsAtEnd.length);
+    assert(!titles.includes(newBlog.title));
+  });
+
   after(async () => mongoose.connection.close());
 });
