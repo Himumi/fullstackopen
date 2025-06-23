@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 
 const app = require('../app')
 const helper = require('./blogs_helper');
+const { log } = require('node:console');
+const { update } = require('lodash');
 
 const api = supertest(app);
 
@@ -93,6 +95,28 @@ describe('blogs api', () => {
 
       const blogsAtEnd = await helper.getBlogs();
       assert.strictEqual(blogsAtEnd.length, blogsAtBegin.length - 1);
+    });
+  });
+
+  describe('updateBlogHandler', () => {
+    test('succeeds and returns updated blog', async () => {
+      const blogsAtBegin = await helper.getBlogs();
+      const blog = blogsAtBegin[0];
+
+      const updateBlog = { 
+        title: blog.title,
+        author: blog.author,
+        url: blog.url,
+        likes: blog.likes + 1 
+      };
+
+      const result = await api
+        .put(`/api/blogs/${blog._id}`)
+        .send(updateBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/);
+
+      assert.strictEqual(result.body.likes, blog.likes + 1);
     });
   });
 });
