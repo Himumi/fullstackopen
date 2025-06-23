@@ -43,7 +43,7 @@ describe('blog router', async () => {
       .expect('Content-Type', /application\/json/);
     
     const blogsAtEnd = await helper.getBlogs();
-    const titles = blogsAtEnd.map(note => note.title);
+    const titles = blogsAtEnd.map(blog =>  blog.title);
 
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1);
     assert(titles.includes(result.body.title));
