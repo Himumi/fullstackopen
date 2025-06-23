@@ -81,6 +81,20 @@ describe('blogs api', () => {
       assert.strictEqual(result.body.likes, 0);
     });
   });
+
+  describe('deleteNoteHandler', () => {
+    test.only('succeeds deleting Blog if id is correct', async () => {
+      const blogsAtBegin = await helper.getBlogs();
+      const id = blogsAtBegin[0]._id;
+
+      await api
+        .delete(`/api/blogs/${id}`)
+        .expect(204);
+
+      const blogsAtEnd = await helper.getBlogs();
+      assert.strictEqual(blogsAtEnd.length, blogsAtBegin.length - 1);
+    });
+  });
 });
 
 after(async () => await mongoose.connection.close());
