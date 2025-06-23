@@ -50,7 +50,7 @@ describe('blog router', async () => {
 
   });
 
-  test.only('does not create blog when data is incorrect', async () => {
+  test('does not create blog when data is incorrect', async () => {
     const blogsAtBegin = await helper.getBlogs();
     const newBlog = { 
       title: 'test title',
