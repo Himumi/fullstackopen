@@ -70,5 +70,24 @@ describe('blog router', async () => {
     assert(!titles.includes(newBlog.title));
   });
 
+  test('creates blog with likes 0 when likes property is missing', async () => {
+    const newBlog = {
+      title: 'test title',
+      author: 'test author',
+      url: 'test url',
+    };
+
+    const result = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    const blogsAtEnd = await helper.getBlogs();
+
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1);
+    assert.strictEqual(result.body.likes, 0);
+  });
+
   after(async () => mongoose.connection.close());
 });
