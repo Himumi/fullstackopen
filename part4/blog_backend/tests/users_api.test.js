@@ -13,11 +13,7 @@ const api = supertest(app);
 describe('users api', () => {
   beforeEach(async () => {
     await User.deleteMany({});
-
-    const passwordHash = await bcrypt.hash('rahasia', 10);
-    const user = new User({ username: 'root', name: 'Superuser', passwordHash });
-
-    await user.save();
+    await User.insertMany(helper.initialUsers);
   });
 
   describe('createUserHandler', () => {
