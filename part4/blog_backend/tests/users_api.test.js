@@ -42,6 +42,26 @@ describe('users api', () => {
       const usernames = usersAtEnd.map(u => u.username);
       assert(usernames.includes(newUser.username));
     });
+
+    test('fails when username or password missing', async () => {
+      const usersAtBegin = await helper.getUsers();
+
+      const newUser = {
+        username: 'himumi',
+        name: 'Himumi',
+      };
+
+      const result = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(401)
+        .expect('Content-Type', /application\/json/);
+
+      const usersAtEnd = await helper.getUsers();
+
+      assert.strictEqual(usersAtEnd.length, usersAtBegin.length);
+      assert.strictEqual(result.body.error, 'username or password missing');
+    });
   });
 
   describe('getUsersHandler', () => {
