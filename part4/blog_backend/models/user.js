@@ -5,10 +5,15 @@ mongoose.set('strictQuery', false);
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
-    required: true,
+    required: [true, 'username is required'],
+    minLength: [3, 'username less than 3 chars'],
   },
   name: String,
-  passwordHash: String,
+  passwordHash: {
+    type: String,
+    required: [true, 'password is required'],
+    minLength: [3, 'password less than 3 chars']
+  },
 });
 
 userSchema.set('toJSON', {
