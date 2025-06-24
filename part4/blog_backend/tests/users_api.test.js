@@ -62,6 +62,44 @@ describe('users api', () => {
       assert.strictEqual(usersAtEnd.length, usersAtBegin.length);
       assert.strictEqual(result.body.error, 'username or password missing');
     });
+
+    test.only('fails when username less than 3 chars', async () => {
+      const usersAtBegin = await helper.getUsers();
+
+      const newUser = {
+        username: 'hm',
+        name: 'Himumi',
+        password: 'himitsu'
+      };
+
+      const result = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(401)
+
+      const usersAtEnd = await helper.getUsers();
+      assert.strictEqual(usersAtEnd.length, usersAtBegin.length);
+      assert(result.body.error.includes('less than 3 chars'));
+    });
+
+    test.only('fails when password less than 3 chars', async () => {
+      const usersAtBegin = await helper.getUsers();
+
+      const newUser = {
+        username: 'himumi',
+        name: 'Himumi',
+        password: 'h'
+      };
+
+      const result = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(401)
+
+      const usersAtEnd = await helper.getUsers();
+      assert.strictEqual(usersAtEnd.length, usersAtBegin.length);
+      assert(result.body.error.includes('less than 3 chars'));
+    });
   });
 
   describe('getUsersHandler', () => {
