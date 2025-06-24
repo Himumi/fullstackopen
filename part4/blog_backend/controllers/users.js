@@ -22,6 +22,12 @@ const createUserHandler = async (request, response, next) => {
       });
     }
 
+    if (password.length < 3) {
+      return response.status(401).json({
+        error: 'User validation failed: password: password less than 3 chars'
+      });
+    }
+
     // creating passwordHash with bcrypt
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
