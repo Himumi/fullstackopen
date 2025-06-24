@@ -20,7 +20,7 @@ describe('createUserHandler', () => {
     await user.save();
   });
 
-  test.only('succeeds creating a new user', async () => {
+  test('succeeds creating a new user', async () => {
     const usersAtBegin = await helper.getUsers();
 
     const newUser = {
