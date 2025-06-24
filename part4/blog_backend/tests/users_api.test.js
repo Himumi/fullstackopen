@@ -43,11 +43,11 @@ describe('users api', () => {
       assert(usernames.includes(newUser.username));
     });
 
-    test('fails when username or password missing', async () => {
+    test.only('fails when username or password missing', async () => {
       const usersAtBegin = await helper.getUsers();
 
       const newUser = {
-        username: 'himumi',
+        password: 'himitsu',
         name: 'Himumi',
       };
 
@@ -60,7 +60,7 @@ describe('users api', () => {
       const usersAtEnd = await helper.getUsers();
 
       assert.strictEqual(usersAtEnd.length, usersAtBegin.length);
-      assert.strictEqual(result.body.error, 'username or password missing');
+      assert(result.body.error.includes('is required'));
     });
 
     test.only('fails when username less than 3 chars', async () => {

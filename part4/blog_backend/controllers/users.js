@@ -17,9 +17,9 @@ const createUserHandler = async (request, response, next) => {
     const { username, name, password } = request.body;
 
     if (!username || !password) {
-      return response.status(401).json({
-        error: 'username or password missing'
-      });
+      const fieldName = username ? 'username' : 'password';
+      const error = `User validation failed: ${fieldName}: ${fieldName} is required`;
+      return response.status(401).json({ error });
     }
 
     if (password.length < 3) {
