@@ -45,7 +45,7 @@ describe('users api', () => {
   });
 
   describe('getUsersHandler', () => {
-    test.only('succeeds fetching all users', async () => {
+    test('succeeds fetching all users', async () => {
       const usersAtBegin = await helper.getUsers();
 
       const result = await api
