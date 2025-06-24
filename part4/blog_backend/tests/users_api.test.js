@@ -100,6 +100,26 @@ describe('users api', () => {
       assert.strictEqual(usersAtEnd.length, usersAtBegin.length);
       assert(result.body.error.includes('less than 3 chars'));
     });
+
+    test.only('fails when user is already taken (unique)', async () => {
+      const usersAtBegin = await helper.getUsers();
+
+      const newUser = {
+        username: 'root',
+        name: 'Lesseruser',
+        password: 'lesssecret'
+      };
+
+      const result = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(401)
+        .expect('Content-Type', /application\/json/);
+
+      const usersAtEnd = await helper.getUsers();
+      assert.strictEqual(usersAtEnd.length, usersAtBegin.length);
+      assert(result.body.error.includes('unique'));
+    });
   });
 
   describe('getUsersHandler', () => {
