@@ -33,6 +33,29 @@ describe('blogs api', () => {
   });
 
   describe('createBlogHandler', () => {
+    test('succeeds creating a new blog', async () => {
+      const blogsAtBegin = await helper.getBlogs();
+
+      const newBlog = {
+        title: 'test title',
+        author: 'test author',
+        url: 'url test',
+        likes: 0
+      };
+
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/);
+
+      const blogsAtEnd = await helper.getBlogs();
+      assert.strictEqual(blogsAtEnd.length, blogsAtBegin.length + 1);
+      
+      const titles = blogsAtEnd.map(b => b.title);
+      assert(titles.includes('test title'));
+    });
+
     test('returns status 400 when data is incorrect', async () => {
       const newBlog = { 
         title: 'test title',
