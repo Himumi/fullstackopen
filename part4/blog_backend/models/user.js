@@ -5,6 +5,7 @@ mongoose.set('strictQuery', false);
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
+    unique: true,
     required: [true, 'username is required'],
     minLength: [3, 'username less than 3 chars'],
   },
