@@ -10,7 +10,7 @@ const helper = require('./users_helper');
 
 const api = supertest(app);
 
-describe('createUserHandler', () => {
+describe('users api', () => {
   beforeEach(async () => {
     await User.deleteMany({});
 
@@ -20,26 +20,28 @@ describe('createUserHandler', () => {
     await user.save();
   });
 
-  test('succeeds creating a new user', async () => {
-    const usersAtBegin = await helper.getUsers();
+  describe('createUserHandler', () => {
+    test('succeeds creating a new user', async () => {
+      const usersAtBegin = await helper.getUsers();
 
-    const newUser = {
-      username: 'himumi',
-      name: 'Himumi Erliansyah',
-      password: 'sangatrahasia'
-    };
+      const newUser = {
+        username: 'himumi',
+        name: 'Himumi Erliansyah',
+        password: 'sangatrahasia'
+      };
 
-    await api
-      .post('/api/users')
-      .send(newUser)
-      .expect(201)
-      .expect('Content-Type', /application\/json/);
-    
-    const usersAtEnd = await helper.getUsers();
-    assert.strictEqual(usersAtEnd.length, usersAtBegin.length + 1);
+      await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(201)
+        .expect('Content-Type', /application\/json/);
+      
+      const usersAtEnd = await helper.getUsers();
+      assert.strictEqual(usersAtEnd.length, usersAtBegin.length + 1);
 
-    const usernames = usersAtEnd.map(u => u.username);
-    assert(usernames.includes(newUser.username));
+      const usernames = usersAtEnd.map(u => u.username);
+      assert(usernames.includes(newUser.username));
+    });
   });
 });
 
