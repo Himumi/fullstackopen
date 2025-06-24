@@ -3,9 +3,12 @@ const mongoose = require('mongoose');
 mongoose.set('strictQuery', false);
 
 const userSchema = new mongoose.Schema({
-  username: String,
+  username: {
+    type: String,
+    required: true,
+  },
   name: String,
-  passwordHash: String
+  passwordHash: String,
 });
 
 userSchema.set('toJSON', {
