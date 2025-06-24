@@ -43,6 +43,19 @@ describe('users api', () => {
       assert(usernames.includes(newUser.username));
     });
   });
+
+  describe('getUsersHandler', () => {
+    test.only('succeeds fetching all users', async () => {
+      const usersAtBegin = await helper.getUsers();
+
+      const result = await api
+        .get('/api/users')
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+      
+      assert.strictEqual(result.body.length, usersAtBegin.length);
+    });
+  });
 });
 
 after(async () => await mongoose.connection.close());
