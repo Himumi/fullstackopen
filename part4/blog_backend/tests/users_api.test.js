@@ -101,7 +101,7 @@ describe('users api', () => {
       assert(result.body.error.includes('less than 3 chars'));
     });
 
-    test.only('fails when user is already taken (unique)', async () => {
+    test('fails when user is already taken (unique)', async () => {
       const usersAtBegin = await helper.getUsers();
 
       const newUser = {
