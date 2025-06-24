@@ -16,6 +16,12 @@ const createUserHandler = async (request, response, next) => {
   try {
     const { username, name, password } = request.body;
 
+    if (!username || !password) {
+      return response.status(401).json({
+        error: 'username or password missing'
+      });
+    }
+
     // creating passwordHash with bcrypt
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
