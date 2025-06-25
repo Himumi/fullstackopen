@@ -28,6 +28,18 @@ describe('loginHandler', () => {
 
     assert.strictEqual(result.body.username, login.username);
   });
+
+  test('fails login when one of data missing (bad request)', async () => {
+    const login = { username: 'root' };
+
+    const result = await api
+      .post('/api/login')
+      .send(login)
+      .expect(400)
+      .expect('Content-Type', /application\/json/);
+
+    assert(result.body.error.includes('missing username or password'));
+  });
 });
 
 after(async () => await mongoose.connection.close());
