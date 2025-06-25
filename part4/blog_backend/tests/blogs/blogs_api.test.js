@@ -113,6 +113,23 @@ describe('blogs api', () => {
       assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1);
       assert.strictEqual(result.body.likes, 0);
     });
+
+    test('fails creating a new blog, when missing userId', async () => {
+      const newBlog = {
+        title: 'title test',
+        author: 'test author',
+        url: 'test url',
+        likes: 0,
+      };
+
+      const result = await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(400)
+        .expect('Content-Type', /application\/json/);
+
+      assert(result.body.error.includes('userId missing or invalid'));
+    });
   });
 
   describe('deleteBlogHandler', () => {
