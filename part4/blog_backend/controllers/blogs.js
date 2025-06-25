@@ -10,28 +10,29 @@ const getBlogsHandler = async (request, response, next) => {
   }
 };
 
-const createBlogHandler = (request, response) => {
-  const blog = new Blog(request.body);
+const createBlogHandler = async (request, response, next) => {
+  try {
+    const blog = new Blog(request.body);
 
-  blog
-    .save()
-    .then(result => response.status(201).json(result))
-    .catch(error => {
-      response.status(400).json({ error });
-    });
+    const savedBlog = await blog.save();
+    response
+      .status(201)
+      .json(savedBlog);
+  } catch (error) {
+    next(error);
+  }
 };
 
-const deleteBlogHandler = async (request, response) => {
+const deleteBlogHandler = async (request, response, next) => {
   try {
     await Blog.findByIdAndDelete(request.params.id);
     response.status(204).end();
   } catch (error) {
-    console.error(error);
-    response.status(400).end();
+    next(error);
   }
 };
 
-const updateBlogHandler = async (request, response) => {
+const updateBlogHandler = async (request, response, next) => {
   try {
     const id = request.params.id;
     const opts = {
@@ -42,8 +43,7 @@ const updateBlogHandler = async (request, response) => {
     const result = await Blog.findByIdAndUpdate(id, request.body, opts);
     response.status(201).json(result);
   } catch (error) {
-    response.status(400).json({ error });
-    console.error(error);
+    next(error);
   }
 };
 
