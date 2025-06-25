@@ -41,12 +41,12 @@ const errorHandler = (error, request, response, next) => {
     }
     case jwtError(error): {
       return response.status(401).json({
-        error: 'token invalid'
+        error: 'invalid token'
       });
     }
     case tokenExpiredError(error): {
       return response.status(401).json({
-        error: 'token expired'
+        error: 'expired token'
       });
     }
     default: {
