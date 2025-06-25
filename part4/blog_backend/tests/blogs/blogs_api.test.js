@@ -12,7 +12,7 @@ describe('blogs api', () => {
   beforeEach(async () => await helper.resetDB());
 
   describe('getBlogshandler', () => {
-    test('api returns all notes', async () => {
+    test('succeeds returning all notes', async () => {
       const result = await api
         .get('/api/blogs')
         .expect(200)
@@ -21,7 +21,7 @@ describe('blogs api', () => {
       assert.strictEqual(result.body.length, helper.initialBlogs.length);
     });
 
-    test('returned blogs with id property instead _id', async () => {
+    test('succeeds fetching note with id property instead _id', async () => {
       const result = await api.get('/api/blogs');
       const blog = result.body[0];
 
@@ -54,7 +54,7 @@ describe('blogs api', () => {
       assert(titles.includes('test title'));
     });
 
-    test('returns status 400 when data is incorrect', async () => {
+    test('fails creating blog with status code 400 bad request', async () => {
       const newBlog = { 
         title: 'test title',
         author: 'test author',
@@ -67,7 +67,7 @@ describe('blogs api', () => {
         .expect(400);
     });
 
-    test('does not create blog when data is incorrect', async () => {
+    test('fails creating a new blog', async () => {
       const newBlog = { 
         title: 'test title',
         author: 'test author',
@@ -85,7 +85,7 @@ describe('blogs api', () => {
       assert(!titles.includes(newBlog.title));
     });
 
-    test('creates blog with likes 0 when likes property is missing', async () => {
+    test('succeeds creating a new blog, when likes field is missing set 0 as default', async () => {
       const newBlog = {
         title: 'test title',
         author: 'test author',
