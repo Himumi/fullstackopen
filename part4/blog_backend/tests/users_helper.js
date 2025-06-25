@@ -29,8 +29,14 @@ const getUserId = async () => {
   return user._id.toString();
 };
 
+const resetDB = async () => {
+  await User.deleteMany({});
+  await User.insertMany(initialUsers);
+};
+
 module.exports = {
   getUsers,
   initialUsers,
-  getUserId
+  getUserId,
+  resetDB,
 };

@@ -11,10 +11,7 @@ const helper = require('./users_helper');
 const api = supertest(app);
 
 describe('users api', () => {
-  beforeEach(async () => {
-    await User.deleteMany({});
-    await User.insertMany(helper.initialUsers);
-  });
+  beforeEach(async () => await helper.resetDB());
 
   describe('createUserHandler', () => {
     test('succeeds creating a new user', async () => {
