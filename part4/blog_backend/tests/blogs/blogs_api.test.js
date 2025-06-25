@@ -5,11 +5,13 @@ const mongoose = require('mongoose');
 
 const app = require('../../app')
 const helper = require('./blogs_helper');
+const usersHelper = require('../users/users_helper');
+const { resetDB } = require('../helper/helper');
 
 const api = supertest(app);
 
 describe('blogs api', () => {
-  beforeEach(async () => await helper.resetDB());
+  beforeEach(async () => await resetDB());
 
   describe('getBlogshandler', () => {
     test('succeeds returning all notes', async () => {
@@ -33,12 +35,14 @@ describe('blogs api', () => {
   describe('createBlogHandler', () => {
     test('succeeds creating a new blog', async () => {
       const blogsAtBegin = await helper.getBlogs();
+      const userId = await usersHelper.getUserId();
 
       const newBlog = {
         title: 'test title',
         author: 'test author',
         url: 'url test',
-        likes: 0
+        likes: 0,
+        userId,
       };
 
       await api
@@ -55,10 +59,13 @@ describe('blogs api', () => {
     });
 
     test('fails creating blog with status code 400 bad request', async () => {
+      const userId = await usersHelper.getUserId();
+
       const newBlog = { 
         title: 'test title',
         author: 'test author',
-        likes: 0
+        likes: 0,
+        userId,
       };
 
       await api
@@ -86,10 +93,13 @@ describe('blogs api', () => {
     });
 
     test('succeeds creating a new blog, when likes field is missing set 0 as default', async () => {
+      const userId = await usersHelper.getUserId();
+
       const newBlog = {
         title: 'test title',
         author: 'test author',
         url: 'test url',
+        userId,
       };
 
       const result = await api
