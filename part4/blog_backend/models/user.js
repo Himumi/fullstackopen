@@ -15,6 +15,12 @@ const userSchema = new mongoose.Schema({
     required: [true, 'password is required'],
     minLength: [3, 'password less than 3 chars']
   },
+  blogs: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }
+  ],
 });
 
 userSchema.set('toJSON', {
