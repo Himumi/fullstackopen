@@ -9,13 +9,19 @@ const User = require('../models/user');
 const isPasswordCorrect = async (password, userObject) => {
   return userObject === null
     ? false
-    : await bcrypt.compare(password, passwordHash);
+    : await bcrypt.compare(password, userObject.passwordHash);
 };
 const invalidLoginInfoMsg = 'invalid username or password';
 
 const loginHandler = async (request, response, next) => {
   try {
     const { username, password } = request.body;
+
+    if (!(username && password)) {
+      return response.status(400).json({
+        error: 'missing username or password'
+      });
+    }
 
     const user = await User.findOne({ username });
 
