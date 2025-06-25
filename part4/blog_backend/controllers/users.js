@@ -19,13 +19,13 @@ const createUserHandler = async (request, response, next) => {
     if (!username || !password) {
       const fieldName = username ? 'username' : 'password';
       const error = `User validation failed: ${fieldName}: ${fieldName} is required`;
-      return response.status(401).json({ error });
+      return response.status(400).json({ error });
     }
 
     if (username.length < 3 || password.length < 3) {
       const fieldName = username.length < 3 ? 'username' : 'password';
       const error = `User validation failed: ${fieldName}: ${fieldName} less than 3 chars`;
-      return response.status(401).json({ error });
+      return response.status(400).json({ error });
     }
 
     // creating passwordHash with bcrypt

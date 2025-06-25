@@ -46,7 +46,7 @@ describe('users api', () => {
       const result = await api
         .post('/api/users')
         .send(newUser)
-        .expect(401)
+        .expect(400)
         .expect('Content-Type', /application\/json/);
 
       const usersAtEnd = await helper.getUsers();
@@ -67,7 +67,7 @@ describe('users api', () => {
       const result = await api
         .post('/api/users')
         .send(newUser)
-        .expect(401)
+        .expect(400)
 
       const usersAtEnd = await helper.getUsers();
       assert.strictEqual(usersAtEnd.length, usersAtBegin.length);
@@ -86,7 +86,7 @@ describe('users api', () => {
       const result = await api
         .post('/api/users')
         .send(newUser)
-        .expect(401)
+        .expect(400)
 
       const usersAtEnd = await helper.getUsers();
       assert.strictEqual(usersAtEnd.length, usersAtBegin.length);
@@ -105,7 +105,7 @@ describe('users api', () => {
       const result = await api
         .post('/api/users')
         .send(newUser)
-        .expect(401)
+        .expect(400)
         .expect('Content-Type', /application\/json/);
 
       const usersAtEnd = await helper.getUsers();
