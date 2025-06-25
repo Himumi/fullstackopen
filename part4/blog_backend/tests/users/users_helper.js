@@ -19,6 +19,19 @@ const initialUsers = [
   }
 ];
 
+const rootLogin = {
+  username: 'root',
+  password: 'rahasia'
+};
+
+let token = null;
+
+const setToken  = text => {
+  token = text;
+};
+
+const getToken = () => token;
+
 const getUsers = async () => {
   const users = await User.find({});
   return users.map(u => u.toJSON());
@@ -39,4 +52,7 @@ module.exports = {
   initialUsers,
   getUserId,
   resetDB,
+  rootLogin,
+  setToken,
+  getToken,
 };

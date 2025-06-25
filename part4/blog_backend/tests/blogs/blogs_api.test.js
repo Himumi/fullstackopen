@@ -7,20 +7,45 @@ const app = require('../../app')
 const helper = require('./blogs_helper');
 const usersHelper = require('../users/users_helper');
 const { resetDB } = require('../helper/helper');
+const { property } = require('lodash');
 
 const api = supertest(app);
 
+const assertEqual = (latestLength, prevLength) => 
+  assert.strictEqual(latestLength, prevLength);
+
+const assertIncludes = (text, target) => 
+  assert(text.includes(target));
+
+const assertNotIncludes = (text, target) => 
+  assert(!text.includes(target));
+
+const getProperty = (objects, property) => 
+  objects.map(o => o[property]);
+
 describe('blogs api', () => {
-  beforeEach(async () => await resetDB());
+  let token = null;
+
+  beforeEach(async () => {
+    await resetDB();
+
+    const login = await api
+      .post('/api/login')
+      .send(usersHelper.rootLogin)
+      .expect(200);
+    
+    usersHelper.setToken(login.body.token);
+  });
 
   describe('getBlogshandler', () => {
     test('succeeds returning all notes', async () => {
+      const blogs = await helper.getBlogs();
       const result = await api
         .get('/api/blogs')
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
-      assert.strictEqual(result.body.length, helper.initialBlogs.length);
+      assertEqual(result.body.length, blogs.length);
     });
 
     test('succeeds fetching note with id property instead _id', async () => {
@@ -35,100 +60,68 @@ describe('blogs api', () => {
   describe('createBlogHandler', () => {
     test('succeeds creating a new blog', async () => {
       const blogsAtBegin = await helper.getBlogs();
-      const userId = await usersHelper.getUserId();
-
-      const newBlog = {
-        title: 'test title',
-        author: 'test author',
-        url: 'url test',
-        likes: 0,
-        userId,
-      };
 
       await api
         .post('/api/blogs')
-        .send(newBlog)
+        .set('Authorization', `Bearer ${usersHelper.getToken()}`)
+        .send(helper.newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/);
 
       const blogsAtEnd = await helper.getBlogs();
-      assert.strictEqual(blogsAtEnd.length, blogsAtBegin.length + 1);
+      const titles = getProperty(blogsAtEnd, 'title');
       
-      const titles = blogsAtEnd.map(b => b.title);
-      assert(titles.includes('test title'));
+      assertEqual(blogsAtEnd.length, blogsAtBegin.length + 1);
+      assertIncludes(titles, helper.newBlog.title);
     });
 
-    test('fails creating blog with status code 400 bad request', async () => {
-      const userId = await usersHelper.getUserId();
+    test('fails creating a new blog when missing one of data and returns 400 status code', async () => {
+      const blogsAtBegin = await helper.getBlogs();
 
-      const newBlog = { 
-        title: 'test title',
-        author: 'test author',
-        likes: 0,
-        userId,
-      };
+      const newBlog = { ...helper.newBlog };
+      delete newBlog.url;
 
       await api
         .post('/api/blogs')
-        .send(newBlog)
-        .expect(400);
-    });
-
-    test('fails creating a new blog', async () => {
-      const newBlog = { 
-        title: 'test title',
-        author: 'test author',
-        likes: 0
-      };
-
-      await api
-        .post('/api/blogs')
-        .send(newBlog);
-
-      const blogsAtEnd = await helper.getBlogs();
-      const titles = blogsAtEnd.map(blog => blog.title);
-
-      assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length);
-      assert(!titles.includes(newBlog.title));
-    });
-
-    test('succeeds creating a new blog, when likes field is missing set 0 as default', async () => {
-      const userId = await usersHelper.getUserId();
-
-      const newBlog = {
-        title: 'test title',
-        author: 'test author',
-        url: 'test url',
-        userId,
-      };
-
-      const result = await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(201)
-        .expect('Content-Type', /application\/json/);
-
-      const blogsAtEnd = await helper.getBlogs();
-
-      assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1);
-      assert.strictEqual(result.body.likes, 0);
-    });
-
-    test('fails creating a new blog, when missing userId', async () => {
-      const newBlog = {
-        title: 'title test',
-        author: 'test author',
-        url: 'test url',
-        likes: 0,
-      };
-
-      const result = await api
-        .post('/api/blogs')
+        .set('Authorization', `Bearer ${usersHelper.getToken()}`)
         .send(newBlog)
         .expect(400)
         .expect('Content-Type', /application\/json/);
 
-      assert(result.body.error.includes('userId missing or invalid'));
+      const blogsAtEnd = await helper.getBlogs();
+      const titles = getProperty(blogsAtEnd, 'title');
+
+      assertEqual(blogsAtEnd.length, blogsAtBegin.length);
+      assertNotIncludes(titles, newBlog.title);
+    });
+
+    test('succeeds creating a new blog, when likes field is missing set 0 as default', async () => {
+      const blogsAtBegin = await helper.getBlogs();
+
+      const newBlog = { ...helper.newBlog };
+      delete newBlog.likes;
+
+      const result = await api
+        .post('/api/blogs')
+        .set('Authorization', `Bearer ${usersHelper.getToken()}`)
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/);
+
+      const blogsAtEnd = await helper.getBlogs();
+
+      assertEqual(blogsAtEnd.length, blogsAtBegin.length + 1);
+      assertEqual(result.body.likes, 0);
+    });
+
+    test('fails creating a new blog, when authorization invalid', async () => {
+      const result = await api
+        .post('/api/blogs')
+        .send(helper.newBlog)
+        .expect(401);
+      
+      const error = result.body.error;
+      assertIncludes(error, 'invalid token');
     });
   });
 
@@ -142,7 +135,7 @@ describe('blogs api', () => {
         .expect(204);
 
       const blogsAtEnd = await helper.getBlogs();
-      assert.strictEqual(blogsAtEnd.length, blogsAtBegin.length - 1);
+      assertEqual(blogsAtEnd.length, blogsAtBegin.length - 1);
     });
   });
 
@@ -151,11 +144,11 @@ describe('blogs api', () => {
       const blogsAtBegin = await helper.getBlogs();
       const blog = blogsAtBegin[0];
 
-      const updateBlog = { 
+      const updateBlog = {
         title: blog.title,
         author: blog.author,
-        url: blog.url,
-        likes: blog.likes + 1 
+        url: blog.author,
+        likes: blog.likes + 1,
       };
 
       const result = await api
@@ -164,7 +157,7 @@ describe('blogs api', () => {
         .expect(201)
         .expect('Content-Type', /application\/json/);
 
-      assert.strictEqual(result.body.likes, blog.likes + 1);
+      assertEqual(result.body.likes, blog.likes + 1);
     });
   });
 });

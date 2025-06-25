@@ -39,6 +39,13 @@ const initialBlogs = [
   }  
 ];
 
+const newBlog = {
+  title: 'test title',
+  author: 'test author',
+  url: 'test url',
+  likes: 0,
+};
+
 const resetDB = async () => {
   await Blog.deleteMany({});
   await Blog.insertMany(initialBlogs);
@@ -67,4 +74,5 @@ module.exports = {
   resetDB,
   getBlogs,
   nonExistingId,
+  newBlog,
 };
