@@ -12,6 +12,21 @@ const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' });
 };
 
+const getToken = request => {
+  const authorization = request.get('Authorization');
+  if (authorization && authorization.startsWith('Bearer ')) {
+    return authorization.replace('Bearer ', '');
+  }
+  return null;
+};
+
+const tokenExtractor = (request, response, next) => {
+  const token = getToken(request);
+  request.token = token;
+
+  next();
+};
+
 // conditional functions
 const castError = error => error.name === 'CastError';
 const validationError = error => error.name === 'ValidationError';
@@ -59,4 +74,5 @@ module.exports = {
   requestLogger,
   unknownEndpoint,
   errorHandler,
+  tokenExtractor,
 };

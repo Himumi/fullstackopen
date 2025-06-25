@@ -14,6 +14,7 @@ const app = express();
 // Middlewares
 app.use(express.json());
 app.use(middleware.errorHandler);
+app.use(middleware.tokenExtractor);
 
 // Routes
 app.use('/api/blogs', blogsRouter);

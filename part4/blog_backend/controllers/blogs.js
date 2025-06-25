@@ -27,7 +27,7 @@ const getBlogsHandler = async (request, response, next) => {
 const createBlogHandler = async (request, response, next) => {
   try {
     const body = request.body;
-    const decodedToken = jwt.verify(getToken(request), process.env.SECRET);
+    const decodedToken = jwt.verify(request.token, process.env.SECRET);
 
     if (!decodedToken.id) {
       return response.status(401).json({
