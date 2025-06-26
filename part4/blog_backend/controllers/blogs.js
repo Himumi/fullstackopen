@@ -12,6 +12,17 @@ const getToken = request => {
   return null;
 };
 
+const decodeToken = (token) => jwt.verify(token, process.env.SECRET);
+const invalidTokenError = () => new Object({ name: 'JsonWebToken' });
+const invalidUserIdError = () => new Object({ 
+    name: 'InvalidUserId',
+    message: 'missing or invalid user id' 
+});
+const invalidAuthorizationError = () => new Object({
+  name: 'InvalidAuthorization',
+  message: 'invalid authorization' 
+});
+
 const getBlogsHandler = async (request, response, next) => {
   try {
     const blogs = await Blog
@@ -27,37 +38,27 @@ const getBlogsHandler = async (request, response, next) => {
 const createBlogHandler = async (request, response, next) => {
   try {
     const body = request.body;
-    const decodedToken = jwt.verify(request.token, process.env.SECRET);
-
+    const decodedToken = decodeToken(request.token);
     if (!decodedToken.id) {
-      return response.status(401).json({
-        error: 'invalid token'
-      });
+      return next(invalidTokenError());
     }
 
     const user = await User.findById(decodedToken.id);
 
     if (!user) {
-      return response.status(400).json({ 
-        error: 'userId missing or invalid'
-      });
+      return next(invalidUserIdError());
     }
 
     const blog = new Blog({
-      title: body.title,
-      author: body.title,
-      url: body.url,
-      likes: body.likes,
-      user: user._id,
+      ...body,
+      user: user._id
     });
 
     const savedBlog = await blog.save();
     user.blogs = user.blogs.concat(savedBlog._id);
     await user.save();
 
-    response
-      .status(201)
-      .json(savedBlog);
+    response.status(201).json(savedBlog);
   } catch (error) {
     next(error);
   }
@@ -65,7 +66,23 @@ const createBlogHandler = async (request, response, next) => {
 
 const deleteBlogHandler = async (request, response, next) => {
   try {
-    await Blog.findByIdAndDelete(request.params.id);
+    const decodedToken = decodeToken(request.token);
+    if (!decodedToken.id) {
+      return next(invalidTokenError());
+    }
+    const user = await User.findById(decodedToken.id);
+
+    if (!user) {
+      return next(invalidUserIdError());
+    }
+
+    const blog = await Blog.findById(request.params.id);
+
+    if (blog.user.toString() !== user._id.toString()) {
+      return next(invalidAuthorizationError());
+    }
+
+    await blog.deleteOne();
     response.status(204).end();
   } catch (error) {
     next(error);
