@@ -36,7 +36,12 @@ const loginHandler = async (request, response, next) => {
       id: user._id,
     };
 
-    const token = jwt.sign(dataForToken, process.env.SECRET); 
+    // token expires in 60*60 seconds, around one hour
+    const token = jwt.sign(
+      dataForToken, 
+      process.env.SECRET, 
+      { expiresIn: 60*60 }
+    ); 
 
     response
       .status(200)
