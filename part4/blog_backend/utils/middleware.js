@@ -34,6 +34,8 @@ const duplicatedError = error => error.name === 'MongoServerError'
   && error.message.includes('E11000 duplicate key error');
 const jwtError = error => error.name === 'JsonWebTokenError';
 const tokenExpiredError = error => error.name === 'TokenExpiredError';
+const invalidUserIdError = error => error.name === 'InvalidUserId';
+const invalidAuthorizationError = error => error.name === 'InvalidAuthorization';
 
 const errorHandler = (error, request, response, next) => {
   logger.error(error.message);
@@ -52,6 +54,16 @@ const errorHandler = (error, request, response, next) => {
     case duplicatedError(error): {
       return response.status(400).json({
         error: 'User validation failed: username: username must be unique'
+      });
+    }
+    case invalidUserIdError(error): {
+      return response.status(400).json({
+        error: error.message
+      });
+    } 
+    case invalidAuthorizationError(error): {
+      return response.status(401).json({
+        error: error.message
       });
     }
     case jwtError(error): {
