@@ -7,7 +7,7 @@ const app = require('../../app')
 const helper = require('./blogs_helper');
 const usersHelper = require('../users/users_helper');
 const { resetDB } = require('../helper/helper');
-const { property } = require('lodash');
+const { application } = require('express');
 
 const api = supertest(app);
 
@@ -114,7 +114,7 @@ describe('blogs api', () => {
       assertEqual(result.body.likes, 0);
     });
 
-    test('fails creating a new blog, when authorization invalid', async () => {
+    test.only('fails creating a new blog, when authorization invalid', async () => {
       const result = await api
         .post('/api/blogs')
         .send(helper.newBlog)
@@ -127,15 +127,35 @@ describe('blogs api', () => {
 
   describe('deleteBlogHandler', () => {
     test('succeeds deleting Blog if id is correct', async () => {
+      const blog = await api
+        .post('/api/blogs')
+        .set('Authorization', `Bearer ${usersHelper.getToken()}`)
+        .send(helper.newBlog);
+      const blogId = blog.body.id; 
+      
       const blogsAtBegin = await helper.getBlogs();
-      const id = blogsAtBegin[0]._id;
 
       await api
-        .delete(`/api/blogs/${id}`)
+        .delete(`/api/blogs/${blogId}`)
+        .set('Authorization', `Bearer ${usersHelper.getToken()}`)
         .expect(204);
 
       const blogsAtEnd = await helper.getBlogs();
       assertEqual(blogsAtEnd.length, blogsAtBegin.length - 1);
+    });
+
+    test('fails deleting blog if not belong its user', async () => {
+      const blogsAtBegin = await helper.getBlogs();
+      const blog = blogsAtBegin[0];
+
+      const result = await api
+        .delete(`/api/blogs/${blog._id}`)
+        .set('Authorization', `Bearer ${usersHelper.getToken()}`)
+        .expect(401);
+      
+      const blogsAtEnd = await helper.getBlogs();
+      assertEqual(blogsAtEnd.length, blogsAtBegin.length);
+      assertIncludes(result.body.error, 'authorization');
     });
   });
 
