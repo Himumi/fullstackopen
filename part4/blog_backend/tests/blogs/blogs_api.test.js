@@ -37,7 +37,7 @@ describe('blogs api', () => {
   });
 
   describe('getBlogshandler', () => {
-    test('succeeds returning all notes', async () => {
+    test('succeeds returning all blogs', async () => {
       const blogs = await helper.getBlogs();
       const result = await api
         .get('/api/blogs')
@@ -48,7 +48,7 @@ describe('blogs api', () => {
       assertEqual(result.body.length, blogs.length);
     });
 
-    test('succeeds fetching note with id property instead _id', async () => {
+    test('succeeds fetching blogs with id property instead _id', async () => {
       const result = await api
         .get('/api/blogs')
         .set('Authorization', `Bearer ${usersHelper.getToken()}`)
