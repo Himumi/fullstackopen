@@ -177,8 +177,13 @@ describe('blogs api', () => {
 
   describe('updateBlogHandler', () => {
     test('succeeds and returns updated blog', async () => {
-      const blogsAtBegin = await helper.getBlogs();
-      const blog = blogsAtBegin[0];
+      let blog = await api
+        .post('/api/blogs')
+        .set('Authorization', `Bearer ${usersHelper.getToken()}`)
+        .send(helper.newBlog);
+
+      blog = blog.body;
+      const blogId = blog.id;
 
       const updateBlog = {
         title: blog.title,
@@ -188,11 +193,12 @@ describe('blogs api', () => {
       };
 
       const result = await api
-        .put(`/api/blogs/${blog._id}`)
+        .put(`/api/blogs/${blogId}`)
+        .set('Authorization', `Bearer ${usersHelper.getToken()}`)
         .send(updateBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/);
-
+      
       assertEqual(result.body.likes, blog.likes + 1);
     });
   });
