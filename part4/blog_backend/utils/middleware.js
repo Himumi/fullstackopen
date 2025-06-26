@@ -1,5 +1,11 @@
-const logger = require('./logger');
+require('dotenv').config();
 
+const jwt = require('jsonwebtoken');
+
+const logger = require('./logger');
+const User = require('../models/user');
+
+// request logger handler (middleware)
 const requestLogger = (request, response, next) => {
   logger.info('Method:', request.method);
   logger.info('Path:  ', request.path);
@@ -8,10 +14,12 @@ const requestLogger = (request, response, next) => {
   next();
 };
 
+// unknown end point handler (middleware)
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' });
 };
 
+// token extractor handler and helper functions
 const getToken = request => {
   const authorization = request.get('Authorization');
   if (authorization && authorization.startsWith('Bearer ')) {
@@ -20,9 +28,39 @@ const getToken = request => {
   return null;
 };
 
+// token extractor handler (middleware)
 const tokenExtractor = (request, response, next) => {
   const token = getToken(request);
   request.token = token;
+
+  next();
+};
+
+// user extractor helper functions 
+const decodeToken = (token) => jwt.verify(token, process.env.SECRET);
+const invalidTokenErrorMsg = () => new Object({ name: 'JsonWebToken' });
+const invalidUserIdErrorMsg = () => new Object({ 
+  name: 'InvalidUserId',
+  message: 'missing or invalid user id' 
+});
+
+// user extractor handler (middleware)
+const userExtractor = async (request, response, next) => {
+  const decodedToken = decodeToken(request.token);
+  
+  if (!decodedToken.id) {
+    return next(invalidTokenErrorMsg());
+  }
+
+  const user = await User.findById(decodedToken.id);
+
+  // validate user
+  if (!user) {
+    return next(invalidUserIdErrorMsg());
+  }
+
+  // add user to request in raw form (_id, _v, etc)
+  request.user = user;
 
   next();
 };
@@ -37,6 +75,7 @@ const tokenExpiredError = error => error.name === 'TokenExpiredError';
 const invalidUserIdError = error => error.name === 'InvalidUserId';
 const invalidAuthorizationError = error => error.name === 'InvalidAuthorization';
 
+// error handler (middleware)
 const errorHandler = (error, request, response, next) => {
   logger.error(error.message);
 
@@ -57,6 +96,7 @@ const errorHandler = (error, request, response, next) => {
       });
     }
     case invalidUserIdError(error): {
+      console.log(error);
       return response.status(400).json({
         error: error.message
       });
@@ -87,4 +127,5 @@ module.exports = {
   unknownEndpoint,
   errorHandler,
   tokenExtractor,
+  userExtractor,
 };
