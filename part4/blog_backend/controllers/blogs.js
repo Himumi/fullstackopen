@@ -7,6 +7,9 @@ const invalidAuthorizationError = () => new Object({
   message: 'invalid authorization' 
 });
 
+const belongsUser = (blogUser, userId) => 
+  blogUser.toString() === userId.toString();
+
 const getBlogsHandler = async (request, response, next) => {
   try {
     const blogs = await Blog
@@ -49,7 +52,7 @@ const deleteBlogHandler = async (request, response, next) => {
     const blog = await Blog.findById(request.params.id);
 
     // checking blog belongs user
-    if (blog.user.toString() !== user._id.toString()) {
+    if (!belongsUser(blog.user, user._id)) {
       return next(invalidAuthorizationError());
     }
 
@@ -62,14 +65,25 @@ const deleteBlogHandler = async (request, response, next) => {
 
 const updateBlogHandler = async (request, response, next) => {
   try {
-    const id = request.params.id;
-    const opts = {
-      new: true,
-      runValidators: true
-    };
+    const body = request.body;
+    const user = request.user;
 
-    const result = await Blog.findByIdAndUpdate(id, request.body, opts);
-    response.status(201).json(result);
+    const blog = await Blog.findById(request.params.id);
+
+    // checking blog belongs user
+    if (!belongsUser(blog.user, user._id)) {
+      return next(invalidAuthorizationError());
+    }
+
+    // update blog contents
+    blog.title = body.title;
+    blog.author = body.author;
+    blog.url = body.url;
+    blog.likes = body.likes;
+
+    const updatedBlog = await blog.save();
+
+    response.status(201).json(updatedBlog);
   } catch (error) {
     next(error);
   }
