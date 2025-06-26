@@ -1,23 +1,7 @@
 const blogsRouter = require('express').Router();
-const jwt = require('jsonwebtoken');
 
 const Blog = require('../models/blog');
-const User = require('../models/user');
 
-const getToken = request => {
-  const authorization = request.get('Authorization');
-  if (authorization && authorization.startsWith('Bearer ')) {
-    return authorization.replace('Bearer ', '');
-  }
-  return null;
-};
-
-const decodeToken = (token) => jwt.verify(token, process.env.SECRET);
-const invalidTokenError = () => new Object({ name: 'JsonWebToken' });
-const invalidUserIdError = () => new Object({ 
-    name: 'InvalidUserId',
-    message: 'missing or invalid user id' 
-});
 const invalidAuthorizationError = () => new Object({
   name: 'InvalidAuthorization',
   message: 'invalid authorization' 
@@ -38,23 +22,17 @@ const getBlogsHandler = async (request, response, next) => {
 const createBlogHandler = async (request, response, next) => {
   try {
     const body = request.body;
-    const decodedToken = decodeToken(request.token);
-    if (!decodedToken.id) {
-      return next(invalidTokenError());
-    }
-
-    const user = await User.findById(decodedToken.id);
-
-    if (!user) {
-      return next(invalidUserIdError());
-    }
+    const user = request.user;
 
     const blog = new Blog({
       ...body,
       user: user._id
     });
 
+    // save blog to DB
     const savedBlog = await blog.save();
+    
+    // update user blogs
     user.blogs = user.blogs.concat(savedBlog._id);
     await user.save();
 
@@ -66,18 +44,11 @@ const createBlogHandler = async (request, response, next) => {
 
 const deleteBlogHandler = async (request, response, next) => {
   try {
-    const decodedToken = decodeToken(request.token);
-    if (!decodedToken.id) {
-      return next(invalidTokenError());
-    }
-    const user = await User.findById(decodedToken.id);
-
-    if (!user) {
-      return next(invalidUserIdError());
-    }
+    const user = request.user;
 
     const blog = await Blog.findById(request.params.id);
 
+    // checking blog belongs user
     if (blog.user.toString() !== user._id.toString()) {
       return next(invalidAuthorizationError());
     }
