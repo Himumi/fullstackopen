@@ -7,7 +7,6 @@ const app = require('../../app')
 const helper = require('./blogs_helper');
 const usersHelper = require('../users/users_helper');
 const { resetDB } = require('../helper/helper');
-const { application } = require('express');
 
 const api = supertest(app);
 
@@ -42,6 +41,7 @@ describe('blogs api', () => {
       const blogs = await helper.getBlogs();
       const result = await api
         .get('/api/blogs')
+        .set('Authorization', `Bearer ${usersHelper.getToken()}`)
         .expect(200)
         .expect('Content-Type', /application\/json/);
 
@@ -49,11 +49,27 @@ describe('blogs api', () => {
     });
 
     test('succeeds fetching note with id property instead _id', async () => {
-      const result = await api.get('/api/blogs');
+      const result = await api
+        .get('/api/blogs')
+        .set('Authorization', `Bearer ${usersHelper.getToken()}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+
       const blog = result.body[0];
 
       assert(blog.hasOwnProperty('id'));
       assert(!blog.hasOwnProperty('_id'));
+    });
+
+    test('succeeds fetching blogs eventhough without token', async () => {
+      const blogsAtBegin = await helper.getBlogs();
+
+      const result = await api
+        .get('/api/blogs')
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+      
+      assertEqual(result.body.length, blogsAtBegin.length);
     });
   });
 
