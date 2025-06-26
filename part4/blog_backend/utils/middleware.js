@@ -30,8 +30,12 @@ const getToken = request => {
 
 // token extractor handler (middleware)
 const tokenExtractor = (request, response, next) => {
-  const token = getToken(request);
-  request.token = token;
+  // SKIP middleware
+  if (request.method === 'GET') {
+    return next();
+  }
+
+  request.token = getToken(request);token;
 
   next();
 };
@@ -46,6 +50,11 @@ const invalidUserIdErrorMsg = () => new Object({
 
 // user extractor handler (middleware)
 const userExtractor = async (request, response, next) => {
+  // SKIP middleware
+  if (request.method === 'GET') {
+    return next();
+  }
+
   const decodedToken = decodeToken(request.token);
   
   if (!decodedToken.id) {
