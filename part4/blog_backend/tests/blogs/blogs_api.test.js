@@ -114,7 +114,7 @@ describe('blogs api', () => {
       assertEqual(result.body.likes, 0);
     });
 
-    test.only('fails creating a new blog, when authorization invalid', async () => {
+    test('fails creating a new blog, when authorization invalid', async () => {
       const result = await api
         .post('/api/blogs')
         .send(helper.newBlog)
