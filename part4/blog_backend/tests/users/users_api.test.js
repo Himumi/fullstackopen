@@ -2,15 +2,17 @@ const { test, after, beforeEach, describe } = require('node:test');
 const assert = require('node:assert');
 const supertest = require('supertest');
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 
 const app = require('../../app');
 const helper = require('./users_helper');
+const { resetDB, removeAllInfo } = require('../helper/helper');
 
 const api = supertest(app);
 
 describe('users api', () => {
-  beforeEach(async () => await helper.resetDB());
+  beforeEach(async () => {
+    await resetDB();
+  });
 
   describe('createUserHandler', () => {
     test('succeeds creating a new user', async () => {
@@ -126,6 +128,9 @@ describe('users api', () => {
       assert.strictEqual(result.body.length, usersAtBegin.length);
     });
   });
-});
 
-after(async () => await mongoose.connection.close());
+  after(async () => {
+    await removeAllInfo(); 
+    await mongoose.connection.close()
+  });
+});

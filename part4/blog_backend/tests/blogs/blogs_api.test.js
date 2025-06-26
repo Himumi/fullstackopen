@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const app = require('../../app')
 const helper = require('./blogs_helper');
 const usersHelper = require('../users/users_helper');
-const { resetDB } = require('../helper/helper');
+const { resetDB, removeAllInfo } = require('../helper/helper');
 
 const api = supertest(app);
 
@@ -202,6 +202,9 @@ describe('blogs api', () => {
       assertEqual(result.body.likes, blog.likes + 1);
     });
   });
-});
 
-after(async () => await mongoose.connection.close());
+  after(async () => {
+    await removeAllInfo(); 
+    await mongoose.connection.close()
+  });
+});

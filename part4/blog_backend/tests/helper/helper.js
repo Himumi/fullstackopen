@@ -24,6 +24,12 @@ const resetDB = async () => {
   await user.save();
 };
 
+const removeAllInfo = async () => {
+  await User.deleteMany({});
+  await Blog.deleteMany({});
+};
+
 module.exports = {
   resetDB,
+  removeAllInfo,
 };

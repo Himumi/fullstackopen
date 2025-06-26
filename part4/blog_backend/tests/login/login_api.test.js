@@ -5,7 +5,7 @@ const supertest = require('supertest');
 const mongoose = require('mongoose')
 
 const app = require('../../app');
-const { resetDB } = require('../helper/helper');
+const { resetDB, removeAllInfo } = require('../helper/helper');
 
 const api = supertest(app);
 
@@ -40,6 +40,9 @@ describe('loginHandler', () => {
 
     assert(result.body.error.includes('missing username or password'));
   });
-});
 
-after(async () => await mongoose.connection.close());
+  after(async () => {
+    await removeAllInfo(); 
+    await mongoose.connection.close()
+  });
+});
