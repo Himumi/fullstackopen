@@ -6,11 +6,6 @@ const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 
-const isPasswordCorrect = async (password, userObject) => {
-  return userObject === null
-    ? false
-    : await bcrypt.compare(password, userObject.passwordHash);
-};
 const invalidLoginInfoMsg = 'invalid username or password';
 
 const loginHandler = async (request, response, next) => {
@@ -24,8 +19,11 @@ const loginHandler = async (request, response, next) => {
     }
 
     const user = await User.findOne({ username });
+    const passwordCorrect = user === null
+      ? false
+      : await bcrypt.compare(password, user.passwordHash);
 
-    if (!(user && isPasswordCorrect(password, user))) {
+    if (!(user && passwordCorrect)) {
       return response.status(401).json({
         error: invalidLoginInfoMsg
       });
