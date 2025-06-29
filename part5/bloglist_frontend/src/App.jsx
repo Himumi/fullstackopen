@@ -82,6 +82,18 @@ const App = () => {
     }
   }
 
+  const updateBlogHandler = async (blogObject) => {
+    try {
+      const blog = await blogService.update(blogObject)
+
+      const updatedBlogs = blogs.map(b => b.id === blog.id ? blog : b)
+      setBlogs(updatedBlogs)
+    } catch (error) {
+      console.log(error)
+      setErrorNotification('failed to add blog', 3)
+    }
+  }
+
   return (
     <div>
       <Notification 
@@ -96,6 +108,7 @@ const App = () => {
             user={user}
             handleCreateBlog={createBlogHandler}
             handleLogout={logoutHandler}
+            handleUpdateBlog={updateBlogHandler}
           />     
       }
     </div>
