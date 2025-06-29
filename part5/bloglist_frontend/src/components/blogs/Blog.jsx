@@ -1,6 +1,10 @@
 import { useState } from 'react'
 
-const Blog = ({ blog, handleUpdateBlog }) => {
+const Blog = ({ 
+  blog, 
+  handleUpdateBlog,
+  handleRemoveBlog
+}) => {
   const [visible, setVisible] = useState(false)
 
   const showWhenVisible = { display: visible ? '' : 'none' }
@@ -25,6 +29,8 @@ const Blog = ({ blog, handleUpdateBlog }) => {
     handleUpdateBlog(updateBlog)
   }
 
+  const removeBlogHandler = () => handleRemoveBlog(blog) 
+
   return (
     <div style={blogStyle}>
       <div>
@@ -34,7 +40,8 @@ const Blog = ({ blog, handleUpdateBlog }) => {
           {blog.url} <br />
           likes {blog.likes} 
           <button onClick={updateLikeHandler}>like</button> <br />
-          {blog.author}
+          {blog.author} <br />
+          <button onClick={removeBlogHandler}>remove</button>
         </div>
       </div>
     </div>

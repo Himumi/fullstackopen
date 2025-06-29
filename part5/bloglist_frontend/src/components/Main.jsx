@@ -7,7 +7,8 @@ const Main = ({
   user,
   handleLogout,
   handleCreateBlog,
-  handleUpdateBlog 
+  handleUpdateBlog,
+  handleRemoveBlog, 
 }) => {
   return (
     <div>
@@ -19,7 +20,11 @@ const Main = ({
       <Togglable textLabel='new blog'>
         <BlogForm handleCreateBlog={handleCreateBlog} />
       </Togglable>
-      <Blogs handleUpdateBlog={handleUpdateBlog} blogs={blogs} />
+      <Blogs 
+        handleUpdateBlog={handleUpdateBlog} 
+        handleRemoveBlog={handleRemoveBlog}
+        blogs={blogs}
+      />
     </div>
   )
 }

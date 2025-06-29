@@ -100,6 +100,24 @@ const App = () => {
     }
   }
 
+  const deleteBlogHandler = async (blogObject) => {
+    try {
+      const confirm = window.confirm(
+        `Remove blog ${blogObject.title} by ${blogObject.author}`
+      )
+
+      if (confirm) {
+        await blogService.remove(blogObject.id)
+
+        const updatedBlogs = blogs.filter(blog => blog.id !== blogObject.id)
+        const sortedBlogs = sortBlogs(updatedBlogs)
+        setBlogs(sortedBlogs)
+      }
+    } catch (error) {
+      setErrorNotification('Failed to delete Blog', 3)
+    }
+  }
+
   return (
     <div>
       <Notification 
@@ -115,6 +133,7 @@ const App = () => {
             handleCreateBlog={createBlogHandler}
             handleLogout={logoutHandler}
             handleUpdateBlog={updateBlogHandler}
+            handleRemoveBlog={deleteBlogHandler}
           />     
       }
     </div>
