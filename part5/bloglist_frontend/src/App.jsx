@@ -11,6 +11,8 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [successMsg, setSuccessMsg] = useState(null)
+  const [errorMsg, setErrorMsg] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -27,15 +29,43 @@ const App = () => {
     }
   }, [])
 
+  // notification handlers
+  const setNotification = (func) => {
+    return (message, time = 1) => {
+      func.call(null, message)
+      setTimeout(() => func.call(null, null), time*1000)
+    }
+  }
+
+  const setSuccessNotification = setNotification(setSuccessMsg)
+  const setErrorNotification = setNotification(setErrorMsg)
+
+  // input onChange handlers
+  const inputOnChangeHandler = (func) => {
+    return ({ target }) => func.call(null, target.value)
+  }
+
+  const usernameHandler = inputOnChangeHandler(setUsername)
+  const passwordHandler = inputOnChangeHandler(setPassword)
+  const titleHandler = inputOnChangeHandler(setTitle)  
+  const authorHandler = inputOnChangeHandler(setAuthor)
+  const urlHandler = inputOnChangeHandler(setUrl)
+
+  const setHooksValue = (value, ...funcs) => {
+    funcs.forEach(func => func.call(null, value))
+  }
+
+  // login handler
   const loginHandler = async (event) => {
     event.preventDefault()
-    console.log('logging in')
 
     try {
+      // login user
       const user = await loginService.login({
         username, password
       }) 
 
+      // add user information to app
       window.localStorage.setItem(
         'loggedBlogAppUser',
         JSON.stringify(user)
@@ -43,25 +73,45 @@ const App = () => {
       blogService.setToken(user.token)
 
       setUser(user)
-      setUsername('')
-      setPassword('')
-      console.log('succeeded to login')
+      setHooksValue('', setUsername, setPassword)
+
+      setSuccessNotification('Logged in', 3)
     } catch (error) {
-      console.log('failed to login')
+      setErrorNotification('Wrong username or password', 3)
     }
   }
 
+  // logout handler
   const logoutHandler = () => {
+    // delete all user information from app
     setUser(null)
     window.localStorage.removeItem('loggedBlogAppUser')
     blogService.deleteToken()
+
+    setSuccessNotification('Logged out', 3)
   }
 
-  const usernameHandler = (event) =>
-    setUsername(event.target.value)
-  const passwordHandler = (event) =>
-    setPassword(event.target.value)
+  // create a new blog handler
+  const createBlogHandler = async (event) => {
+    event.preventDefault()
 
+    try {
+      const blog = await blogService.create({
+        title, author, url
+      })
+      setBlogs(blogs.concat(blog))
+
+      setSuccessNotification(`Added ${blog.title} by ${blog.author}`, 3)
+    } catch (error) {
+      const field = error.response.data.error.match(/`\w+`/)
+      setErrorNotification(`Missing ${field}`, 3)
+    }
+
+    // reset values
+    setHooksValue('', setTitle, setAuthor, setUrl)
+  }
+
+  // components
   const loginForm = () => (
     <div>
       <div>
@@ -107,27 +157,6 @@ const App = () => {
     </div>
   )
 
-  const titleHandler = ({ target }) => setTitle(target.value)
-  const authorHandler = ({ target }) => setAuthor(target.value)
-  const urlHandler = ({ target }) => setUrl(target.value)
-
-  const createBlogHandler = async (event) => {
-    event.preventDefault()
-
-    try {
-      const blog = await blogService.create({
-        title, author, url
-      })
-      setBlogs(blogs.concat(blog))
-    } catch (error) {
-      console.log(error)
-    }
-
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-  }
-
   const blogForm = () => (
     <div>
       <h2>create new</h2>
@@ -166,9 +195,22 @@ const App = () => {
     </div>
   )
 
+  const notifStyles = {
+    border: `2px solid ${!errorMsg ? 'green' : 'red'}`,
+    color: !errorMsg ? 'green' : 'red',
+    width: '100%',
+    fontSize: '16px',
+  }
+
+  const notification = () => (
+    <div style={notifStyles}>
+      <p style={{ padding: '3px 10px'}}>{successMsg || errorMsg}</p>
+    </div>
+  )
+
   return (
     <div>
-
+      {(errorMsg || successMsg) && notification()}
       {
         user === null
         ? loginForm()
