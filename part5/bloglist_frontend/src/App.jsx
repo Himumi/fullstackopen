@@ -7,6 +7,9 @@ import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import Main from './components/Main'
 
+const sortBlogs = (blogs) =>
+  blogs.sort((a, b) => b.likes - a.likes)
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
@@ -14,9 +17,10 @@ const App = () => {
   const [errorMsg, setErrorMsg] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+    blogService.getAll().then(blogs => {
+      const sortedBlogs = sortBlogs(blogs)
+      setBlogs(sortedBlogs)
+    })  
   }, [])
 
   useEffect(() => {
@@ -73,7 +77,8 @@ const App = () => {
   const createBlogHandler = async (blogObject) => {
     try {
       const blog = await blogService.create(blogObject)
-      setBlogs(blogs.concat(blog))
+      const sortedBlogs = sortBlogs(blogs.concat(blog))
+      setBlogs(sortedBlogs)
 
       setSuccessNotification(`Added ${blog.title} by ${blog.author}`, 3)
     } catch (error) {
@@ -87,7 +92,8 @@ const App = () => {
       const blog = await blogService.update(blogObject)
 
       const updatedBlogs = blogs.map(b => b.id === blog.id ? blog : b)
-      setBlogs(updatedBlogs)
+      const sortedBlogs = sortBlogs(updatedBlogs)
+      setBlogs(sortedBlogs)
     } catch (error) {
       console.log(error)
       setErrorNotification('failed to add blog', 3)
