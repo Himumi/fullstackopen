@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react'
-import Blog from './components/Blog'
+
 import blogService from './services/blogs'
 import loginService from './services/login'
+
+import LoginForm from './components/LoginForm'
+import Notification from './components/Notification'
+import Main from './components/Main'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [successMsg, setSuccessMsg] = useState(null)
   const [errorMsg, setErrorMsg] = useState(null)
 
@@ -40,30 +39,11 @@ const App = () => {
   const setSuccessNotification = setNotification(setSuccessMsg)
   const setErrorNotification = setNotification(setErrorMsg)
 
-  // input onChange handlers
-  const inputOnChangeHandler = (func) => {
-    return ({ target }) => func.call(null, target.value)
-  }
-
-  const usernameHandler = inputOnChangeHandler(setUsername)
-  const passwordHandler = inputOnChangeHandler(setPassword)
-  const titleHandler = inputOnChangeHandler(setTitle)  
-  const authorHandler = inputOnChangeHandler(setAuthor)
-  const urlHandler = inputOnChangeHandler(setUrl)
-
-  const setHooksValue = (value, ...funcs) => {
-    funcs.forEach(func => func.call(null, value))
-  }
-
   // login handler
-  const loginHandler = async (event) => {
-    event.preventDefault()
-
+  const loginHandler = async (loginInfo) => {
     try {
       // login user
-      const user = await loginService.login({
-        username, password
-      }) 
+      const user = await loginService.login(loginInfo) 
 
       // add user information to app
       window.localStorage.setItem(
@@ -71,9 +51,7 @@ const App = () => {
         JSON.stringify(user)
       )
       blogService.setToken(user.token)
-
       setUser(user)
-      setHooksValue('', setUsername, setPassword)
 
       setSuccessNotification('Logged in', 3)
     } catch (error) {
@@ -92,13 +70,9 @@ const App = () => {
   }
 
   // create a new blog handler
-  const createBlogHandler = async (event) => {
-    event.preventDefault()
-
+  const createBlogHandler = async (blogObject) => {
     try {
-      const blog = await blogService.create({
-        title, author, url
-      })
+      const blog = await blogService.create(blogObject)
       setBlogs(blogs.concat(blog))
 
       setSuccessNotification(`Added ${blog.title} by ${blog.author}`, 3)
@@ -106,115 +80,23 @@ const App = () => {
       const field = error.response.data.error.match(/`\w+`/)
       setErrorNotification(`Missing ${field}`, 3)
     }
-
-    // reset values
-    setHooksValue('', setTitle, setAuthor, setUrl)
   }
-
-  // components
-  const loginForm = () => (
-    <div>
-      <div>
-        <h1>log in to application</h1>
-      </div>
-      <form onSubmit={loginHandler}>
-        <div>
-          username 
-          <input 
-            type='text'
-            name='Username'
-            value={username}
-            onChange={usernameHandler}
-          />
-        </div>
-        <div>
-          password 
-          <input 
-            type='password'
-            name='Password'
-            value={password}
-            onChange={passwordHandler}
-          />
-        </div>
-        <div>
-          <button type='submit'>login</button>
-        </div>
-      </form>
-    </div>
-  )
-
-  const blogList = () => (
-    <div>
-      <h2>blogs</h2>
-      <p>
-        {user.name} logged in
-        <button onClick={logoutHandler}>logout</button>  
-      </p>
-      {blogForm()}
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
-    </div>
-  )
-
-  const blogForm = () => (
-    <div>
-      <h2>create new</h2>
-      <form onSubmit={createBlogHandler}>
-        <div>
-          title: 
-          <input 
-            type='text'
-            name='Title'
-            value={title}
-            onChange={titleHandler}
-          />
-        </div>
-        <div>
-          author: 
-          <input 
-            type='text'
-            name='Author'
-            value={author}
-            onChange={authorHandler}
-          />
-        </div>
-        <div>
-          url: 
-          <input 
-            type='text'
-            name='Url'
-            value={url}
-            onChange={urlHandler}
-          />
-        </div>
-        <div>
-          <button type='submit'>create</button>
-        </div>
-      </form>
-    </div>
-  )
-
-  const notifStyles = {
-    border: `2px solid ${!errorMsg ? 'green' : 'red'}`,
-    color: !errorMsg ? 'green' : 'red',
-    width: '100%',
-    fontSize: '16px',
-  }
-
-  const notification = () => (
-    <div style={notifStyles}>
-      <p style={{ padding: '3px 10px'}}>{successMsg || errorMsg}</p>
-    </div>
-  )
 
   return (
     <div>
-      {(errorMsg || successMsg) && notification()}
-      {
-        user === null
-        ? loginForm()
-        : blogList()
+      <Notification 
+        errorMsg={errorMsg}
+        successMsg={successMsg}
+      />
+      {!user 
+        ? <LoginForm handleLogin={loginHandler} /> 
+        : 
+          <Main 
+            blogs={blogs}
+            user={user}
+            handleCreateBlog={createBlogHandler}
+            handleLogout={logoutHandler}
+          />     
       }
     </div>
   )
