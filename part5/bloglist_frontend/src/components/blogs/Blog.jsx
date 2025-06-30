@@ -41,7 +41,7 @@ const Blog = ({
           likes {blog.likes}
           <button onClick={updateLikeHandler} className='likeButton'>like</button> <br />
           {blog.author} <br />
-          <button onClick={removeBlogHandler}>remove</button>
+          <button onClick={removeBlogHandler} className='removeButton'>remove</button>
         </div>
       </div>
     </div>
