@@ -49,4 +49,19 @@ describe('<Note />', () => {
     const divAfterClick = selectByQuery('.hiddenContent', container)
     expectToNotHaveStyle(divAfterClick, 'display: none')
   })
+
+  test('calls update blog function if user clicks like button twice', async () => {
+    const likeMock = vi.fn()
+    const { container } = render(<Blog blog={blog} handleUpdateBlog={likeMock} />)
+    const user = userEvent.setup()
+
+    const viewButton = selectByQuery('.hiddenButton', container)
+    await user.click(viewButton)
+
+    const likeButton = selectByQuery('.likeButton', container)
+    await user.click(likeButton)
+    await user.click(likeButton)
+
+    expect(likeMock.mock.calls).toHaveLength(2)
+  })
 })
