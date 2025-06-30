@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import Blogs from './blogs/Blogs'
 import BlogForm from './blogs/BlogForm'
 import Togglable from './Togglable'
@@ -27,6 +28,15 @@ const Main = ({
       />
     </div>
   )
+}
+
+Main.propTypes = {
+  blogs: PropTypes.array.isRequired,
+  user: PropTypes.object.isRequired,
+  handleLogout: PropTypes.func.isRequired,
+  handleCreateBlog: PropTypes.func.isRequired,
+  handleUpdateBlog: PropTypes.func.isRequired,
+  handleRemoveBlog: PropTypes.func.isRequired,
 }
 
 export default Main

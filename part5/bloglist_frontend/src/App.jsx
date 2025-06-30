@@ -20,7 +20,7 @@ const App = () => {
     blogService.getAll().then(blogs => {
       const sortedBlogs = sortBlogs(blogs)
       setBlogs(sortedBlogs)
-    })  
+    })
   }, [])
 
   useEffect(() => {
@@ -120,21 +120,13 @@ const App = () => {
 
   return (
     <div>
-      <Notification 
+      <Notification
         errorMsg={errorMsg}
         successMsg={successMsg}
       />
-      {!user 
-        ? <LoginForm handleLogin={loginHandler} /> 
-        : 
-          <Main 
-            blogs={blogs}
-            user={user}
-            handleCreateBlog={createBlogHandler}
-            handleLogout={logoutHandler}
-            handleUpdateBlog={updateBlogHandler}
-            handleRemoveBlog={deleteBlogHandler}
-          />     
+      {!user
+        ? <LoginForm handleLogin={loginHandler} />
+        : <Main blogs={blogs} user={user} handleCreateBlog={createBlogHandler} handleLogout={logoutHandler} handleUpdateBlog={updateBlogHandler} handleRemoveBlog={deleteBlogHandler} />
       }
     </div>
   )
