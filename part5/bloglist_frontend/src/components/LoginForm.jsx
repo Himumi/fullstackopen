@@ -18,7 +18,7 @@ const LoginForm = ({ handleLogin }) => {
     })
 
     setHooks('')
-  };
+  }
 
   return (
     <div>
@@ -27,8 +27,9 @@ const LoginForm = ({ handleLogin }) => {
       </div>
       <form onSubmit={loginHandler}>
         <div>
-          username 
-          <input 
+          username
+          <input
+            className='username'
             type='text'
             name='Username'
             value={username}
@@ -36,8 +37,9 @@ const LoginForm = ({ handleLogin }) => {
           />
         </div>
         <div>
-          password 
-          <input 
+          password
+          <input
+            className='password'
             type='password'
             name='Password'
             value={password}
@@ -45,7 +47,7 @@ const LoginForm = ({ handleLogin }) => {
           />
         </div>
         <div>
-          <button type='submit'>login</button>
+          <button type='submit' className='loginButton'>login</button>
         </div>
       </form>
     </div>
