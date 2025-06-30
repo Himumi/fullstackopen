@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
-const Blog = ({ 
-  blog, 
+const Blog = ({
+  blog,
   handleUpdateBlog,
   handleRemoveBlog
 }) => {
@@ -29,17 +29,17 @@ const Blog = ({
     handleUpdateBlog(updateBlog)
   }
 
-  const removeBlogHandler = () => handleRemoveBlog(blog) 
+  const removeBlogHandler = () => handleRemoveBlog(blog)
 
   return (
     <div style={blogStyle}>
       <div>
-        {blog.title}
-        <button onClick={toggleVisibility}>{visible ? 'hide' : 'view'}</button>
-        <div style={showWhenVisible}>
+        {blog.title} {!visible && `by ${blog.author}`}
+        <button onClick={toggleVisibility} className='hiddenButton'>{visible ? 'hide' : 'view'}</button>
+        <div style={showWhenVisible} className='hiddenContent'>
           {blog.url} <br />
-          likes {blog.likes} 
-          <button onClick={updateLikeHandler}>like</button> <br />
+          likes {blog.likes}
+          <button onClick={updateLikeHandler} className='likeButton'>like</button> <br />
           {blog.author} <br />
           <button onClick={removeBlogHandler}>remove</button>
         </div>
