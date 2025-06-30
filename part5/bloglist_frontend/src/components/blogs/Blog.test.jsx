@@ -35,4 +35,18 @@ describe('<Note />', () => {
     const div = selectByQuery('.hiddenContent', container)
     expect(div).toHaveStyle('display: none')
   })
+
+  test('displays hidden content if user clicks the button', async () => {
+    const user = userEvent.setup()
+    const button = selectByQuery('.hiddenButton', container)
+
+    const divBeforeClick = selectByQuery('.hiddenContent', container)
+    expectToHaveStyle(divBeforeClick, 'display: none')
+
+    // mocking user click
+    await user.click(button)
+
+    const divAfterClick = selectByQuery('.hiddenContent', container)
+    expectToNotHaveStyle(divAfterClick, 'display: none')
+  })
 })
