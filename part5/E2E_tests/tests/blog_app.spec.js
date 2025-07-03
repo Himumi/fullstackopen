@@ -19,23 +19,25 @@ describe('Blog app', () => {
     )).toBeVisible()
   })
 
-  test('succeeds logged in', async ({ page }) => {
-    await page.getByTestId('username').fill('himumi')
-    await page.getByTestId('password').fill('rahasia')
-    await page.getByRole('button', { name: 'login' }).click()
+  describe('login', () => {
+    test('succeeds with correct credentials', async ({ page }) => {
+      await page.getByTestId('username').fill('himumi')
+      await page.getByTestId('password').fill('rahasia')
+      await page.getByRole('button', { name: 'login' }).click()
 
-    await expect(page.getByText(
-      'Erliansyah logged in'
-    )).toBeVisible()
-  })
+      await expect(page.getByText(
+        'Erliansyah logged in'
+      )).toBeVisible()
+    })
 
-  test('fails logged in', async ({ page }) => {
-    await page.getByTestId('username').fill('himumi')
-    await page.getByTestId('password').fill('wrong')
-    await page.getByRole('button', { name: 'login' }).click()
+    test('fails with wrong credentials', async ({ page }) => {
+      await page.getByTestId('username').fill('himumi')
+      await page.getByTestId('password').fill('wrong')
+      await page.getByRole('button', { name: 'login' }).click()
 
-    await expect(page.getByText(
-      'Wrong username or password'
-    )).toBeVisible()
-  })
+      await expect(page.getByText(
+        'Wrong username or password'
+      )).toBeVisible()
+    })
+    })
 })
