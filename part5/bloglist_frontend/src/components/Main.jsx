@@ -3,26 +3,26 @@ import Blogs from './blogs/Blogs'
 import BlogForm from './blogs/BlogForm'
 import Togglable from './Togglable'
 
-const Main = ({ 
+const Main = ({
   blogs,
   user,
   handleLogout,
   handleCreateBlog,
   handleUpdateBlog,
-  handleRemoveBlog, 
+  handleRemoveBlog,
 }) => {
   return (
     <div>
       <h2>blogs</h2>
-      <p>
-        {user.name} logged in
-        <button onClick={handleLogout}>logout</button>  
-      </p>
+      <div>
+        <span>{user.name} logged in</span>
+        <button onClick={handleLogout}>logout</button>
+      </div>
       <Togglable textLabel='new blog'>
         <BlogForm handleCreateBlog={handleCreateBlog} />
       </Togglable>
-      <Blogs 
-        handleUpdateBlog={handleUpdateBlog} 
+      <Blogs
+        handleUpdateBlog={handleUpdateBlog}
         handleRemoveBlog={handleRemoveBlog}
         blogs={blogs}
       />
