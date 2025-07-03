@@ -14,7 +14,9 @@ describe('Blog app', () => {
   })
 
   test('Login form is shown', async ({ page }) => {
-    await expect(page.getByText('log in to application')).toBeVisible()
+    await expect(page.getByText(
+      'log in to application'
+    )).toBeVisible()
   })
 
   test('succeeds logged in', async ({ page }) => {
@@ -22,6 +24,18 @@ describe('Blog app', () => {
     await page.getByTestId('password').fill('rahasia')
     await page.getByRole('button', { name: 'login' }).click()
 
-    await expect(page.getByText('Erliansyah logged in')).toBeVisible()
+    await expect(page.getByText(
+      'Erliansyah logged in'
+    )).toBeVisible()
+  })
+
+  test('fails logged in', async ({ page }) => {
+    await page.getByTestId('username').fill('himumi')
+    await page.getByTestId('password').fill('wrong')
+    await page.getByRole('button', { name: 'login' }).click()
+
+    await expect(page.getByText(
+      'Wrong username or password'
+    )).toBeVisible()
   })
 })
