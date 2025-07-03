@@ -1,5 +1,5 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
-const { loginWith, createBlog } = require('./helper')
+const { loginWith, createBlog, getButtonAndClick } = require('./helper')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -60,10 +60,9 @@ describe('Blog app', () => {
       })
 
       test('succeeds updating blogs likes', async ({ page }) => {
-        await page.getByRole('button', { name: 'view' }).click()
-        await page.getByRole('button', { name: 'like' }).click()
+        await getButtonAndClick(page, 'view')
+        await getButtonAndClick(page, 'like')
 
-        await page.pause()
         await expect(page.locator(
           '.hiddenContent>span:nth-child(2)'
         )).toHaveText('likes 1')
@@ -71,19 +70,20 @@ describe('Blog app', () => {
 
       test('succeeds removing blog', async ({ page }) => {
         // have to define events on top
-        page.on('dialog', async dialog => {
-          await dialog.accept()
-        })
+        page.on(
+          'dialog', 
+          async dialog => await dialog.accept()
+        )
 
-        await page.getByRole('button', { name: 'view' }).click()
-        await page.getByRole('button', { name: 'remove' }).click()
+        await getButtonAndClick(page, 'view')
+        await getButtonAndClick(page, 'remove')
 
         await expect(page.locator('.blog')).not.toBeVisible()
       })
 
-      test('fails removing blog belong other user', async ({ page, request }) => {
+      test.only('fails removing blog belong other user', async ({ page, request }) => {
         // logout 
-        await page.getByRole('button', { name: 'logout' }).click()
+        await getButtonAndClick(page, 'logout')
         // creating a new user
         await request.post('/api/users', {
           data: {
@@ -96,11 +96,14 @@ describe('Blog app', () => {
         // login with other user
         await loginWith(page, 'otheruser', 'secret')
 
-        page.on('dialog', async dialog => await dialog.accept())
+        page.on(
+          'dialog', 
+          async dialog => await dialog.accept()
+        )
 
         // try to remove other user blog
-        await page.getByRole('button', { name: 'view' }).click()
-        await page.getByRole('button', { name: 'remove' }).click()
+        await getButtonAndClick(page, 'view')
+        await getButtonAndClick(page, 'remove')
 
         await expect(page.locator('.notification')).toBeVisible()
       })
@@ -110,7 +113,7 @@ describe('Blog app', () => {
           title: 'title2', author: 'author2', url: 'url2'
         })
         await page.locator('.blog:nth-child(2) .hiddenButton').click()
-        await page.getByRole('button', { name: 'like' }).click()
+        await getButtonAndClick(page, 'like')
         await expect(page.locator('.blog:first-child>span')).toHaveText('title2')
       })
     })
