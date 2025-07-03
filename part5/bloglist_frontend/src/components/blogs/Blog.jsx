@@ -39,10 +39,10 @@ const Blog = ({
       <span>{blogTitle}</span>
       <button onClick={toggleVisibility} className='hiddenButton'>{visible ? 'hide' : 'view'}</button>
       <div style={showWhenVisible} className='hiddenContent'>
-        {blog.url} <br />
-        likes {blog.likes}
+        <span>{blog.url} <br /></span>
+        <span>likes {blog.likes}</span>
         <button onClick={updateLikeHandler} className='likeButton'>like</button> <br />
-        {blog.author} <br />
+        <span>{blog.author} <br /></span>
         <button onClick={removeBlogHandler} className='removeButton'>remove</button>
       </div>
     </div>
