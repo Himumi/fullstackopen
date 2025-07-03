@@ -12,4 +12,11 @@ const createBlog = async (page, blog) => {
   await page.getByRole('button', { name: 'create' }).click()
 }
 
-module.exports = { loginWith, createBlog }
+const getButtonAndClick = async (page, prop) =>
+  await page.getByRole('button', { name: prop }).click()
+
+module.exports = { 
+  loginWith,
+  createBlog,
+  getButtonAndClick
+}
