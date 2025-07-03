@@ -67,6 +67,18 @@ describe('Blog app', () => {
           '.hiddenContent>span:nth-child(2)'
         )).toHaveText('likes 1')
       })
+
+      test('succeeds remove blog', async ({ page }) => {
+        // have to define events on top
+        page.on('dialog', async dialog => {
+          await dialog.accept()
+        })
+
+        await page.getByRole('button', { name: 'view' }).click()
+        await page.getByRole('button', { name: 'remove' }).click()
+
+        await expect(page.locator('.blog')).not.toBeVisible()
+      })
     })
   })
 })
