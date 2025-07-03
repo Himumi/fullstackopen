@@ -5,7 +5,7 @@ const BlogForm = ({ handleCreateBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
-  
+
   const titleHandler = helper.inputOnChangeHandler(setTitle)
   const authorHandler = helper.inputOnChangeHandler(setAuthor)
   const urlHandler = helper.inputOnChangeHandler(setUrl)
@@ -27,8 +27,9 @@ const BlogForm = ({ handleCreateBlog }) => {
       <h2>create new</h2>
       <form onSubmit={createBlogHandler}>
         <div>
-          title: 
-          <input 
+          title:
+          <input
+            data-testid='titleInput'
             type='text'
             name='Title'
             value={title}
@@ -36,8 +37,9 @@ const BlogForm = ({ handleCreateBlog }) => {
           />
         </div>
         <div>
-          author: 
-          <input 
+          author:
+          <input
+            data-testid='authorInput'
             type='text'
             name='Author'
             value={author}
@@ -45,8 +47,9 @@ const BlogForm = ({ handleCreateBlog }) => {
           />
         </div>
         <div>
-          url: 
-          <input 
+          url:
+          <input
+            data-testid='urlInput'
             type='text'
             name='Url'
             value={url}
