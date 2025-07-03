@@ -18,9 +18,13 @@ const getButtonAndClick = async (page, prop) =>
 const acceptWindowConfirm = (page) =>
   page.on('dialog', async dialog => await dialog.accept())
 
+const createUser = async (request, info) =>
+  await request.post('/api/users', { data: info })
+
 module.exports = { 
   loginWith,
   createBlog,
   getButtonAndClick,
-  acceptWindowConfirm
+  acceptWindowConfirm,
+  createUser,
 }
