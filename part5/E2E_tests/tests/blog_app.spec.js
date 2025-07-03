@@ -104,6 +104,15 @@ describe('Blog app', () => {
 
         await expect(page.locator('.notification')).toBeVisible()
       })
+
+      test('succeeds arranged blog according to blogs likes', async ({ page }) => {
+        await createBlog(page, {
+          title: 'title2', author: 'author2', url: 'url2'
+        })
+        await page.locator('.blog:nth-child(2) .hiddenButton').click()
+        await page.getByRole('button', { name: 'like' }).click()
+        await expect(page.locator('.blog:first-child>span')).toHaveText('title2')
+      })
     })
   })
 })
