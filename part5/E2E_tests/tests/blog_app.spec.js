@@ -1,5 +1,10 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
-const { loginWith, createBlog, getButtonAndClick } = require('./helper')
+const { 
+  loginWith,
+  createBlog,
+  getButtonAndClick,
+  acceptWindowConfirm
+} = require('./helper')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
@@ -70,10 +75,7 @@ describe('Blog app', () => {
 
       test('succeeds removing blog', async ({ page }) => {
         // have to define events on top
-        page.on(
-          'dialog', 
-          async dialog => await dialog.accept()
-        )
+        acceptWindowConfirm(page)
 
         await getButtonAndClick(page, 'view')
         await getButtonAndClick(page, 'remove')
@@ -81,7 +83,7 @@ describe('Blog app', () => {
         await expect(page.locator('.blog')).not.toBeVisible()
       })
 
-      test.only('fails removing blog belong other user', async ({ page, request }) => {
+      test('fails removing blog belong other user', async ({ page, request }) => {
         // logout 
         await getButtonAndClick(page, 'logout')
         // creating a new user
@@ -96,10 +98,7 @@ describe('Blog app', () => {
         // login with other user
         await loginWith(page, 'otheruser', 'secret')
 
-        page.on(
-          'dialog', 
-          async dialog => await dialog.accept()
-        )
+        acceptWindowConfirm(page)
 
         // try to remove other user blog
         await getButtonAndClick(page, 'view')
