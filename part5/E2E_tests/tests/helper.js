@@ -21,10 +21,14 @@ const acceptWindowConfirm = (page) =>
 const createUser = async (request, info) =>
   await request.post('/api/users', { data: info })
 
+const resetDB = async (request) =>
+  await request.post('/api/testing/reset')
+
 module.exports = { 
   loginWith,
   createBlog,
   getButtonAndClick,
   acceptWindowConfirm,
   createUser,
+  resetDB,
 }
