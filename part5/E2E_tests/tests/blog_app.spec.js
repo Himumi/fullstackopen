@@ -79,6 +79,30 @@ describe('Blog app', () => {
 
         await expect(page.locator('.blog')).not.toBeVisible()
       })
+
+      test('fails removing blog belong other user', async ({ page, request }) => {
+        // logout 
+        await page.getByRole('button', { name: 'logout' }).click()
+        // creating a new user
+        await request.post('/api/users', {
+          data: {
+            name: 'other user',
+            username: 'otheruser',
+            password: 'secret',
+          }
+        })
+
+        // login with other user
+        await loginWith(page, 'otheruser', 'secret')
+
+        page.on('dialog', async dialog => await dialog.accept())
+
+        // try to remove other user blog
+        await page.getByRole('button', { name: 'view' }).click()
+        await page.getByRole('button', { name: 'remove' }).click()
+
+        await expect(page.locator('.notification')).toBeVisible()
+      })
     })
   })
 })
