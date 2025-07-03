@@ -5,11 +5,12 @@ const {
   getButtonAndClick,
   acceptWindowConfirm,
   createUser,
+  resetDB,
 } = require('./helper')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
-    await request.post('/api/testing/reset')
+    await resetDB(request)
     await createUser(request, {
       name: 'Erliansyah',
       username: 'himumi',
