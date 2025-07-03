@@ -3,18 +3,17 @@ const {
   loginWith,
   createBlog,
   getButtonAndClick,
-  acceptWindowConfirm
+  acceptWindowConfirm,
+  createUser,
 } = require('./helper')
 
 describe('Blog app', () => {
   beforeEach(async ({ page, request }) => {
     await request.post('/api/testing/reset')
-    await request.post('/api/users', {
-      data: {
-        name: 'Erliansyah',
-        username: 'himumi',
-        password: 'rahasia',
-      }
+    await createUser(request, {
+      name: 'Erliansyah',
+      username: 'himumi',
+      password: 'rahasia',
     })
     await page.goto('/')
   })
@@ -87,12 +86,10 @@ describe('Blog app', () => {
         // logout 
         await getButtonAndClick(page, 'logout')
         // creating a new user
-        await request.post('/api/users', {
-          data: {
-            name: 'other user',
-            username: 'otheruser',
-            password: 'secret',
-          }
+        await createUser(request, {
+          name: 'other user',
+          username: 'otheruser',
+          password: 'secret',
         })
 
         // login with other user
