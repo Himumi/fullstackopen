@@ -49,5 +49,24 @@ describe('Blog app', () => {
       })
       await expect(page.locator('.blog>span')).toBeVisible()
     })
+
+    describe('created blogs', () => {
+      beforeEach(async ({ page }) => {
+        await createBlog(page, {
+          title: 'title',
+          author: 'author',
+          url: 'url'
+        })
+      })
+
+      test('succeeds update blogs likes', async ({ page }) => {
+        await page.getByRole('button', { name: 'view' }).click()
+        await page.getByRole('button', { name: 'like' }).click()
+
+        await expect(page.locator(
+          '.hiddenContent>span:nth-child(2)'
+        )).toHaveText('likes 1')
+      })
+    })
   })
 })
