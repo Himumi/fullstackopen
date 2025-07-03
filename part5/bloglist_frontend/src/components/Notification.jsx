@@ -11,8 +11,8 @@ const Notification = ({ errorMsg, successMsg }) => {
   }
 
   return (
-    <div style={notifStyles}>
-      <p style={{ padding: '3px 10px'}}>{successMsg || errorMsg}</p>
+    <div style={notifStyles} className="notification">
+      <p style={{ padding: '3px 10px' }}>{successMsg || errorMsg}</p>
     </div>
   )
 }
