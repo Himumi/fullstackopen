@@ -15,8 +15,12 @@ const createBlog = async (page, blog) => {
 const getButtonAndClick = async (page, prop) =>
   await page.getByRole('button', { name: prop }).click()
 
+const acceptWindowConfirm = (page) =>
+  page.on('dialog', async dialog => await dialog.accept())
+
 module.exports = { 
   loginWith,
   createBlog,
-  getButtonAndClick
+  getButtonAndClick,
+  acceptWindowConfirm
 }
