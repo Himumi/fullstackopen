@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -15,6 +15,8 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [successMsg, setSuccessMsg] = useState(null)
   const [errorMsg, setErrorMsg] = useState(null)
+
+  const BlogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs => {
@@ -81,6 +83,7 @@ const App = () => {
       setBlogs(sortedBlogs)
 
       setSuccessNotification(`Added ${blog.title} by ${blog.author}`, 3)
+      BlogFormRef.current.toggleVisibility()
     } catch (error) {
       const field = error.response.data.error.match(/`\w+`/)
       setErrorNotification(`Missing ${field}`, 3)
@@ -126,7 +129,7 @@ const App = () => {
       />
       {!user
         ? <LoginForm handleLogin={loginHandler} />
-        : <Main blogs={blogs} user={user} handleCreateBlog={createBlogHandler} handleLogout={logoutHandler} handleUpdateBlog={updateBlogHandler} handleRemoveBlog={deleteBlogHandler} />
+        : <Main ref={BlogFormRef} blogs={blogs} user={user} handleCreateBlog={createBlogHandler} handleLogout={logoutHandler} handleUpdateBlog={updateBlogHandler} handleRemoveBlog={deleteBlogHandler} />
       }
     </div>
   )
