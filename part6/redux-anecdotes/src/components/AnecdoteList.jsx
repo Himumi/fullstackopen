@@ -5,9 +5,22 @@ import Anecdote from "./Anecdote"
 const AnecdoteList = () => {
   const dispatch = useDispatch()
 
-  // Fetch Anecdotes from redux
   const anecdoteSorter = (a, b) => b.votes - a.votes
-  const anecdotes = useSelector(state => state.sort(anecdoteSorter))
+  const anecdotesSelector = ({ anecdotes, filter }) => {
+    // Sort anecdotes based on their votes
+    const sortedAnecdotes = anecdotes.sort(anecdoteSorter) 
+    
+    if (filter === '') {
+      return sortedAnecdotes
+    }
+
+    return sortedAnecdotes.filter(
+      a => a.content.toLowerCase().includes(filter)
+    )
+  }
+
+  // Fetch Anecdotes from redux
+  const anecdotes = useSelector(anecdotesSelector)
 
   const handleVote = (id) => () => dispatch(toggleVote(id))
 
