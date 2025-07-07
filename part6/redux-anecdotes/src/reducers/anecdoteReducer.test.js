@@ -27,4 +27,21 @@ describe('anecdote reducer', () => {
 
     expect(newState).toStrictEqual(expected)
   })
+
+  test('succeeds to return new state with action NEW_ANECDOTE', () => {
+    const state = []
+    const action = {
+      type: 'NEW_ANECDOTE',
+      payload: {
+        content: 'the anecdote testing content'
+      }
+    }
+
+    deepFreeze(state)
+
+    const newState = anecdoteReducer(state, action)
+
+    expect(newState).toHaveLength(1)
+    expect(newState[0].content).toBe(action.payload.content)
+  })
 })
