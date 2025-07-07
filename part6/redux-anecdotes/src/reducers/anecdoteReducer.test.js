@@ -1,5 +1,6 @@
 import deepFreeze from 'deep-freeze'
 import anecdoteReducer from './anecdoteReducer'
+import { toggleVote } from './anecdoteReducer'
 
 describe('anecdote reducer', () => {
   test('returns new state with action TOGGLE_VOTE', () => {
@@ -10,12 +11,7 @@ describe('anecdote reducer', () => {
         votes: 0
       }
     ]
-    const action = {
-      type: 'TOGGLE_VOTE',
-      payload: {
-        id: 1
-      }
-    }
+    const action = toggleVote(1)
 
     deepFreeze(state)
 
