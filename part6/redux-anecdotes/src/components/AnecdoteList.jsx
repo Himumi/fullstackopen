@@ -5,16 +5,12 @@ import Anecdote from "./Anecdote"
 const AnecdoteList = () => {
   const dispatch = useDispatch()
 
-  const anecdoteSorter = (a, b) => b.votes - a.votes
   const anecdotesSelector = ({ anecdotes, filter }) => {
-    // Sort anecdotes based on their votes
-    const sortedAnecdotes = anecdotes.sort(anecdoteSorter) 
-    
     if (filter === '') {
-      return sortedAnecdotes
+      return anecdotes
     }
 
-    return sortedAnecdotes.filter(
+    return anecdotes.filter(
       a => a.content.toLowerCase().includes(filter)
     )
   }
