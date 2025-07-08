@@ -1,6 +1,5 @@
 import deepFreeze from 'deep-freeze'
 import anecdoteReducer from './anecdoteReducer'
-import { toggleVote, newAnecdote } from './anecdoteReducer'
 
 describe('anecdote reducer', () => {
   test('returns new state with action toggleVote', () => {
@@ -37,5 +36,27 @@ describe('anecdote reducer', () => {
 
     expect(newState).toHaveLength(1)
     expect(newState[0].content).toBe(action.payload)
+  })
+
+  test('succeeds to set Anecdotes to redux store with setAnecdotes', () => {
+    const state = []
+    const action = {
+      type: 'anecdotes/setAnecdotes',
+      payload: [
+        {
+          content: "If it hurts, do it more often",
+          id: "47145",
+          votes: 0
+        }
+      ]
+    }
+
+    deepFreeze(state)
+
+    const newState = anecdoteReducer(state, action)
+    const contents = newState.map(a => a.content)
+
+    expect(newState).toHaveLength(1)
+    expect(contents).toContainEqual(action.payload[0].content)
   })
 })
