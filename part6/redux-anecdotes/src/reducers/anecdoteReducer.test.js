@@ -3,7 +3,7 @@ import anecdoteReducer from './anecdoteReducer'
 import { toggleVote, newAnecdote } from './anecdoteReducer'
 
 describe('anecdote reducer', () => {
-  test('returns new state with action TOGGLE_VOTE', () => {
+  test('returns new state with action toggleVote', () => {
     const state = [
       {
         content: 'the anecdote testing example',
@@ -11,28 +11,31 @@ describe('anecdote reducer', () => {
         votes: 0
       }
     ]
-    const action = toggleVote(1)
+    const action = {
+      type: 'anecdotes/toggleVote',
+      payload: 1
+    }
 
     deepFreeze(state)
 
     const newState = anecdoteReducer(state, action)
+    const anecdote = newState.find(a => a.id === action.payload)
 
-    const replaceAnecdote = a => a.id !== action.payload.id 
-      ? a : { ...a, votes: a.votes + 1}
-    const expected = state.map(replaceAnecdote)
-
-    expect(newState).toStrictEqual(expected)
+    expect(anecdote.votes).toBe(1)
   })
 
-  test('succeeds to return new state with action NEW_ANECDOTE', () => {
+  test('succeeds to return new state with action newAnecdote', () => {
     const state = []
-    const action = newAnecdote('the anecdote testing content')
+    const action = {
+      type: 'anecdotes/newAnecdote',
+      payload: 'the anecdote testing content'
+    }
 
     deepFreeze(state)
 
     const newState = anecdoteReducer(state, action)
 
     expect(newState).toHaveLength(1)
-    expect(newState[0].content).toBe(action.payload.content)
+    expect(newState[0].content).toBe(action.payload)
   })
 })
