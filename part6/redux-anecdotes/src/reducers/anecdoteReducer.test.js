@@ -27,7 +27,11 @@ describe('anecdote reducer', () => {
     const state = []
     const action = {
       type: 'anecdotes/newAnecdote',
-      payload: 'the anecdote testing content'
+      payload: {
+        content: 'the anecdote testing content',
+        votes: 0,
+        id: 1
+      } 
     }
 
     deepFreeze(state)
@@ -35,7 +39,7 @@ describe('anecdote reducer', () => {
     const newState = anecdoteReducer(state, action)
 
     expect(newState).toHaveLength(1)
-    expect(newState[0].content).toBe(action.payload)
+    expect(newState[0].content).toBe(action.payload.content)
   })
 
   test('succeeds to set Anecdotes to redux store with setAnecdotes', () => {
