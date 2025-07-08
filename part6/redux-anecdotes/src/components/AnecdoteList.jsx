@@ -17,12 +17,16 @@ const AnecdoteList = () => {
 
   // Fetch Anecdotes from redux
   const anecdotes = useSelector(anecdotesSelector)
+  
+  // Sort anecdotes based on their votes
+  const anecdoteSorter = (a, b) => b.votes - a.votes
+  const sortedAnecdotes = [...anecdotes].sort(anecdoteSorter)
 
   const handleVote = (id) => () => dispatch(toggleVote(id))
 
   return (
     <div>
-      {anecdotes.map(anecdote => 
+      {sortedAnecdotes.map(anecdote => 
         <Anecdote 
           key={anecdote.id}
           anecdote={anecdote}
