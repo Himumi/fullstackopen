@@ -15,4 +15,17 @@ describe('notification reducer', () => {
 
     expect(newState).toBe('notification')
   })
+
+  test('removes state with removeMessage', () => {
+    const state = 'notification'
+    const action = {
+      type: 'notification/removeMessage'
+    }
+
+    deepFreeze(state)
+
+    const newState = notificationReducer(state, action)
+
+    expect(newState).toBe('')
+  })
 })
