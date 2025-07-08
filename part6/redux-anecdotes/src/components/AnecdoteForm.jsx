@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux'
 import { newAnecdote } from '../reducers/anecdoteReducer.js'
-import { setMessage } from '../reducers/notificationReducer.js'
+import { setMessage, removeMessage } from '../reducers/notificationReducer.js'
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch()
@@ -15,6 +15,7 @@ const AnecdoteForm = () => {
     
     // Set notification message
     dispatch(setMessage(`Created ${content}`))
+    setTimeout(() => dispatch(removeMessage()), 5000)
   }
 
   return (
