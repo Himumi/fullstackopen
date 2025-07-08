@@ -23,10 +23,10 @@ describe('anecdote reducer', () => {
     expect(anecdote.votes).toBe(1)
   })
 
-  test('succeeds to return new state with action newAnecdote', () => {
+  test('succeeds to return new state with action appendAnecdote', () => {
     const state = []
     const action = {
-      type: 'anecdotes/newAnecdote',
+      type: 'anecdotes/appendAnecdote',
       payload: {
         content: 'the anecdote testing content',
         votes: 0,
