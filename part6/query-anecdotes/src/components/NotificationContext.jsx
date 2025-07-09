@@ -33,4 +33,18 @@ export const useNotificationDispatch = () => {
   return notificationAndDispatch[1]
 }
 
+const setMessage = message => new Object({
+  type: 'SET_MESSAGE',
+  payload: message
+})
+
+const removeMessage = () => new Object({
+  type: 'REMOVE_MESSAGE'
+})
+
+export const handleNotification = dispatch => (message, second) => {
+  dispatch(setMessage(message))
+  setTimeout(() => dispatch(removeMessage()), second * 1000)
+}
+
 export default NotificationContext
