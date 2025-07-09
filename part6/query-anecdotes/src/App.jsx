@@ -7,25 +7,31 @@ import Notification from './components/Notification'
 
 const App = () => {
   const queryclient = useQueryClient()
+
+  const dispatch = useNotificationDispatch()
+  const setNotification = handleNotification(dispatch)
+
   const appendUpdateAnecdote = updateAnecdote => {
     const anecdotes = queryclient.getQueryData(['anecdotes'])
     const updatedAnecdotes = anecdotes.map(
       a => a.id !== updateAnecdote.id ? a : updateAnecdote
     )
     queryclient.setQueryData(['anecdotes'], updatedAnecdotes)
+    // Display success message
+    setNotification(`You voted ${updateAnecdote.content}`, 5)
   }
+
   const updateAnecdoteMutation = useMutation({
     mutationFn: updateAnecdote,
     onSuccess: appendUpdateAnecdote 
   })
 
-  const dispatch = useNotificationDispatch()
-  const setNotification = handleNotification(dispatch)
-
   const handleVote = (anecdote) => {
-    updateAnecdoteMutation.mutate({ ...anecdote, votes: anecdote.votes + 1 })
+    updateAnecdoteMutation.mutate({ 
+      ...anecdote,
+      votes: anecdote.votes + 1 
+    })
     console.log('vote')
-    setNotification(`You voted ${anecdote.content}`, 5)
   }
 
   const result = useQuery({

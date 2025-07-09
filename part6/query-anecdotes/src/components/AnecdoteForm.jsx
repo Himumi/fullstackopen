@@ -4,16 +4,20 @@ import { useNotificationDispatch, handleNotification } from './NotificationConte
 
 const AnecdoteForm = () => {
   const queryClient = useQueryClient()
+
+  // notification dispatch 
+  const dispatch = useNotificationDispatch()
+  const setNotification = handleNotification(dispatch)
+
   const appendNewAnecdote = newAnecdote => {
     const anecdotes = queryClient.getQueryData(['anecdotes'])
     queryClient.setQueryData(
       ['anecdotes'],
       anecdotes.concat(newAnecdote)
     )
+    // Display success message
+    setNotification(`Created ${newAnecdote.content}`, 5)
   }
-
-  const dispatch = useNotificationDispatch()
-  const setNotification = handleNotification(dispatch)
 
   const newAnecdoteMutation = useMutation({
     mutationFn: createAnecdote,
@@ -27,8 +31,6 @@ const AnecdoteForm = () => {
 
     // Post anecdote to server
     newAnecdoteMutation.mutate({ content, votes: 0 })
-
-    setNotification(`Created ${content}`, 5)
     console.log('new anecdote')
   }
 
