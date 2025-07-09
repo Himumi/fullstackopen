@@ -21,9 +21,14 @@ const App = () => {
     setNotification(`You voted ${updateAnecdote.content}`, 5)
   }
 
+  const handleError = error => {
+    setNotification(error.response.data.error, 5)
+  }
+
   const updateAnecdoteMutation = useMutation({
     mutationFn: updateAnecdote,
-    onSuccess: appendUpdateAnecdote 
+    onSuccess: appendUpdateAnecdote,
+    onError: handleError
   })
 
   const handleVote = (anecdote) => {

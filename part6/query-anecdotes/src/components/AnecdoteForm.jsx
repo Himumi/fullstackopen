@@ -19,9 +19,14 @@ const AnecdoteForm = () => {
     setNotification(`Created ${newAnecdote.content}`, 5)
   }
 
+  const handleError = error => {
+    setNotification(error.response.data.error, 5)
+  }
+
   const newAnecdoteMutation = useMutation({
     mutationFn: createAnecdote,
     onSuccess: appendNewAnecdote,
+    onError: handleError
   })
 
   const onCreate = (event) => {
