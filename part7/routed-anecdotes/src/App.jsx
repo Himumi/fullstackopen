@@ -55,6 +55,7 @@ const App = () => {
     }
 
     setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
+    handleNotification(`You voted ${voted.content}`, 5)
   }
 
   // Look up specific anecdote
@@ -70,7 +71,7 @@ const App = () => {
       <Notification message={notification} />
 
       <Routes>
-        <Route path='/anecdotes/:id' element={<Anecdote anecdote={anecdote} handleVote={vote} />} />
+        <Route path='/anecdotes/:id' element={<Anecdote anecdote={anecdote} handleVote={() => vote(anecdote.id)} />} />
         <Route path='/' element={<AnecdoteList anecdotes={anecdotes} />} />
         <Route path='/create' element={<CreateNew addNew={addNew} handleNotification={handleNotification} />} />
         <Route path='/about' element={<About />} /> 

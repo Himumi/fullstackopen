@@ -1,4 +1,4 @@
-const Anecdote = ({ anecdote }) => {
+const Anecdote = ({ anecdote, handleVote }) => {
   const margin = {
     margin: '20px 0',
   }
@@ -15,7 +15,7 @@ const Anecdote = ({ anecdote }) => {
         <br />
         <span>
           {anecdote.votes}
-          <button>vote</button>
+          <button onClick={handleVote}>vote</button>
         </span>
       </div>
     </div>
