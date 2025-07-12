@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { updateBlog } from '../../reducers/blogs'
+import { updateBlog, removeBlog } from '../../reducers/blogs'
 import { setNotification } from '../../reducers/notification'
 
-const Blog = ({ blog, handleRemoveBlog }) => {
+const Blog = ({ blog }) => {
   const [visible, setVisible] = useState(false)
   const dispatch = useDispatch()
 
@@ -40,7 +40,20 @@ const Blog = ({ blog, handleRemoveBlog }) => {
     }
   }
 
-  const removeBlogHandler = () => handleRemoveBlog(blog)
+  const handleRemove = async () => {
+    try {
+      const confirm = window.confirm(
+        `Remove blog ${blog.title} by ${blog.author}`
+      )
+
+      if (confirm) {
+        dispatch(removeBlog(blog))
+        setSuccessNotification(`Removed ${blog.title}`, 3)
+      }
+    } catch (error) {
+      setErrorNotification('Failed to delete Blog', 3)
+    }
+  }
 
   const blogAuthor = visible ? '' : `by ${blog.author}`
   const blogTitle = `${blog.title} ${blogAuthor}`
@@ -63,7 +76,7 @@ const Blog = ({ blog, handleRemoveBlog }) => {
         <span>
           {blog.author} <br />
         </span>
-        <button onClick={removeBlogHandler} className="removeButton">
+        <button onClick={handleRemove} className="removeButton">
           remove
         </button>
       </div>

@@ -63,24 +63,6 @@ const App = () => {
     setSuccessNotification('Logged out', 3)
   }
 
-  const handleRemoveBlog = async (blogObject) => {
-    try {
-      const confirm = window.confirm(
-        `Remove blog ${blogObject.title} by ${blogObject.author}`
-      )
-
-      if (confirm) {
-        await blogService.remove(blogObject.id)
-
-        const updatedBlogs = blogs.filter((blog) => blog.id !== blogObject.id)
-        const sortedBlogs = sortBlogs(updatedBlogs)
-        setSuccessNotification(`Removed ${blogObject.title}`, 3)
-      }
-    } catch (error) {
-      setErrorNotification('Failed to delete Blog', 3)
-    }
-  }
-
   if (!user) {
     return <LoginForm handleLogin={handleLogin} />
   }
@@ -98,9 +80,7 @@ const App = () => {
         <Togglable textLabel="new blog" ref={BlogFormRef}>
           <BlogForm />
         </Togglable>
-        <Blogs
-          handleRemoveBlog={handleRemoveBlog}
-        />
+        <Blogs />
       </div>
 
     </div>
