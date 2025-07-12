@@ -5,7 +5,9 @@ import loginService from './services/login'
 
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
-import Main from './components/Main'
+import Togglable from './components/Togglable'
+import BlogForm from './components/blogs/BlogForm'
+import Blogs from './components/blogs/Blogs'
 
 const sortBlogs = (blogs) => blogs.sort((a, b) => b.likes - a.likes)
 
@@ -45,7 +47,7 @@ const App = () => {
   const setErrorNotification = setNotification(setErrorMsg)
 
   // login handler
-  const loginHandler = async (loginInfo) => {
+  const handleLogin = async (loginInfo) => {
     try {
       // login user
       const user = await loginService.login(loginInfo)
@@ -62,7 +64,7 @@ const App = () => {
   }
 
   // logout handler
-  const logoutHandler = () => {
+  const handleLogout = () => {
     // delete all user information from app
     setUser(null)
     window.localStorage.removeItem('loggedBlogAppUser')
@@ -72,7 +74,7 @@ const App = () => {
   }
 
   // create a new blog handler
-  const createBlogHandler = async (blogObject) => {
+  const handleCreateBlog = async (blogObject) => {
     try {
       const blog = await blogService.create(blogObject)
       const sortedBlogs = sortBlogs(blogs.concat(blog))
@@ -86,7 +88,7 @@ const App = () => {
     }
   }
 
-  const updateBlogHandler = async (blogObject) => {
+  const handleUpdateBlog = async (blogObject) => {
     try {
       const blog = await blogService.update(blogObject)
 
@@ -99,7 +101,7 @@ const App = () => {
     }
   }
 
-  const deleteBlogHandler = async (blogObject) => {
+  const handleRemoveBlog = async (blogObject) => {
     try {
       const confirm = window.confirm(
         `Remove blog ${blogObject.title} by ${blogObject.author}`
@@ -117,22 +119,30 @@ const App = () => {
     }
   }
 
+  if (!user) {
+    return <LoginForm handleLogin={handleLogin} />
+  }
+
   return (
     <div>
       <Notification errorMsg={errorMsg} successMsg={successMsg} />
-      {!user ? (
-        <LoginForm handleLogin={loginHandler} />
-      ) : (
-        <Main
-          ref={BlogFormRef}
+      
+      <div>
+        <h2>blogs</h2>
+        <div>
+          <span>{user.name} logged in</span>
+          <button onClick={handleLogout}>logout</button>
+        </div>
+        <Togglable textLabel="new blog" ref={BlogFormRef}>
+          <BlogForm handleCreateBlog={handleCreateBlog} />
+        </Togglable>
+        <Blogs
+          handleUpdateBlog={handleUpdateBlog}
+          handleRemoveBlog={handleRemoveBlog}
           blogs={blogs}
-          user={user}
-          handleCreateBlog={createBlogHandler}
-          handleLogout={logoutHandler}
-          handleUpdateBlog={updateBlogHandler}
-          handleRemoveBlog={deleteBlogHandler}
         />
-      )}
+      </div>
+
     </div>
   )
 }
