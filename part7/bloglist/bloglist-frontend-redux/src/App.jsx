@@ -63,21 +63,6 @@ const App = () => {
     setSuccessNotification('Logged out', 3)
   }
 
-  // create a new blog handler
-  const handleCreateBlog = async (blogObject) => {
-    try {
-      const blog = await blogService.create(blogObject)
-      const sortedBlogs = sortBlogs(blogs.concat(blog))
-      setBlogs(sortedBlogs)
-
-      setSuccessNotification(`Added ${blog.title} by ${blog.author}`, 3)
-      BlogFormRef.current.toggleVisibility()
-    } catch (error) {
-      const field = error.response.data.error.match(/`\w+`/)
-      setErrorNotification(`Missing ${field}`, 3)
-    }
-  }
-
   const handleUpdateBlog = async (blogObject) => {
     try {
       const blog = await blogService.update(blogObject)
@@ -124,7 +109,7 @@ const App = () => {
           <button onClick={handleLogout}>logout</button>
         </div>
         <Togglable textLabel="new blog" ref={BlogFormRef}>
-          <BlogForm handleCreateBlog={handleCreateBlog} />
+          <BlogForm />
         </Togglable>
         <Blogs
           handleUpdateBlog={handleUpdateBlog}

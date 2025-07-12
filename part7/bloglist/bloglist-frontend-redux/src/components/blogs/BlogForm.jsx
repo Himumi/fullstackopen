@@ -1,10 +1,14 @@
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { createNewBlog } from '../../reducers/blogs'
+import { setNotification } from '../../reducers/notification'
 import helper from '../../helper/helper'
 
-const BlogForm = ({ handleCreateBlog }) => {
+const BlogForm = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const dispatch = useDispatch()
 
   const titleHandler = helper.inputOnChangeHandler(setTitle)
   const authorHandler = helper.inputOnChangeHandler(setAuthor)
@@ -12,20 +16,32 @@ const BlogForm = ({ handleCreateBlog }) => {
 
   const setHooks = helper.setHooksValue(setTitle, setAuthor, setUrl)
 
-  const createBlogHandler = (event) => {
+  const setNotificationStatus = status => {
+    return (message, second) => 
+      dispatch(setNotification(status, message, second))
+  } 
+
+  const setSuccessNotification = setNotificationStatus('success')
+  const setErrorNotification = setNotificationStatus('error')
+
+  const handleCreate = async event => {
     event.preventDefault()
-    handleCreateBlog({
-      title,
-      author,
-      url
-    })
+    try {
+      dispatch(createNewBlog({
+        title, author, url
+      }))
+      setSuccessNotification(`Added ${title} by ${author}`, 3)
+    } catch (error) {
+      const field = error.response.data.error.match(/`\w+`/)
+      setErrorNotification(`Missing ${field}`, 3)
+    }
     setHooks('')
   }
 
   return (
     <div>
       <h2>create new</h2>
-      <form onSubmit={createBlogHandler}>
+      <form onSubmit={handleCreate}>
         <div>
           title:
           <input
