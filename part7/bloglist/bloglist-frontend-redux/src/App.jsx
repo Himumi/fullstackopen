@@ -9,14 +9,14 @@ import Togglable from './components/Togglable'
 import BlogForm from './components/blogs/BlogForm'
 import Blogs from './components/blogs/Blogs'
 
+import { useDispatch } from 'react-redux'
+import { setNotification } from './reducers/notification'
+
 const sortBlogs = (blogs) => blogs.sort((a, b) => b.likes - a.likes)
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [successMsg, setSuccessMsg] = useState(null)
-  const [errorMsg, setErrorMsg] = useState(null)
-
   const BlogFormRef = useRef()
 
   useEffect(() => {
@@ -35,16 +35,14 @@ const App = () => {
     }
   }, [])
 
-  // notification handlers
-  const setNotification = (func) => {
-    return (message, time = 1) => {
-      func.call(null, message)
-      setTimeout(() => func.call(null, null), time * 1000)
-    }
-  }
+  const dispatch = useDispatch()
+  const setNotificationStatus = status => {
+    return (message, second) => 
+      dispatch(setNotification(status, message, second))
+  } 
 
-  const setSuccessNotification = setNotification(setSuccessMsg)
-  const setErrorNotification = setNotification(setErrorMsg)
+  const setSuccessNotification = setNotificationStatus('success')
+  const setErrorNotification = setNotificationStatus('error')
 
   // login handler
   const handleLogin = async (loginInfo) => {
@@ -95,6 +93,7 @@ const App = () => {
       const updatedBlogs = blogs.map((b) => (b.id === blog.id ? blog : b))
       const sortedBlogs = sortBlogs(updatedBlogs)
       setBlogs(sortedBlogs)
+      setSuccessNotification(`Liked ${blog.title}`, 3)
     } catch (error) {
       console.log(error)
       setErrorNotification('failed to add blog', 3)
@@ -113,6 +112,7 @@ const App = () => {
         const updatedBlogs = blogs.filter((blog) => blog.id !== blogObject.id)
         const sortedBlogs = sortBlogs(updatedBlogs)
         setBlogs(sortedBlogs)
+        setSuccessNotification(`Removed ${blogObject.title}`, 3)
       }
     } catch (error) {
       setErrorNotification('Failed to delete Blog', 3)
@@ -125,7 +125,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification errorMsg={errorMsg} successMsg={successMsg} />
+      <Notification />
       
       <div>
         <h2>blogs</h2>
