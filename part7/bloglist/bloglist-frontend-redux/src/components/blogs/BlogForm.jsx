@@ -1,28 +1,25 @@
 import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { createNewBlog } from '../../reducers/blogs'
-import { setNotification } from '../../reducers/notification'
 import helper from '../../helper/helper'
+
+import useNotification from '../../hooks/useNotification'
 
 const BlogForm = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
   const dispatch = useDispatch()
+  const {
+    setSuccessNotification,
+    setErrorNotification
+  } = useNotification()
 
   const titleHandler = helper.inputOnChangeHandler(setTitle)
   const authorHandler = helper.inputOnChangeHandler(setAuthor)
   const urlHandler = helper.inputOnChangeHandler(setUrl)
 
   const setHooks = helper.setHooksValue(setTitle, setAuthor, setUrl)
-
-  const setNotificationStatus = status => {
-    return (message, second) => 
-      dispatch(setNotification(status, message, second))
-  } 
-
-  const setSuccessNotification = setNotificationStatus('success')
-  const setErrorNotification = setNotificationStatus('error')
 
   const handleCreate = async event => {
     event.preventDefault()

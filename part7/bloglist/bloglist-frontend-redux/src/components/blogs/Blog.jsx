@@ -2,19 +2,15 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { updateBlog, removeBlog } from '../../reducers/blogs'
-import { setNotification } from '../../reducers/notification'
+import useNotification from '../../hooks/useNotification'
 
 const Blog = ({ blog }) => {
   const [visible, setVisible] = useState(false)
   const dispatch = useDispatch()
-
-  const setNotificationStatus = status => {
-    return (message, second) => 
-      dispatch(setNotification(status, message, second))
-  } 
-
-  const setSuccessNotification = setNotificationStatus('success')
-  const setErrorNotification = setNotificationStatus('error')
+  const {
+    setSuccessNotification,
+    setErrorNotification
+  } = useNotification()
 
   const showWhenVisible = { display: visible ? '' : 'none' }
 

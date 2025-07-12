@@ -9,13 +9,16 @@ import Togglable from './components/Togglable'
 import BlogForm from './components/blogs/BlogForm'
 import Blogs from './components/blogs/Blogs'
 
-import { useDispatch } from 'react-redux'
-import { setNotification } from './reducers/notification'
+import useNotification from './hooks/useNotification'
 
 const sortBlogs = (blogs) => blogs.sort((a, b) => b.likes - a.likes)
 
 const App = () => {
   const [user, setUser] = useState(null)
+  const {
+    setSuccessNotification,
+    setErrorNotification
+  } = useNotification()
   const BlogFormRef = useRef()
 
   useEffect(() => {
@@ -26,15 +29,6 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
-
-  const dispatch = useDispatch()
-  const setNotificationStatus = status => {
-    return (message, second) => 
-      dispatch(setNotification(status, message, second))
-  } 
-
-  const setSuccessNotification = setNotificationStatus('success')
-  const setErrorNotification = setNotificationStatus('error')
 
   // login handler
   const handleLogin = async (loginInfo) => {
