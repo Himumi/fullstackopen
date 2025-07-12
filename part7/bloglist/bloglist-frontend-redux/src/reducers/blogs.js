@@ -32,4 +32,11 @@ export const initializeBlogs = () => {
   }
 }
 
+export const createNewBlog = blog => {
+  return async dispatch => {
+    const createdBlog = await blogServices.create(blog)
+    dispatch(append(createdBlog))
+  }
+}
+
 export default blogsSlice.reducer
