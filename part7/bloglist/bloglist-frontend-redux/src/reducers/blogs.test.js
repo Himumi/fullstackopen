@@ -46,4 +46,26 @@ describe('Blogs reducer', () => {
 
     expect(newState[0]).toStrictEqual(action.payload)
   })
+
+  test('succeeds removing blog with blogs/remove', () => {
+    const state = [
+      {
+        title: 'title',
+        author: 'author',
+        url: 'url',
+        id: 1,
+        likes: 0,
+      }
+    ]
+    const action = {
+      type: 'blogs/remove',
+      payload: 1
+    }
+
+    deepFreeze(state)
+
+    const newState = reducer(state, action)
+
+    expect(newState).toHaveLength(0)
+  })
 })
