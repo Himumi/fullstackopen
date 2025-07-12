@@ -39,4 +39,11 @@ export const createNewBlog = blog => {
   }
 }
 
+export const updateBlog = blog => {
+  return async dispatch => {
+    const updatedBlog = await blogServices.update(blog)
+    dispatch(update(updatedBlog))
+  }
+}
+
 export default blogsSlice.reducer
