@@ -1,17 +1,17 @@
-require('dotenv').config();
+require('dotenv').config()
 
-const nodeEnv = process.env.NODE_ENV;
+const nodeEnv = process.env.NODE_ENV
 
 const info = (...params) => {
   if (nodeEnv !== 'test') {
-    console.log(...params);
+    console.log(...params)
   }
-};
+}
 
 const error = (...params) => {
   if (nodeEnv !== 'test') {
     console.error(...params)
   }
-};
+}
 
-module.exports = { info, error };
+module.exports = { info, error }

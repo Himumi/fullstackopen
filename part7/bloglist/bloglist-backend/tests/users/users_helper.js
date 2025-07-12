@@ -1,5 +1,5 @@
-const User = require('../../models/user');
-const bcrypt = require('bcrypt');
+const User = require('../../models/user')
+const bcrypt = require('bcrypt')
 
 const initialUsers = [
   {
@@ -17,35 +17,35 @@ const initialUsers = [
     name: 'Takahashi',
     passwordHash: bcrypt.hashSync('naisho', 10)
   }
-];
+]
 
 const rootLogin = {
   username: 'root',
   password: 'rahasia'
-};
+}
 
-let token = null;
+let token = null
 
-const setToken  = text => {
-  token = text;
-};
+const setToken = (text) => {
+  token = text
+}
 
-const getToken = () => token;
+const getToken = () => token
 
 const getUsers = async () => {
-  const users = await User.find({});
-  return users.map(u => u.toJSON());
-};
+  const users = await User.find({})
+  return users.map((u) => u.toJSON())
+}
 
 const getUserId = async () => {
-  const user = await User.findOne({ username: 'erliansyah' });
-  return user._id.toString();
-};
+  const user = await User.findOne({ username: 'erliansyah' })
+  return user._id.toString()
+}
 
 const resetDB = async () => {
-  await User.deleteMany({});
-  await User.insertMany(initialUsers);
-};
+  await User.deleteMany({})
+  await User.insertMany(initialUsers)
+}
 
 module.exports = {
   getUsers,
@@ -54,5 +54,5 @@ module.exports = {
   resetDB,
   rootLogin,
   setToken,
-  getToken,
-};
+  getToken
+}
