@@ -1,6 +1,16 @@
+import { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import Blog from './Blog'
+import { initializeBlogs } from '../../reducers/blogs'
 
-const Blogs = ({ blogs, handleUpdateBlog, handleRemoveBlog }) => {
+const Blogs = ({ handleUpdateBlog, handleRemoveBlog }) => {
+  const dispatch = useDispatch()
+  const blogs = useSelector(state => state.blogs)
+
+  useEffect(() => {
+    dispatch(initializeBlogs())
+  }, []) 
+  
   return (
     <div>
       {blogs.map((blog) => (

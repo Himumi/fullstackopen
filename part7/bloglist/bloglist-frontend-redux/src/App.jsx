@@ -15,16 +15,8 @@ import { setNotification } from './reducers/notification'
 const sortBlogs = (blogs) => blogs.sort((a, b) => b.likes - a.likes)
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const BlogFormRef = useRef()
-
-  useEffect(() => {
-    blogService.getAll().then((blogs) => {
-      const sortedBlogs = sortBlogs(blogs)
-      setBlogs(sortedBlogs)
-    })
-  }, [])
 
   useEffect(() => {
     const loggedUser = window.localStorage.getItem('loggedBlogAppUser')
@@ -92,7 +84,6 @@ const App = () => {
 
       const updatedBlogs = blogs.map((b) => (b.id === blog.id ? blog : b))
       const sortedBlogs = sortBlogs(updatedBlogs)
-      setBlogs(sortedBlogs)
       setSuccessNotification(`Liked ${blog.title}`, 3)
     } catch (error) {
       console.log(error)
@@ -111,7 +102,6 @@ const App = () => {
 
         const updatedBlogs = blogs.filter((blog) => blog.id !== blogObject.id)
         const sortedBlogs = sortBlogs(updatedBlogs)
-        setBlogs(sortedBlogs)
         setSuccessNotification(`Removed ${blogObject.title}`, 3)
       }
     } catch (error) {
@@ -139,7 +129,6 @@ const App = () => {
         <Blogs
           handleUpdateBlog={handleUpdateBlog}
           handleRemoveBlog={handleRemoveBlog}
-          blogs={blogs}
         />
       </div>
 
