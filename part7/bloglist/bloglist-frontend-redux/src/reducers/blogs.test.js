@@ -21,4 +21,29 @@ describe('Blogs reducer', () => {
 
     expect(newState[0]).toStrictEqual(action.payload)
   })
+
+  test('returns updated blogs with blogs/update', () => {
+    const state = [
+      {
+        title: 'title',
+        author: 'author',
+        url: 'url',
+        id: 1,
+        likes: 0,
+      }
+    ]
+    const action = {
+      type: 'blogs/update',
+      payload: {
+        ...state[0],
+        likes: state[0].likes + 1
+      }
+    }
+
+    deepFreeze(state)
+
+    const newState = reducer(state, action)
+
+    expect(newState[0]).toStrictEqual(action.payload)
+  })
 })
