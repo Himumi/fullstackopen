@@ -7,7 +7,7 @@ const Notification = ({ errorMsg, successMsg }) => {
     border: `2px solid ${!errorMsg ? 'green' : 'red'}`,
     color: !errorMsg ? 'green' : 'red',
     width: '100%',
-    fontSize: '16px',
+    fontSize: '16px'
   }
 
   return (

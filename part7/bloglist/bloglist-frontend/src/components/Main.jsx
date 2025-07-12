@@ -1,5 +1,5 @@
-import { forwardRef } from 'react';
-import PropTypes from 'prop-types';
+import { forwardRef } from 'react'
+import PropTypes from 'prop-types'
 import Blogs from './blogs/Blogs'
 import BlogForm from './blogs/BlogForm'
 import Togglable from './Togglable'
@@ -22,7 +22,7 @@ const Main = forwardRef((props, ref) => {
         <span>{user.name} logged in</span>
         <button onClick={handleLogout}>logout</button>
       </div>
-      <Togglable textLabel='new blog' ref={ref}>
+      <Togglable textLabel="new blog" ref={ref}>
         <BlogForm handleCreateBlog={handleCreateBlog} />
       </Togglable>
       <Blogs
@@ -40,7 +40,7 @@ Main.propTypes = {
   handleLogout: PropTypes.func.isRequired,
   handleCreateBlog: PropTypes.func.isRequired,
   handleUpdateBlog: PropTypes.func.isRequired,
-  handleRemoveBlog: PropTypes.func.isRequired,
+  handleRemoveBlog: PropTypes.func.isRequired
 }
 
 export default Main

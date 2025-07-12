@@ -10,14 +10,14 @@ const BlogForm = ({ handleCreateBlog }) => {
   const authorHandler = helper.inputOnChangeHandler(setAuthor)
   const urlHandler = helper.inputOnChangeHandler(setUrl)
 
-  const setHooks = helper.setHooksValue(
-    setTitle, setAuthor, setUrl
-  )
+  const setHooks = helper.setHooksValue(setTitle, setAuthor, setUrl)
 
   const createBlogHandler = (event) => {
     event.preventDefault()
     handleCreateBlog({
-      title, author, url
+      title,
+      author,
+      url
     })
     setHooks('')
   }
@@ -29,9 +29,9 @@ const BlogForm = ({ handleCreateBlog }) => {
         <div>
           title:
           <input
-            data-testid='titleInput'
-            type='text'
-            name='Title'
+            data-testid="titleInput"
+            type="text"
+            name="Title"
             value={title}
             onChange={titleHandler}
           />
@@ -39,9 +39,9 @@ const BlogForm = ({ handleCreateBlog }) => {
         <div>
           author:
           <input
-            data-testid='authorInput'
-            type='text'
-            name='Author'
+            data-testid="authorInput"
+            type="text"
+            name="Author"
             value={author}
             onChange={authorHandler}
           />
@@ -49,15 +49,15 @@ const BlogForm = ({ handleCreateBlog }) => {
         <div>
           url:
           <input
-            data-testid='urlInput'
-            type='text'
-            name='Url'
+            data-testid="urlInput"
+            type="text"
+            name="Url"
             value={url}
             onChange={urlHandler}
           />
         </div>
         <div>
-          <button type='submit'>create</button>
+          <button type="submit">create</button>
         </div>
       </form>
     </div>

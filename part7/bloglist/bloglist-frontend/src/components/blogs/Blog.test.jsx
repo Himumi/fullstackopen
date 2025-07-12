@@ -19,20 +19,19 @@ describe('<Note />', () => {
   })
 
   // helpers
-  const selectByQuery = (query, container) =>
-    container.querySelector(query)
+  const selectByQuery = (query, container) => container.querySelector(query)
 
-  const expectToHaveStyle = (style, target) =>
-    expect(target).toHaveStyle(style)
+  const expectToHaveStyle = (style, target) => expect(target).toHaveStyle(style)
   const expectToNotHaveStyle = (style, target) =>
     expect(target).not.toHaveStyle(style)
   const expectToHaveLength = (length, target) =>
     expect(target).toHaveLength(length)
 
-  const userHelper = () => new Object({
-    user: userEvent.setup(),
-    mocker: vi.fn()
-  })
+  const userHelper = () =>
+    new Object({
+      user: userEvent.setup(),
+      mocker: vi.fn()
+    })
 
   test('renders content', async () => {
     await screen.findByText('Blog title by Blog author')
@@ -59,9 +58,7 @@ describe('<Note />', () => {
 
   test('calls update blog function if user clicks like button twice', async () => {
     const { user, mocker } = userHelper()
-    const { container } = render(
-      <Blog blog={blog} handleUpdateBlog={mocker} />
-    )
+    const { container } = render(<Blog blog={blog} handleUpdateBlog={mocker} />)
 
     const viewButton = selectByQuery('.hiddenButton', container)
     await user.click(viewButton)
@@ -75,9 +72,7 @@ describe('<Note />', () => {
 
   test('calls remove blog handler if user clicks remove button', async () => {
     const { user, mocker } = userHelper()
-    const { container } = render(
-      <Blog blog={blog} handleRemoveBlog={mocker} />
-    )
+    const { container } = render(<Blog blog={blog} handleRemoveBlog={mocker} />)
 
     const viewButton = selectByQuery('.viewButton', container)
     await user.click(viewButton)

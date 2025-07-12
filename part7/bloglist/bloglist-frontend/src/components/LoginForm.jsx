@@ -7,14 +7,13 @@ const LoginForm = ({ handleLogin }) => {
 
   const usernameChangeHandler = helper.inputOnChangeHandler(setUsername)
   const passwordChangeHandler = helper.inputOnChangeHandler(setPassword)
-  const setHooks = helper.setHooksValue(
-    setUsername, setPassword
-  )
+  const setHooks = helper.setHooksValue(setUsername, setPassword)
 
   const loginHandler = (event) => {
     event.preventDefault()
     handleLogin({
-      username, password
+      username,
+      password
     })
 
     setHooks('')
@@ -29,10 +28,10 @@ const LoginForm = ({ handleLogin }) => {
         <div>
           username
           <input
-            data-testid='username'
-            className='username'
-            type='text'
-            name='Username'
+            data-testid="username"
+            className="username"
+            type="text"
+            name="Username"
             value={username}
             onChange={usernameChangeHandler}
           />
@@ -40,16 +39,18 @@ const LoginForm = ({ handleLogin }) => {
         <div>
           password
           <input
-            data-testid='password'
-            className='password'
-            type='password'
-            name='Password'
+            data-testid="password"
+            className="password"
+            type="password"
+            name="Password"
             value={password}
             onChange={passwordChangeHandler}
           />
         </div>
         <div>
-          <button type='submit' className='loginButton'>login</button>
+          <button type="submit" className="loginButton">
+            login
+          </button>
         </div>
       </form>
     </div>

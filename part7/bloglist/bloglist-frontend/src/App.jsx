@@ -7,8 +7,7 @@ import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import Main from './components/Main'
 
-const sortBlogs = (blogs) =>
-  blogs.sort((a, b) => b.likes - a.likes)
+const sortBlogs = (blogs) => blogs.sort((a, b) => b.likes - a.likes)
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -19,7 +18,7 @@ const App = () => {
   const BlogFormRef = useRef()
 
   useEffect(() => {
-    blogService.getAll().then(blogs => {
+    blogService.getAll().then((blogs) => {
       const sortedBlogs = sortBlogs(blogs)
       setBlogs(sortedBlogs)
     })
@@ -38,7 +37,7 @@ const App = () => {
   const setNotification = (func) => {
     return (message, time = 1) => {
       func.call(null, message)
-      setTimeout(() => func.call(null, null), time*1000)
+      setTimeout(() => func.call(null, null), time * 1000)
     }
   }
 
@@ -49,13 +48,10 @@ const App = () => {
   const loginHandler = async (loginInfo) => {
     try {
       // login user
-      const user = await loginService.login(loginInfo) 
+      const user = await loginService.login(loginInfo)
 
       // add user information to app
-      window.localStorage.setItem(
-        'loggedBlogAppUser',
-        JSON.stringify(user)
-      )
+      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
 
@@ -94,7 +90,7 @@ const App = () => {
     try {
       const blog = await blogService.update(blogObject)
 
-      const updatedBlogs = blogs.map(b => b.id === blog.id ? blog : b)
+      const updatedBlogs = blogs.map((b) => (b.id === blog.id ? blog : b))
       const sortedBlogs = sortBlogs(updatedBlogs)
       setBlogs(sortedBlogs)
     } catch (error) {
@@ -112,7 +108,7 @@ const App = () => {
       if (confirm) {
         await blogService.remove(blogObject.id)
 
-        const updatedBlogs = blogs.filter(blog => blog.id !== blogObject.id)
+        const updatedBlogs = blogs.filter((blog) => blog.id !== blogObject.id)
         const sortedBlogs = sortBlogs(updatedBlogs)
         setBlogs(sortedBlogs)
       }
@@ -123,14 +119,20 @@ const App = () => {
 
   return (
     <div>
-      <Notification
-        errorMsg={errorMsg}
-        successMsg={successMsg}
-      />
-      {!user
-        ? <LoginForm handleLogin={loginHandler} />
-        : <Main ref={BlogFormRef} blogs={blogs} user={user} handleCreateBlog={createBlogHandler} handleLogout={logoutHandler} handleUpdateBlog={updateBlogHandler} handleRemoveBlog={deleteBlogHandler} />
-      }
+      <Notification errorMsg={errorMsg} successMsg={successMsg} />
+      {!user ? (
+        <LoginForm handleLogin={loginHandler} />
+      ) : (
+        <Main
+          ref={BlogFormRef}
+          blogs={blogs}
+          user={user}
+          handleCreateBlog={createBlogHandler}
+          handleLogout={logoutHandler}
+          handleUpdateBlog={updateBlogHandler}
+          handleRemoveBlog={deleteBlogHandler}
+        />
+      )}
     </div>
   )
 }

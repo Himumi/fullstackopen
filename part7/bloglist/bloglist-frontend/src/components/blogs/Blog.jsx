@@ -1,10 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({
-  blog,
-  handleUpdateBlog,
-  handleRemoveBlog
-}) => {
+const Blog = ({ blog, handleUpdateBlog, handleRemoveBlog }) => {
   const [visible, setVisible] = useState(false)
 
   const showWhenVisible = { display: visible ? '' : 'none' }
@@ -15,7 +11,7 @@ const Blog = ({
     paddingLeft: 2,
     border: 'solid',
     borderWidth: 1,
-    marginBottom: 5,
+    marginBottom: 5
   }
 
   const toggleVisibility = () => setVisible(!visible)
@@ -24,7 +20,7 @@ const Blog = ({
     const updateBlog = {
       ...blog,
       likes: blog.likes + 1,
-      user: blog.user.id,
+      user: blog.user.id
     }
     handleUpdateBlog(updateBlog)
   }
@@ -35,15 +31,26 @@ const Blog = ({
   const blogTitle = `${blog.title} ${blogAuthor}`
 
   return (
-    <div style={blogStyle} className='blog'>
+    <div style={blogStyle} className="blog">
       <span>{blogTitle}</span>
-      <button onClick={toggleVisibility} className='hiddenButton'>{visible ? 'hide' : 'view'}</button>
-      <div style={showWhenVisible} className='hiddenContent'>
-        <span>{blog.url} <br /></span>
+      <button onClick={toggleVisibility} className="hiddenButton">
+        {visible ? 'hide' : 'view'}
+      </button>
+      <div style={showWhenVisible} className="hiddenContent">
+        <span>
+          {blog.url} <br />
+        </span>
         <span>likes {blog.likes}</span>
-        <button onClick={updateLikeHandler} className='likeButton'>like</button> <br />
-        <span>{blog.author} <br /></span>
-        <button onClick={removeBlogHandler} className='removeButton'>remove</button>
+        <button onClick={updateLikeHandler} className="likeButton">
+          like
+        </button>{' '}
+        <br />
+        <span>
+          {blog.author} <br />
+        </span>
+        <button onClick={removeBlogHandler} className="removeButton">
+          remove
+        </button>
       </div>
     </div>
   )
