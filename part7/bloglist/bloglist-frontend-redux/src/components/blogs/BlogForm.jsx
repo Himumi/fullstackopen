@@ -4,35 +4,39 @@ import { createNewBlog } from '../../reducers/blogs'
 import helper from '../../helper/helper'
 
 import useNotification from '../../hooks/useNotification'
+import useInput from '../../hooks/useInput'
 
 const BlogForm = () => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-  const dispatch = useDispatch()
+  const {reset: resetTitle, ...title} = useInput('text')
+  const {reset: resetAuthor, ...author} = useInput('text')
+  const {reset: resetUrl, ...url} = useInput('text')
   const {
     setSuccessNotification,
     setErrorNotification
   } = useNotification()
 
-  const titleHandler = helper.inputOnChangeHandler(setTitle)
-  const authorHandler = helper.inputOnChangeHandler(setAuthor)
-  const urlHandler = helper.inputOnChangeHandler(setUrl)
+  const dispatch = useDispatch()
 
-  const setHooks = helper.setHooksValue(setTitle, setAuthor, setUrl)
+  const resetValues = () => {
+    resetTitle()
+    resetAuthor()
+    resetUrl()
+  }
 
   const handleCreate = async event => {
     event.preventDefault()
     try {
       dispatch(createNewBlog({
-        title, author, url
+        title: title.value,
+        author: author.value,
+        url: url.value
       }))
       setSuccessNotification(`Added ${title} by ${author}`, 3)
     } catch (error) {
       const field = error.response.data.error.match(/`\w+`/)
       setErrorNotification(`Missing ${field}`, 3)
     }
-    setHooks('')
+    resetValues()
   }
 
   return (
@@ -43,30 +47,24 @@ const BlogForm = () => {
           title:
           <input
             data-testid="titleInput"
-            type="text"
             name="Title"
-            value={title}
-            onChange={titleHandler}
+            {...title}
           />
         </div>
         <div>
           author:
           <input
             data-testid="authorInput"
-            type="text"
             name="Author"
-            value={author}
-            onChange={authorHandler}
+            {...author}
           />
         </div>
         <div>
           url:
           <input
             data-testid="urlInput"
-            type="text"
             name="Url"
-            value={url}
-            onChange={urlHandler}
+            {...url}
           />
         </div>
         <div>
