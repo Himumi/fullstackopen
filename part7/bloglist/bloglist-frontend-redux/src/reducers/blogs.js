@@ -15,9 +15,12 @@ const blogsSlice = createSlice({
     remove(state, action) {
       const id = action.payload
       return state.filter(b => b.id !== id)
-    }
+    },
+    setBlogs(state, action) {
+      return action.payload
+    } 
   }
 })
 
-const { create, update, remove } = blogsSlice.actions
+const { create, update, remove, setBlogs } = blogsSlice.actions
 export default blogsSlice.reducer
