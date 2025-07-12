@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "lodash": "^4.17.21",
+    "prettier": "^3.6.2",
     "supertest": "^7.1.1"
   }
 }
