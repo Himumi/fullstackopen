@@ -2,10 +2,10 @@ import deepFreeze from 'deep-freeze'
 import reducer from './blogs'
 
 describe('Blogs reducer', () => {
-  test('returns a new blog with blogs/create', () => {
+  test('returns a new blog with blogs/append', () => {
     const state = []
     const action = {
-      type: 'blogs/create',
+      type: 'blogs/append',
       payload: {
         title: 'title',
         author: 'author',
