@@ -1,7 +1,20 @@
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
 
-const Blog = ({ blog, handleUpdateBlog, handleRemoveBlog }) => {
+import { updateBlog } from '../../reducers/blogs'
+import { setNotification } from '../../reducers/notification'
+
+const Blog = ({ blog, handleRemoveBlog }) => {
   const [visible, setVisible] = useState(false)
+  const dispatch = useDispatch()
+
+  const setNotificationStatus = status => {
+    return (message, second) => 
+      dispatch(setNotification(status, message, second))
+  } 
+
+  const setSuccessNotification = setNotificationStatus('success')
+  const setErrorNotification = setNotificationStatus('error')
 
   const showWhenVisible = { display: visible ? '' : 'none' }
 
@@ -16,13 +29,15 @@ const Blog = ({ blog, handleUpdateBlog, handleRemoveBlog }) => {
 
   const toggleVisibility = () => setVisible(!visible)
 
-  const updateLikeHandler = () => {
-    const updateBlog = {
-      ...blog,
-      likes: blog.likes + 1,
-      user: blog.user.id
+  const handleUpdate = async () => {
+    try {
+      dispatch(updateBlog({
+        ...blog, likes: blog.likes + 1
+      })) 
+      setSuccessNotification(`Liked ${blog.title}`, 3)
+    } catch (error) {
+      setErrorNotification('failed to add blog', 3)
     }
-    handleUpdateBlog(updateBlog)
   }
 
   const removeBlogHandler = () => handleRemoveBlog(blog)
@@ -41,7 +56,7 @@ const Blog = ({ blog, handleUpdateBlog, handleRemoveBlog }) => {
           {blog.url} <br />
         </span>
         <span>likes {blog.likes}</span>
-        <button onClick={updateLikeHandler} className="likeButton">
+        <button onClick={handleUpdate} className="likeButton">
           like
         </button>{' '}
         <br />
