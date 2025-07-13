@@ -2,6 +2,10 @@ import { render, screen } from '@testing-library/react'
 import Blog from './Blog'
 import { beforeEach, describe, expect, test } from 'vitest'
 import userEvent from '@testing-library/user-event'
+import { ReducerProvider } from '../../reducers/ReducerContext'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
 
 describe('<Note />', () => {
   let container
@@ -15,7 +19,13 @@ describe('<Note />', () => {
   }
 
   beforeEach(() => {
-    container = render(<Blog blog={blog} />).container
+    container = render(
+      <QueryClientProvider client={queryClient}>
+        <ReducerProvider>
+          <Blog blog={blog} />
+        </ReducerProvider>
+      </QueryClientProvider>
+    ).container
   })
 
   // helpers
@@ -58,7 +68,13 @@ describe('<Note />', () => {
 
   test('calls update blog function if user clicks like button twice', async () => {
     const { user, mocker } = userHelper()
-    const { container } = render(<Blog blog={blog} handleUpdateBlog={mocker} />)
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <ReducerProvider>
+          <Blog blog={blog} handleUpdate={mocker} />
+        </ReducerProvider>
+      </QueryClientProvider>
+    )
 
     const viewButton = selectByQuery('.hiddenButton', container)
     await user.click(viewButton)
@@ -72,7 +88,13 @@ describe('<Note />', () => {
 
   test('calls remove blog handler if user clicks remove button', async () => {
     const { user, mocker } = userHelper()
-    const { container } = render(<Blog blog={blog} handleRemoveBlog={mocker} />)
+    const { container } = render(
+      <QueryClientProvider client={queryClient}>
+        <ReducerProvider>
+          <Blog blog={blog} handleRemove={mocker} />
+        </ReducerProvider>
+      </QueryClientProvider>
+    )
 
     const viewButton = selectByQuery('.viewButton', container)
     await user.click(viewButton)
