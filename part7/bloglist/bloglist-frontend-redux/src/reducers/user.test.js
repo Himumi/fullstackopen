@@ -16,4 +16,20 @@ describe('User Reducer', () => {
 
     expect(newState).toStrictEqual(action.payload)
   })
+
+  test('succeeds removing user with user/remove', () => {
+    const state = {
+      username: 'himumi',
+      name: 'Himumi'
+    }
+    const action = {
+      type: 'user/remove'
+    }
+
+    deepFreeze(state)
+
+    const newState = reducer(state, action)
+
+    expect(newState).toBeNull()
+  })
 })
