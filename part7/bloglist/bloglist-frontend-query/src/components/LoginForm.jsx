@@ -1,24 +1,25 @@
-import { useState } from 'react'
-import helper from '../helper/helper'
 import useUser from '../hooks/useUser'
+import useInput from '../hooks/useInput'
 
 const LoginForm = ({ handleLogin }) => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const {reset: resetUsername, ...username} = useInput('text')
+  const {reset: resetPassword, ...password} = useInput('password')
   const user = useUser()
 
-  const usernameChangeHandler = helper.inputOnChangeHandler(setUsername)
-  const passwordChangeHandler = helper.inputOnChangeHandler(setPassword)
-  const setHooks = helper.setHooksValue(setUsername, setPassword)
+  const resetValues = () => {
+    resetUsername()
+    resetPassword()
+  }
 
   handleLogin ??= (event) => {
     event.preventDefault()
 
     user.handleLogin({
-      username, password
+      username: username.value,
+      password: password.value
     })
 
-    setHooks('')
+    resetValues()
   }
 
   return (
@@ -32,10 +33,8 @@ const LoginForm = ({ handleLogin }) => {
           <input
             data-testid="username"
             className="username"
-            type="text"
             name="Username"
-            value={username}
-            onChange={usernameChangeHandler}
+            {...username}
           />
         </div>
         <div>
@@ -43,10 +42,8 @@ const LoginForm = ({ handleLogin }) => {
           <input
             data-testid="password"
             className="password"
-            type="password"
             name="Password"
-            value={password}
-            onChange={passwordChangeHandler}
+            {...password}
           />
         </div>
         <div>
