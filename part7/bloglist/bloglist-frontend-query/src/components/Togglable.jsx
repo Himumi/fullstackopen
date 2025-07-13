@@ -1,19 +1,11 @@
-import { useState, forwardRef, useImperativeHandle } from 'react'
+import useToggleVisible from '../hooks/useToggleVisible'
 
 // eslint-disable-next-line react/display-name
-const Togglable = forwardRef((props, ref) => {
-  const [visible, setVisible] = useState(false)
+const Togglable = (props, ref) => {
+  const {visible, toggleVisibility} = useToggleVisible()
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
-
-  const toggleVisibility = () => setVisible(!visible)
-
-  useImperativeHandle(ref, () => {
-    return {
-      toggleVisibility
-    }
-  })
 
   return (
     <div>
@@ -26,6 +18,6 @@ const Togglable = forwardRef((props, ref) => {
       </div>
     </div>
   )
-})
+}
 
 export default Togglable

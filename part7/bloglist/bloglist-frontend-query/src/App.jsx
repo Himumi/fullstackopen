@@ -1,5 +1,3 @@
-import { useState, useEffect, useRef } from 'react'
-
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import Blogs from './components/blogs/Blogs'
@@ -10,7 +8,6 @@ import useUser from './hooks/useUser'
 
 const App = () => {
   const user = useUser() 
-  const BlogFormRef = useRef()
 
   if (!user.value) {
     return <LoginForm />
@@ -25,7 +22,7 @@ const App = () => {
           <span>{user.name} logged in</span>
           <button onClick={user.handleLogout}>logout</button>
         </div>
-        <Togglable textLabel="new blog" ref={BlogFormRef}>
+        <Togglable textLabel="new blog" >
           <BlogForm />
         </Togglable>
         <Blogs />

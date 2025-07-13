@@ -2,12 +2,14 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import blogServices from '../../services/blogs'
 import useNotification from '../../hooks/useNotification'
 import useInput from '../../hooks/useInput'
+import useToggleVisible from '../../hooks/useToggleVisible'
 
 const BlogForm = ({ handleCreate }) => {
   const {reset: resetTitle, ...title} = useInput('text')
   const {reset: resetAuthor, ...author} = useInput('text')
   const {reset: resetUrl, ...url} = useInput('text')
   const { setSuccessNotification } = useNotification()
+  const {toggleVisibility} = useToggleVisible()
   const queryClient = useQueryClient()
   
   const handleSuccess =  blog => {
@@ -34,6 +36,7 @@ const BlogForm = ({ handleCreate }) => {
       author: author.value,
       url: url.value
     })
+    toggleVisibility()
     resetValues()
   }
 
