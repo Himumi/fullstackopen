@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
 import blogService from './services/blogs'
-import loginService from './services/login'
 
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
@@ -10,47 +9,32 @@ import BlogForm from './components/blogs/BlogForm'
 import Blogs from './components/blogs/Blogs'
 
 import useNotification from './hooks/useNotification'
+import { useSelector, useDispatch } from 'react-redux'
+import { set } from './reducers/user'
 
 const sortBlogs = (blogs) => blogs.sort((a, b) => b.likes - a.likes)
 
 const App = () => {
-  const [user, setUser] = useState(null)
+  const user = useSelector(state => state.user)
   const {
     setSuccessNotification,
     setErrorNotification
   } = useNotification()
   const BlogFormRef = useRef()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const loggedUser = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUser) {
       const user = JSON.parse(loggedUser)
-      setUser(user)
+      dispatch(set(user))
       blogService.setToken(user.token)
     }
   }, [])
 
-  // login handler
-  const handleLogin = async (loginInfo) => {
-    try {
-      // login user
-      const user = await loginService.login(loginInfo)
-
-      // add user information to app
-      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
-      blogService.setToken(user.token)
-      setUser(user)
-
-      setSuccessNotification('Logged in', 3)
-    } catch (error) {
-      setErrorNotification('Wrong username or password', 3)
-    }
-  }
-
   // logout handler
   const handleLogout = () => {
     // delete all user information from app
-    setUser(null)
     window.localStorage.removeItem('loggedBlogAppUser')
     blogService.deleteToken()
 
@@ -58,7 +42,7 @@ const App = () => {
   }
 
   if (!user) {
-    return <LoginForm handleLogin={handleLogin} />
+    return <LoginForm />
   }
 
   return (
