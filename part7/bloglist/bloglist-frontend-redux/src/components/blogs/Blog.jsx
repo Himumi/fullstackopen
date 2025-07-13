@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { updateBlog, removeBlog } from '../../reducers/blogs'
 import useNotification from '../../hooks/useNotification'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleUpdate, handleRemove }) => {
   const [visible, setVisible] = useState(false)
   const dispatch = useDispatch()
   const {
@@ -25,7 +25,7 @@ const Blog = ({ blog }) => {
 
   const toggleVisibility = () => setVisible(!visible)
 
-  const handleUpdate = async () => {
+  handleUpdate ??= async () => {
     try {
       dispatch(updateBlog({
         ...blog, likes: blog.likes + 1
@@ -36,7 +36,7 @@ const Blog = ({ blog }) => {
     }
   }
 
-  const handleRemove = async () => {
+  handleRemove ??= async () => {
     try {
       const confirm = window.confirm(
         `Remove blog ${blog.title} by ${blog.author}`
