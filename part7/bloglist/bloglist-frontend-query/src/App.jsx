@@ -13,7 +13,7 @@ const App = () => {
   const BlogFormRef = useRef()
 
   if (!user.value) {
-    return <LoginForm handleLogin={user.handleLogin} />
+    return <LoginForm />
   }
 
   return (

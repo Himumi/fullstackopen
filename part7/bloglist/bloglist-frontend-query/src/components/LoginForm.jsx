@@ -1,19 +1,21 @@
 import { useState } from 'react'
 import helper from '../helper/helper'
+import useUser from '../hooks/useUser'
 
 const LoginForm = ({ handleLogin }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const user = useUser()
 
   const usernameChangeHandler = helper.inputOnChangeHandler(setUsername)
   const passwordChangeHandler = helper.inputOnChangeHandler(setPassword)
   const setHooks = helper.setHooksValue(setUsername, setPassword)
 
-  const loginHandler = (event) => {
+  handleLogin ??= (event) => {
     event.preventDefault()
-    handleLogin({
-      username,
-      password
+
+    user.handleLogin({
+      username, password
     })
 
     setHooks('')
@@ -24,7 +26,7 @@ const LoginForm = ({ handleLogin }) => {
       <div>
         <h1>log in to application</h1>
       </div>
-      <form onSubmit={loginHandler}>
+      <form onSubmit={handleLogin}>
         <div>
           username
           <input
