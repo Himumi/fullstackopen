@@ -14,4 +14,17 @@ describe('Visible Reducer', () => {
 
     expect(newState).toBeTruthy()
   })
+
+  test('returns new state with SET_NOT_VISIBLE', () => {
+    const state = true
+    const action = {
+      type: 'SET_NOT_VISIBLE'
+    }
+
+    deepFreeze(state)
+
+    const newState = reducer(state, action)
+
+    expect(newState).toBeFalsy()
+  })
 })
