@@ -2,7 +2,7 @@ import Blog from './Blog'
 import { useQuery } from '@tanstack/react-query'
 import blogServices from '../../services/blogs'
 
-const Blogs = ({ handleRemoveBlog }) => {
+const Blogs = () => {
   const result =  useQuery({
     queryKey: ['blogs'],
     queryFn: blogServices.getAll 
@@ -20,7 +20,6 @@ const Blogs = ({ handleRemoveBlog }) => {
         <Blog
           key={blog.id}
           blog={blog}
-          handleRemoveBlog={handleRemoveBlog}
         />
       ))}
     </div>

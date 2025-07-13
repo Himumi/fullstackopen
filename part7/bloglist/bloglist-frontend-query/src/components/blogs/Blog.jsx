@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import useNotification from '../../hooks/useNotification'
 import blogServices from '../../services/blogs'
 
-const Blog = ({ blog, handleUpdate, handleRemoveBlog }) => {
+const Blog = ({ blog, handleUpdate, handleRemove }) => {
   const [visible, setVisible] = useState(false)
   const { setSuccessNotification } = useNotification()
 
@@ -18,6 +18,17 @@ const Blog = ({ blog, handleUpdate, handleRemoveBlog }) => {
   const updateBlogMutation = useMutation({
     mutationFn: blogServices.update,
     onSuccess: onUpdateSuccess
+  })
+
+  const onRemoveSuccess = () => {
+    setSuccessNotification(`removed ${blog.title}`, 3)
+    const blogs = queryClient.getQueryData(['blogs'])
+    queryClient.setQueryData(['blogs'], blogs.filter(b => b.id !== blog.id))
+  }
+
+  const removeBlogMutation = useMutation({
+    mutationFn: blogServices.remove,
+    onSuccess: onRemoveSuccess
   })
 
   const showWhenVisible = { display: visible ? '' : 'none' }
@@ -42,7 +53,15 @@ const Blog = ({ blog, handleUpdate, handleRemoveBlog }) => {
     updateBlogMutation.mutate(updateBlog)
   }
 
-  const removeBlogHandler = () => handleRemoveBlog(blog)
+  handleRemove ??= () => {
+    const confirm = window.confirm(
+      `Remove blog ${blog.title} by ${blog.author}`
+    )
+
+    if (confirm) {
+      removeBlogMutation.mutate(blog.id)
+    }
+  }
 
   const blogAuthor = visible ? '' : `by ${blog.author}`
   const blogTitle = `${blog.title} ${blogAuthor}`
@@ -65,7 +84,7 @@ const Blog = ({ blog, handleUpdate, handleRemoveBlog }) => {
         <span>
           {blog.author} <br />
         </span>
-        <button onClick={removeBlogHandler} className="removeButton">
+        <button onClick={handleRemove} className="removeButton">
           remove
         </button>
       </div>

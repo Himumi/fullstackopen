@@ -11,8 +11,6 @@ import Togglable from './components/Togglable'
 
 import useNotification from './hooks/useNotification'
 
-const sortBlogs = (blogs) => blogs.sort((a, b) => b.likes - a.likes)
-
 const App = () => {
   const [user, setUser] = useState(null)
   const { 
@@ -58,21 +56,6 @@ const App = () => {
     setSuccessNotification('Logged out', 3)
   }
 
-  const deleteBlogHandler = async (blogObject) => {
-    try {
-      const confirm = window.confirm(
-        `Remove blog ${blogObject.title} by ${blogObject.author}`
-      )
-
-      if (confirm) {
-        await blogService.remove(blogObject.id)
-
-      }
-    } catch (error) {
-      setErrorNotification('Failed to delete Blog', 3)
-    }
-  }
-
   if (!user) {
     return <LoginForm handleLogin={loginHandler} />
   }
@@ -89,9 +72,7 @@ const App = () => {
         <Togglable textLabel="new blog" ref={BlogFormRef}>
           <BlogForm />
         </Togglable>
-        <Blogs
-          handleRemoveBlog={deleteBlogHandler}
-        />
+        <Blogs />
       </div>
     </div>
   )
