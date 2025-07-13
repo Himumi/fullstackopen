@@ -1,10 +1,26 @@
 import { useState } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import helper from '../../helper/helper'
+import blogServices from '../../services/blogs'
+import useNotification from '../../hooks/useNotification'
 
-const BlogForm = ({ handleCreateBlog }) => {
+const BlogForm = ({ handleCreate }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const { setSuccessNotification } = useNotification()
+  const queryClient = useQueryClient()
+  
+  const handleSuccess =  blog => {
+    setSuccessNotification(`Added ${blog.title} by ${blog.author}`, 3)
+    const blogs = queryClient.getQueriesData(['blogs'])
+    queryClient.setQueryData(['blogs'], blogs.concat(blog))
+  }
+
+  const newBlogMutation = useMutation({
+    mutationFn: blogServices.create,
+    onSuccess: handleSuccess,
+  })
 
   const titleHandler = helper.inputOnChangeHandler(setTitle)
   const authorHandler = helper.inputOnChangeHandler(setAuthor)
@@ -12,12 +28,10 @@ const BlogForm = ({ handleCreateBlog }) => {
 
   const setHooks = helper.setHooksValue(setTitle, setAuthor, setUrl)
 
-  const createBlogHandler = (event) => {
+  handleCreate ??= (event) => {
     event.preventDefault()
-    handleCreateBlog({
-      title,
-      author,
-      url
+    newBlogMutation.mutate({
+      title, author, url
     })
     setHooks('')
   }
@@ -25,7 +39,7 @@ const BlogForm = ({ handleCreateBlog }) => {
   return (
     <div>
       <h2>create new</h2>
-      <form onSubmit={createBlogHandler}>
+      <form onSubmit={handleCreate}>
         <div>
           title:
           <input
