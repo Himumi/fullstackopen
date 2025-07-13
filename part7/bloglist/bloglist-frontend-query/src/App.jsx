@@ -14,7 +14,6 @@ import useNotification from './hooks/useNotification'
 const sortBlogs = (blogs) => blogs.sort((a, b) => b.likes - a.likes)
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const { 
     setSuccessNotification,
@@ -22,13 +21,6 @@ const App = () => {
   } = useNotification()
 
   const BlogFormRef = useRef()
-
-  useEffect(() => {
-    blogService.getAll().then((blogs) => {
-      const sortedBlogs = sortBlogs(blogs)
-      setBlogs(sortedBlogs)
-    })
-  }, [])
 
   useEffect(() => {
     const loggedUser = window.localStorage.getItem('loggedBlogAppUser')
@@ -70,8 +62,6 @@ const App = () => {
   const createBlogHandler = async (blogObject) => {
     try {
       const blog = await blogService.create(blogObject)
-      const sortedBlogs = sortBlogs(blogs.concat(blog))
-      setBlogs(sortedBlogs)
 
       setSuccessNotification(`Added ${blog.title} by ${blog.author}`, 3)
       BlogFormRef.current.toggleVisibility()
@@ -85,9 +75,6 @@ const App = () => {
     try {
       const blog = await blogService.update(blogObject)
 
-      const updatedBlogs = blogs.map((b) => (b.id === blog.id ? blog : b))
-      const sortedBlogs = sortBlogs(updatedBlogs)
-      setBlogs(sortedBlogs)
     } catch (error) {
       console.log(error)
       setErrorNotification('failed to add blog', 3)
@@ -103,9 +90,6 @@ const App = () => {
       if (confirm) {
         await blogService.remove(blogObject.id)
 
-        const updatedBlogs = blogs.filter((blog) => blog.id !== blogObject.id)
-        const sortedBlogs = sortBlogs(updatedBlogs)
-        setBlogs(sortedBlogs)
       }
     } catch (error) {
       setErrorNotification('Failed to delete Blog', 3)
@@ -131,7 +115,6 @@ const App = () => {
         <Blogs
           handleUpdateBlog={updateBlogHandler}
           handleRemoveBlog={deleteBlogHandler}
-          blogs={blogs}
         />
       </div>
     </div>
