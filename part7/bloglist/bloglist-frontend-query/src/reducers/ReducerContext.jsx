@@ -2,7 +2,10 @@ import { createContext, useReducer } from "react";
 import rootReducer from './root'
 
 const initialState = {
-  notification: '',
+  notification: {
+    status: '',
+    message: ''
+  },
 } 
 
 const ReducerContext = createContext()
