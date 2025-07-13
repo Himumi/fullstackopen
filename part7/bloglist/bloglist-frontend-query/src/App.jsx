@@ -5,7 +5,9 @@ import loginService from './services/login'
 
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
-import Main from './components/Main'
+import Blogs from './components/blogs/Blogs'
+import BlogForm from './components/blogs/BlogForm'
+import Togglable from './components/Togglable'
 
 const sortBlogs = (blogs) => blogs.sort((a, b) => b.likes - a.likes)
 
@@ -117,22 +119,28 @@ const App = () => {
     }
   }
 
+  if (!user) {
+    return <LoginForm handleLogin={loginHandler} />
+  }
+
   return (
     <div>
       <Notification errorMsg={errorMsg} successMsg={successMsg} />
-      {!user ? (
-        <LoginForm handleLogin={loginHandler} />
-      ) : (
-        <Main
-          ref={BlogFormRef}
-          blogs={blogs}
-          user={user}
-          handleCreateBlog={createBlogHandler}
-          handleLogout={logoutHandler}
+      <div>
+        <h2>blogs</h2>
+        <div>
+          <span>{user.name} logged in</span>
+          <button onClick={logoutHandler}>logout</button>
+        </div>
+        <Togglable textLabel="new blog" ref={BlogFormRef}>
+          <BlogForm handleCreateBlog={createBlogHandler} />
+        </Togglable>
+        <Blogs
           handleUpdateBlog={updateBlogHandler}
           handleRemoveBlog={deleteBlogHandler}
+          blogs={blogs}
         />
-      )}
+      </div>
     </div>
   )
 }
