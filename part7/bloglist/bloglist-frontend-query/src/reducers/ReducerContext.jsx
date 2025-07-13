@@ -6,7 +6,8 @@ const initialState = {
     status: '',
     message: ''
   },
-  user: null
+  user: null,
+  toggleVisible: false,
 } 
 
 const ReducerContext = createContext()
