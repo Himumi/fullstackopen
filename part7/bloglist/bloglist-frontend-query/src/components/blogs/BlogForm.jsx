@@ -1,13 +1,12 @@
-import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import helper from '../../helper/helper'
 import blogServices from '../../services/blogs'
 import useNotification from '../../hooks/useNotification'
+import useInput from '../../hooks/useInput'
 
 const BlogForm = ({ handleCreate }) => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  const {reset: resetTitle, ...title} = useInput('text')
+  const {reset: resetAuthor, ...author} = useInput('text')
+  const {reset: resetUrl, ...url} = useInput('text')
   const { setSuccessNotification } = useNotification()
   const queryClient = useQueryClient()
   
@@ -22,18 +21,20 @@ const BlogForm = ({ handleCreate }) => {
     onSuccess: handleSuccess,
   })
 
-  const titleHandler = helper.inputOnChangeHandler(setTitle)
-  const authorHandler = helper.inputOnChangeHandler(setAuthor)
-  const urlHandler = helper.inputOnChangeHandler(setUrl)
-
-  const setHooks = helper.setHooksValue(setTitle, setAuthor, setUrl)
+  const resetValues = () => {
+    resetTitle()
+    resetAuthor()
+    resetUrl()
+  }
 
   handleCreate ??= (event) => {
     event.preventDefault()
     newBlogMutation.mutate({
-      title, author, url
+      title: title.value,
+      author: author.value,
+      url: url.value
     })
-    setHooks('')
+    resetValues()
   }
 
   return (
@@ -44,30 +45,24 @@ const BlogForm = ({ handleCreate }) => {
           title:
           <input
             data-testid="titleInput"
-            type="text"
             name="Title"
-            value={title}
-            onChange={titleHandler}
+            {...title}
           />
         </div>
         <div>
           author:
           <input
             data-testid="authorInput"
-            type="text"
             name="Author"
-            value={author}
-            onChange={authorHandler}
+            {...author}
           />
         </div>
         <div>
           url:
           <input
             data-testid="urlInput"
-            type="text"
             name="Url"
-            value={url}
-            onChange={urlHandler}
+            {...url}
           />
         </div>
         <div>
