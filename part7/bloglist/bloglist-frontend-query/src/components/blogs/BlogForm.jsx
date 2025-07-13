@@ -13,7 +13,7 @@ const BlogForm = ({ handleCreate }) => {
   
   const handleSuccess =  blog => {
     setSuccessNotification(`Added ${blog.title} by ${blog.author}`, 3)
-    const blogs = queryClient.getQueriesData(['blogs'])
+    const blogs = queryClient.getQueryData(['blogs'])
     queryClient.setQueryData(['blogs'], blogs.concat(blog))
   }
 
