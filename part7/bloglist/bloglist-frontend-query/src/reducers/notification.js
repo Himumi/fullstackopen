@@ -8,7 +8,7 @@ const notificationReducer = (state = initialState, action) => {
     case 'SET_MESSAGE':
       return action.payload 
     case 'REMOVE_MESSAGE':
-      return ''
+      return initialState
     default:
       return state
   }

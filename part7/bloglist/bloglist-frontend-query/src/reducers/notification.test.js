@@ -21,4 +21,23 @@ describe('Notification Reducer', () => {
 
     expect(newState).toStrictEqual(action.payload)
   })
+
+  test('succeeds removing notification with REMOVE_MESSAGE', () => {
+    const state = {
+      status: 'success',
+      message: 'notification'
+    }
+    const action = {
+      type: 'REMOVE_MESSAGE'
+    }
+
+    deepFreeze(state)
+
+    const newState = reducer(state, action)
+
+    expect(newState).toStrictEqual({
+      status: '',
+      message: '',
+    })
+  })
 })
