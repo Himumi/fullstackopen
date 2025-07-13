@@ -1,6 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
-
-import blogService from './services/blogs'
+import { useRef } from 'react'
 
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
@@ -9,8 +7,9 @@ import BlogForm from './components/blogs/BlogForm'
 import Blogs from './components/blogs/Blogs'
 
 import useNotification from './hooks/useNotification'
+import useGetUserFromLocal from './hooks/useGetUserFromLocal'
 import { useSelector, useDispatch } from 'react-redux'
-import { set, deleteAllUserInfo } from './reducers/user'
+import { deleteAllUserInfo } from './reducers/user'
 
 const sortBlogs = (blogs) => blogs.sort((a, b) => b.likes - a.likes)
 
@@ -23,16 +22,9 @@ const App = () => {
   const BlogFormRef = useRef()
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    const loggedUser = window.localStorage.getItem('loggedBlogAppUser')
-    if (loggedUser) {
-      const user = JSON.parse(loggedUser)
-      dispatch(set(user))
-      blogService.setToken(user.token)
-    }
-  }, [])
+  // Retrieve user info from local storage
+  useGetUserFromLocal()
 
-  // logout handler
   const handleLogout = () => {
     dispatch(deleteAllUserInfo())
     setSuccessNotification('Logged out', 3)
