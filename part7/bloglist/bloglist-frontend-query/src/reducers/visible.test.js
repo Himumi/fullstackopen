@@ -27,4 +27,17 @@ describe('Visible Reducer', () => {
 
     expect(newState).toBeFalsy()
   })
+
+  test('changes state with TOGGLE_VISIBLE', () => {
+    const state = false
+    const action = {
+      type: 'TOGGLE_VISIBLE'
+    }
+
+    deepFreeze(state)
+
+    const newState = reducer(state, action)
+
+    expect(newState).toBeTruthy()
+  })
 })
