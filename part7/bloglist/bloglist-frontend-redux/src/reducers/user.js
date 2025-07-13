@@ -27,4 +27,13 @@ export const setUserAndSave = (credential) => {
   }
 }
 
+export const deleteAllUserInfo = () => {
+  return dispatch => {
+    // delete all user information from app
+    window.localStorage.removeItem('loggedBlogAppUser')
+    blogServices.deleteToken()
+    dispatch(remove())
+  }
+}
+
 export default userSlice.reducer
