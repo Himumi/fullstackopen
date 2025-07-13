@@ -1,9 +1,11 @@
 import { render, screen } from '@testing-library/react'
-import Blog from './Blog'
 import { beforeEach, describe, expect, test } from 'vitest'
 import userEvent from '@testing-library/user-event'
 
-describe('<Note />', () => {
+import Wrapper from '../Wrapper'
+import Blog from './Blog'
+
+describe('<Blog />', () => {
   let container
 
   const blog = {
@@ -15,7 +17,11 @@ describe('<Note />', () => {
   }
 
   beforeEach(() => {
-    container = render(<Blog blog={blog} />).container
+    container = render(
+      <Wrapper>
+        <Blog blog={blog} />
+      </Wrapper>
+    ).container
   })
 
   // helpers
@@ -58,7 +64,11 @@ describe('<Note />', () => {
 
   test('calls update blog function if user clicks like button twice', async () => {
     const { user, mocker } = userHelper()
-    const { container } = render(<Blog blog={blog} handleUpdateBlog={mocker} />)
+    const { container } = render(
+      <Wrapper>
+        <Blog blog={blog} handleUpdate={mocker} />
+      </Wrapper>
+    )
 
     const viewButton = selectByQuery('.hiddenButton', container)
     await user.click(viewButton)
@@ -72,7 +82,11 @@ describe('<Note />', () => {
 
   test('calls remove blog handler if user clicks remove button', async () => {
     const { user, mocker } = userHelper()
-    const { container } = render(<Blog blog={blog} handleRemoveBlog={mocker} />)
+    const { container } = render(
+      <Wrapper>
+        <Blog blog={blog} handleRemove={mocker} />
+      </Wrapper>
+    )
 
     const viewButton = selectByQuery('.viewButton', container)
     await user.click(viewButton)
