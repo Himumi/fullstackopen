@@ -9,13 +9,17 @@ import Blogs from './components/blogs/Blogs'
 import BlogForm from './components/blogs/BlogForm'
 import Togglable from './components/Togglable'
 
+import useNotification from './hooks/useNotification'
+
 const sortBlogs = (blogs) => blogs.sort((a, b) => b.likes - a.likes)
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [successMsg, setSuccessMsg] = useState(null)
-  const [errorMsg, setErrorMsg] = useState(null)
+  const { 
+    setSuccessNotification,
+    setErrorNotification
+  } = useNotification()
 
   const BlogFormRef = useRef()
 
@@ -34,17 +38,6 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
-
-  // notification handlers
-  const setNotification = (func) => {
-    return (message, time = 1) => {
-      func.call(null, message)
-      setTimeout(() => func.call(null, null), time * 1000)
-    }
-  }
-
-  const setSuccessNotification = setNotification(setSuccessMsg)
-  const setErrorNotification = setNotification(setErrorMsg)
 
   // login handler
   const loginHandler = async (loginInfo) => {
@@ -125,7 +118,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification errorMsg={errorMsg} successMsg={successMsg} />
+      <Notification />
       <div>
         <h2>blogs</h2>
         <div>
