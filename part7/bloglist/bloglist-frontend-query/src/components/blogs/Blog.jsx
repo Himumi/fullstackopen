@@ -1,10 +1,10 @@
-import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import useNotification from '../../hooks/useNotification'
 import blogServices from '../../services/blogs'
+import useVisible from '../../hooks/useVisible'
 
 const Blog = ({ blog, handleUpdate, handleRemove }) => {
-  const [visible, setVisible] = useState(false)
+  const [visible, toggleVisibility] = useVisible()
   const { setSuccessNotification } = useNotification()
 
   const queryClient = useQueryClient()
@@ -41,8 +41,6 @@ const Blog = ({ blog, handleUpdate, handleRemove }) => {
     borderWidth: 1,
     marginBottom: 5
   }
-
-  const toggleVisibility = () => setVisible(!visible)
 
   handleUpdate ??= () => {
     const updateBlog = {
