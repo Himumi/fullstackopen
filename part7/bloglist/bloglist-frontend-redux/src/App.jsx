@@ -10,7 +10,7 @@ import Blogs from './components/blogs/Blogs'
 
 import useNotification from './hooks/useNotification'
 import { useSelector, useDispatch } from 'react-redux'
-import { set } from './reducers/user'
+import { set, deleteAllUserInfo } from './reducers/user'
 
 const sortBlogs = (blogs) => blogs.sort((a, b) => b.likes - a.likes)
 
@@ -34,10 +34,7 @@ const App = () => {
 
   // logout handler
   const handleLogout = () => {
-    // delete all user information from app
-    window.localStorage.removeItem('loggedBlogAppUser')
-    blogService.deleteToken()
-
+    dispatch(deleteAllUserInfo())
     setSuccessNotification('Logged out', 3)
   }
 
