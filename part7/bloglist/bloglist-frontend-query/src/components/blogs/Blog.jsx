@@ -1,7 +1,24 @@
 import { useState } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import useNotification from '../../hooks/useNotification'
+import blogServices from '../../services/blogs'
 
-const Blog = ({ blog, handleUpdateBlog, handleRemoveBlog }) => {
+const Blog = ({ blog, handleUpdate, handleRemoveBlog }) => {
   const [visible, setVisible] = useState(false)
+  const { setSuccessNotification } = useNotification()
+
+  const queryClient = useQueryClient()
+
+  const onUpdateSuccess = blog => {
+    setSuccessNotification(`liked ${blog.title}`, 3)
+    const blogs = queryClient.getQueryData(['blogs'])
+    queryClient.setQueryData(['blogs'], blogs.map(b => b.id !== blog.id ? b : blog))
+  }
+
+  const updateBlogMutation = useMutation({
+    mutationFn: blogServices.update,
+    onSuccess: onUpdateSuccess
+  })
 
   const showWhenVisible = { display: visible ? '' : 'none' }
 
@@ -16,13 +33,13 @@ const Blog = ({ blog, handleUpdateBlog, handleRemoveBlog }) => {
 
   const toggleVisibility = () => setVisible(!visible)
 
-  const updateLikeHandler = () => {
+  handleUpdate ??= () => {
     const updateBlog = {
       ...blog,
       likes: blog.likes + 1,
       user: blog.user.id
     }
-    handleUpdateBlog(updateBlog)
+    updateBlogMutation.mutate(updateBlog)
   }
 
   const removeBlogHandler = () => handleRemoveBlog(blog)
@@ -41,7 +58,7 @@ const Blog = ({ blog, handleUpdateBlog, handleRemoveBlog }) => {
           {blog.url} <br />
         </span>
         <span>likes {blog.likes}</span>
-        <button onClick={updateLikeHandler} className="likeButton">
+        <button onClick={handleUpdate} className="likeButton">
           like
         </button>{' '}
         <br />

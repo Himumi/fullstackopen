@@ -58,16 +58,6 @@ const App = () => {
     setSuccessNotification('Logged out', 3)
   }
 
-  const updateBlogHandler = async (blogObject) => {
-    try {
-      const blog = await blogService.update(blogObject)
-
-    } catch (error) {
-      console.log(error)
-      setErrorNotification('failed to add blog', 3)
-    }
-  }
-
   const deleteBlogHandler = async (blogObject) => {
     try {
       const confirm = window.confirm(
@@ -100,7 +90,6 @@ const App = () => {
           <BlogForm />
         </Togglable>
         <Blogs
-          handleUpdateBlog={updateBlogHandler}
           handleRemoveBlog={deleteBlogHandler}
         />
       </div>
