@@ -9,7 +9,6 @@ import Blogs from './components/blogs/Blogs'
 import useNotification from './hooks/useNotification'
 import useGetUserFromLocal from './hooks/useGetUserFromLocal'
 import { useSelector, useDispatch } from 'react-redux'
-import { deleteAllUserInfo } from './reducers/user'
 
 const sortBlogs = (blogs) => blogs.sort((a, b) => b.likes - a.likes)
 
@@ -25,11 +24,6 @@ const App = () => {
   // Retrieve user info from local storage
   useGetUserFromLocal()
 
-  const handleLogout = () => {
-    dispatch(deleteAllUserInfo())
-    setSuccessNotification('Logged out', 3)
-  }
-
   if (!user) {
     return <LoginForm />
   }
@@ -40,10 +34,7 @@ const App = () => {
       
       <div>
         <h2>blogs</h2>
-        <div>
-          <span>{user.name} logged in</span>
-          <button onClick={handleLogout}>logout</button>
-        </div>
+        <User />
         <Togglable textLabel="new blog" ref={BlogFormRef}>
           <BlogForm />
         </Togglable>

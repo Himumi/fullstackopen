@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { set } from '../reducers/user'
+import blogServices from '../services/blogs'
 
 const useGetUserFromLocal = () => {
   const dispatch = useDispatch()
@@ -10,7 +11,7 @@ const useGetUserFromLocal = () => {
     if (loggedUser) {
       const user = JSON.parse(loggedUser)
       dispatch(set(user))
-      blogService.setToken(user.token)
+      blogServices.setToken(user.token)
     }
   }, [])
 }
