@@ -1,12 +1,8 @@
+import useQueryBlogs from '../../hooks/useQueryBlogs'
 import Blog from './Blog'
-import { useQuery } from '@tanstack/react-query'
-import blogServices from '../../services/blogs'
 
 const Blogs = () => {
-  const result =  useQuery({
-    queryKey: ['blogs'],
-    queryFn: blogServices.getAll 
-  })
+  const result = useQueryBlogs()
 
   if (result.isLoading) {
     return <div>loading data...</div>
