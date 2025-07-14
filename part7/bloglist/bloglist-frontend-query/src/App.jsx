@@ -3,6 +3,7 @@ import Notification from './components/Notification'
 import Blogs from './components/blogs/Blogs'
 import BlogForm from './components/blogs/BlogForm'
 import Togglable from './components/Togglable'
+import Nav from './components/Nav'
 
 import useUser from './hooks/useUser'
 
@@ -17,11 +18,7 @@ const App = () => {
     <div>
       <Notification />
       <div>
-        <h2>blogs</h2>
-        <div>
-          <span>{user.name} logged in</span>
-          <button onClick={user.handleLogout}>logout</button>
-        </div>
+      <Nav />
         <Togglable textLabel="new blog" >
           <BlogForm />
         </Togglable>
