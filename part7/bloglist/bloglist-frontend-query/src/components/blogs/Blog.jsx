@@ -1,13 +1,17 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import useNotification from '../../hooks/useNotification'
+import { useParams } from 'react-router-dom'
 import blogServices from '../../services/blogs'
-import useVisible from '../../hooks/useVisible'
+import useUser from '../../hooks/useUser'
+import useNotification from '../../hooks/useNotification'
 
-const Blog = ({ blog, handleUpdate, handleRemove }) => {
-  const [visible, toggleVisibility] = useVisible()
+const Blog = ({ handleUpdate, handleRemove }) => {
   const { setSuccessNotification } = useNotification()
 
+  const id = useParams().id
   const queryClient = useQueryClient()
+  const blogs = queryClient.getQueryData(['blogs'])
+  const blog = blogs.find(blog => blog.id === id)
+  const loggedUser = useUser()
 
   const onUpdateSuccess = blog => {
     setSuccessNotification(`liked ${blog.title}`, 3)
@@ -31,17 +35,6 @@ const Blog = ({ blog, handleUpdate, handleRemove }) => {
     onSuccess: onRemoveSuccess
   })
 
-  const showWhenVisible = { display: visible ? '' : 'none' }
-
-  const blogStyle = {
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5
-  }
-
   handleUpdate ??= () => {
     const updateBlog = {
       ...blog,
@@ -61,30 +54,17 @@ const Blog = ({ blog, handleUpdate, handleRemove }) => {
     }
   }
 
-  const blogAuthor = visible ? '' : `by ${blog.author}`
-  const blogTitle = `${blog.title} ${blogAuthor}`
-
   return (
-    <div style={blogStyle} className="blog">
-      <span>{blogTitle}</span>
-      <button onClick={toggleVisibility} className="hiddenButton">
-        {visible ? 'hide' : 'view'}
-      </button>
-      <div style={showWhenVisible} className="hiddenContent">
-        <span>
-          {blog.url} <br />
-        </span>
-        <span>likes {blog.likes}</span>
-        <button onClick={handleUpdate} className="likeButton">
-          like
-        </button>{' '}
-        <br />
-        <span>
-          {blog.author} <br />
-        </span>
-        <button onClick={handleRemove} className="removeButton">
-          remove
-        </button>
+    <div className="blog">
+      <h2>{blog.title}</h2>
+      <div>
+        <a href={blog.url}>{blog.url}</a> <br />
+        {blog.likes} likes <button onClick={handleUpdate}>like</button> <br />
+        Added by {blog.author} <br />
+        {loggedUser.value.username !== blog.user
+          ? null
+          : <button onClick={handleRemove}>remove</button>
+        }
       </div>
     </div>
   )
