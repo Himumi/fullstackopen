@@ -2,6 +2,9 @@ import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import Home from './components/Home'
 import Nav from './components/Nav'
+import User from './components/users/User'
+import Users from './components/users/Users'
+import UsersList from './components/users/UsersList'
 
 import {
   Route,
@@ -10,7 +13,6 @@ import {
 } from 'react-router-dom'
 
 import useUser from './hooks/useUser'
-import Users from './components/Users'
 
 const App = () => {
   const user = useUser() 
@@ -26,7 +28,10 @@ const App = () => {
 
       <Routes>
         <Route index element={<Home />} />
-        <Route path='users' element={<Users />} />
+        <Route path='users' element={<Users />} >
+          <Route index element={<UsersList />} />
+          <Route path=':id' element={<User />} />
+        </Route>
       </Routes>
     </Router>
   )
