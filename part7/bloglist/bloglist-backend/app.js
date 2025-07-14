@@ -8,6 +8,7 @@ const middleware = require('./utils/middleware')
 const blogsRouter = require('./controllers/blogs')
 const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
+const commentsRouter = require('./controllers/comments')
 
 const app = express()
 
@@ -17,6 +18,7 @@ app.use(middleware.tokenExtractor)
 
 // Routes
 app.use('/api/blogs', middleware.userExtractor, blogsRouter)
+app.use('/api/blogs', commentsRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
 
