@@ -47,6 +47,10 @@ const resetDB = async () => {
   await User.insertMany(initialUsers)
 }
 
+const removeAllInfo = async () => {
+  await User.deleteMany({})
+}
+
 module.exports = {
   getUsers,
   initialUsers,
@@ -54,5 +58,6 @@ module.exports = {
   resetDB,
   rootLogin,
   setToken,
-  getToken
+  getToken,
+  removeAllInfo,
 }
