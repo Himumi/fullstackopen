@@ -5,6 +5,9 @@ import Nav from './components/Nav'
 import User from './components/users/User'
 import Users from './components/users/Users'
 import UsersList from './components/users/UsersList'
+import Blogs from './components/blogs/Blogs'
+import Blog from './components/blogs/Blog'
+import BlogsList from './components/blogs/BlogsList'
 
 import {
   Route,
@@ -31,6 +34,10 @@ const App = () => {
         <Route path='users' element={<Users />} >
           <Route index element={<UsersList />} />
           <Route path=':id' element={<User />} />
+        </Route>
+        <Route path='blogs' element={<Blogs />}>
+          <Route index element={<BlogsList />} />
+          <Route path=':id' element={<Blog />} />
         </Route>
       </Routes>
     </Router>
