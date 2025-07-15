@@ -30,6 +30,26 @@ const getBlogsHandler = async (request, response, next) => {
   }
 }
 
+const getBlogHandler = async (request, response, next) => {
+  try {
+    const blog = await Blog
+      .findById(request.params.id)
+      .populate('user', {
+        username: 1,
+        name: 1,
+        id:1,
+      })
+      .populate('comments', {
+        id: 1,
+        content: 1,
+      })
+
+    response.json(blog)
+  } catch (error) {
+    next(error)
+  }
+}
+
 const createBlogHandler = async (request, response, next) => {
   try {
     const body = request.body
@@ -98,6 +118,7 @@ const updateBlogHandler = async (request, response, next) => {
 }
 
 blogsRouter.get('/', getBlogsHandler)
+blogsRouter.get('/:id', getBlogHandler)
 blogsRouter.post('/', createBlogHandler)
 blogsRouter.delete('/:id', deleteBlogHandler)
 blogsRouter.put('/:id', updateBlogHandler)
