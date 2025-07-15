@@ -1,5 +1,5 @@
-import useUser from '../hooks/useUser'
-import useInput from '../hooks/useInput'
+import useUser from '../../hooks/useUser'
+import useInput from '../../hooks/useInput'
 
 const LoginForm = ({ handleLogin }) => {
   const {reset: resetUsername, ...username} = useInput('text')

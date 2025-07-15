@@ -1,8 +1,6 @@
-import { Outlet } from "react-router-dom"
-
 import BlogsList from "./BlogsList"
 import BlogForm from './BlogForm'
-import Togglable from '../Togglable'
+import Togglable from '../togglable/Togglable'
 
 const Blogs = () => {
   return (

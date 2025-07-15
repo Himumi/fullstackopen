@@ -1,4 +1,4 @@
-import useToggleVisible from '../hooks/useToggleVisible'
+import useToggleVisible from '../../hooks/useToggleVisible'
 
 // eslint-disable-next-line react/display-name
 const Togglable = (props, ref) => {

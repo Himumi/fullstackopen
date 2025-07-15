@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import LoginForm from './LoginForm'
 import userEvent from '@testing-library/user-event'
 import { describe, expect } from 'vitest'
-import { ReducerProvider } from '../reducers/ReducerContext'
+import { ReducerProvider } from '../../reducers/ReducerContext'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 const queryClient = new QueryClient()
