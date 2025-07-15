@@ -28,6 +28,22 @@ describe('blogs api', () => {
 
   describe('GET', () => {
     describe('succeeds returning', () => {
+      test('a blog', async () => {
+        const blogs = await helper.getBlogs()
+        const blog = blogs.find(blog => blog.title === 'Type wars')
+
+        const result = await api
+          .get(`/api/blogs/${blog._id.toString()}`)
+          .set('Authorization', `Bearer ${usersHelper.getToken()}`)
+          .expect(200)
+          .expect('Content-Type', /application\/json/)
+
+        const blogsAtEnd = await helper.getBlogs()
+        const titles = blogsAtEnd.map(blog => blog.title)
+
+        assert(titles.includes(result.body.title))
+      })
+
       test('all blogs', async () => {
         const blogs = await helper.getBlogs()
         const result = await api
