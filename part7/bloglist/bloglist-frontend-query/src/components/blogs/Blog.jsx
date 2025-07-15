@@ -1,56 +1,61 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
-import blogServices from '../../services/blogs'
 import useUser from '../../hooks/useUser'
 import useNotification from '../../hooks/useNotification'
+import { useBlogQuery, useBlogsMutation } from '../../hooks/useBlogsQuery'
 
-const Blog = ({ handleUpdate, handleRemove }) => {
-  const { setSuccessNotification } = useNotification()
-
-  const id = useParams().id
-  const queryClient = useQueryClient()
-  const blogs = queryClient.getQueryData(['blogs'])
-  const blog = blogs.find(blog => blog.id === id)
+const Blog = () => {
   const loggedUser = useUser()
+  const result = useBlogQuery(useParams().id)
+  const blogsMutation = useBlogsMutation()
 
-  const onUpdateSuccess = blog => {
-    setSuccessNotification(`liked ${blog.title}`, 3)
-    const blogs = queryClient.getQueryData(['blogs'])
-    queryClient.setQueryData(['blogs'], blogs.map(b => b.id !== blog.id ? b : blog))
+  const {
+    setSuccessNotification,
+    setErrorNotification,
+  } = useNotification()
+
+  if (result.isLoading) {
+    return <div>loading data</div>
   }
 
-  const updateBlogMutation = useMutation({
-    mutationFn: blogServices.update,
-    onSuccess: onUpdateSuccess
-  })
-
-  const onRemoveSuccess = () => {
-    setSuccessNotification(`removed ${blog.title}`, 3)
-    const blogs = queryClient.getQueryData(['blogs'])
-    queryClient.setQueryData(['blogs'], blogs.filter(b => b.id !== blog.id))
+  if (result.isError) {
+    return <div>no return data</div>
   }
 
-  const removeBlogMutation = useMutation({
-    mutationFn: blogServices.remove,
-    onSuccess: onRemoveSuccess
-  })
+  const blog = result.data
 
-  handleUpdate ??= () => {
+  const handleUpdate = () => {
     const updateBlog = {
       ...blog,
       likes: blog.likes + 1,
       user: blog.user.id
     }
-    updateBlogMutation.mutate(updateBlog)
+
+    blogsMutation.update.mutate(updateBlog, {
+      onSuccess: (result, variable, context) => {
+        setSuccessNotification(`Liked ${variable.title}`, 3)
+      },
+      onError: (error, variable, context) => {
+        console.log(error)
+        setErrorNotification(`Failed updating ${variable.title}`, 3)
+      }
+    })
   }
 
-  handleRemove ??= () => {
+  const handleDelete = () => {
     const confirm = window.confirm(
       `Remove blog ${blog.title} by ${blog.author}`
     )
 
     if (confirm) {
-      removeBlogMutation.mutate(blog.id)
+      blogsMutation.delete.mutate(blog, {
+        onSuccess: (result, variable, context) => {
+          setSuccessNotification(`removed ${variable.title}`, 3)
+        },
+        onError: (error, variable, context) => {
+          console.log(error)
+          setErrorNotification(`Failed deleting ${variable.title}`, 3)
+        }
+      })
     }
   }
 
@@ -63,7 +68,7 @@ const Blog = ({ handleUpdate, handleRemove }) => {
         Added by {blog.author} <br />
         {loggedUser.value.username !== blog.user
           ? null
-          : <button onClick={handleRemove}>remove</button>
+          : <button onClick={handleDelete}>delete</button>
         }
       </div>
     </div>

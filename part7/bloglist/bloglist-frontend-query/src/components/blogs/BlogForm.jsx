@@ -3,25 +3,21 @@ import blogServices from '../../services/blogs'
 import useNotification from '../../hooks/useNotification'
 import useInput from '../../hooks/useInput'
 import useToggleVisible from '../../hooks/useToggleVisible'
+import { useBlogsMutation } from '../../hooks/useBlogsQuery'
 
-const BlogForm = ({ handleCreate }) => {
+const BlogForm = () => {
   const {reset: resetTitle, ...title} = useInput('text')
   const {reset: resetAuthor, ...author} = useInput('text')
   const {reset: resetUrl, ...url} = useInput('text')
-  const { setSuccessNotification } = useNotification()
-  const {toggleVisibility} = useToggleVisible()
-  const queryClient = useQueryClient()
-  
-  const handleSuccess =  blog => {
-    setSuccessNotification(`Added ${blog.title} by ${blog.author}`, 3)
-    const blogs = queryClient.getQueryData(['blogs'])
-    queryClient.setQueryData(['blogs'], blogs.concat(blog))
-  }
 
-  const newBlogMutation = useMutation({
-    mutationFn: blogServices.create,
-    onSuccess: handleSuccess,
-  })
+  const {toggleVisibility} = useToggleVisible()
+  const blogsMutation = useBlogsMutation()
+  const queryClient = useQueryClient()
+
+  const { 
+    setSuccessNotification,
+    setErrorNotification
+  } = useNotification()
 
   const resetValues = () => {
     resetTitle()
@@ -29,13 +25,25 @@ const BlogForm = ({ handleCreate }) => {
     resetUrl()
   }
 
-  handleCreate ??= (event) => {
+  const handleCreate = (event) => {
     event.preventDefault()
-    newBlogMutation.mutate({
+
+    const newBlog = {
       title: title.value,
       author: author.value,
       url: url.value
+    }
+
+    blogsMutation.create.mutate(newBlog, {
+      onSuccess: (result, variable, context) => {
+        setSuccessNotification(`Added ${result.title} by ${result.author}`, 3)
+      },
+      onError: (error, variable, context) => {
+        console.log(error)
+        setErrorNotification(`Failed creating blog`, 3)       
+      }
     })
+
     toggleVisibility()
     resetValues()
   }
