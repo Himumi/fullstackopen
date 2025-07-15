@@ -1,9 +1,18 @@
-import { useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
+import { useBlogsQuery } from '../../hooks/useBlogsQuery'
 
 const Blogs = () => {
-  const queryClient = useQueryClient()
-  const blogs = queryClient.getQueryData(['blogs'])
+  const result = useBlogsQuery()
+
+  if (result.isLoading) {
+    return <div>loading data</div>
+  }
+
+  if (result.isError) {
+    return <div>no result data</div>
+  }
+
+  const blogs = result.data
 
   const blogStyle = {
     paddingTop: 10,
