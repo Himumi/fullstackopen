@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom'
 import useUser from '../../hooks/useUser'
 import useNotification from '../../hooks/useNotification'
 import { useBlogQuery, useBlogsMutation } from '../../hooks/useBlogsQuery'
+import CommentList from '../comment/CommentList'
 
 const Blog = () => {
   const loggedUser = useUser()
@@ -22,6 +23,7 @@ const Blog = () => {
   }
 
   const blog = result.data
+  console.log('blog', blog)
 
   const handleUpdate = () => {
     const updateBlog = {
@@ -71,6 +73,7 @@ const Blog = () => {
           : <button onClick={handleDelete}>delete</button>
         }
       </div>
+      <CommentList comments={blog.comments} />
     </div>
   )
 }
