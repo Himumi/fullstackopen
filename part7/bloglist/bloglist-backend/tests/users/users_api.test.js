@@ -5,126 +5,115 @@ const mongoose = require('mongoose')
 
 const app = require('../../app')
 const helper = require('./users_helper')
-const { resetDB, removeAllInfo } = require('../helper/helper')
 
 const api = supertest(app)
 
 describe('users api', () => {
   beforeEach(async () => {
-    await resetDB()
+    await helper.resetDB()
   })
 
-  describe('createUserHandler', () => {
-    test('succeeds creating a new user', async () => {
-      const usersAtBegin = await helper.getUsers()
+  describe('POST', () => {
+    describe('succeeds creating a new user', () => {
+      test('when data are correct', async () => {
+        const usersAtBegin = await helper.getUsers()
 
-      const newUser = {
-        username: 'himumi',
-        name: 'Himumi Erliansyah',
-        password: 'sangatrahasia'
-      }
+        const newUser = {
+          username: 'himumi',
+          name: 'Himumi Erliansyah',
+          password: 'sangatrahasia'
+        }
 
-      await api
-        .post('/api/users')
-        .send(newUser)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
+        await api
+          .post('/api/users')
+          .send(newUser)
+          .expect(201)
+          .expect('Content-Type', /application\/json/)
 
-      const usersAtEnd = await helper.getUsers()
-      assert.strictEqual(usersAtEnd.length, usersAtBegin.length + 1)
+        const usersAtEnd = await helper.getUsers()
+        assert.strictEqual(usersAtEnd.length, usersAtBegin.length + 1)
 
-      const usernames = usersAtEnd.map((u) => u.username)
-      assert(usernames.includes(newUser.username))
+        const usernames = usersAtEnd.map((u) => u.username)
+        assert(usernames.includes(newUser.username))
+      })
     })
 
-    test('fails when username or password missing', async () => {
-      const usersAtBegin = await helper.getUsers()
+    describe('fails creating a new user', () => {
+      test('when username or password are missing', async () => {
+        const usersAtBegin = await helper.getUsers()
 
-      const newUser = {
-        password: 'himitsu',
-        name: 'Himumi'
-      }
+        const newUser = {
+          password: 'himitsu',
+          name: 'Himumi'
+        }
 
-      const result = await api
-        .post('/api/users')
-        .send(newUser)
-        .expect(400)
-        .expect('Content-Type', /application\/json/)
+        const result = await api
+          .post('/api/users')
+          .send(newUser)
+          .expect(400)
+          .expect('Content-Type', /application\/json/)
 
-      const usersAtEnd = await helper.getUsers()
+        const usersAtEnd = await helper.getUsers()
 
-      assert.strictEqual(usersAtEnd.length, usersAtBegin.length)
-      assert(result.body.error.includes('is required'))
-    })
+        assert.strictEqual(usersAtEnd.length, usersAtBegin.length)
+        assert(result.body.error.includes('is required'))
+      })
 
-    test('fails when username less than 3 chars', async () => {
-      const usersAtBegin = await helper.getUsers()
+      test('when username less than 3 chars', async () => {
+        const usersAtBegin = await helper.getUsers()
 
-      const newUser = {
-        username: 'hm',
-        name: 'Himumi',
-        password: 'himitsu'
-      }
+        const newUser = {
+          username: 'hm',
+          name: 'Himumi',
+          password: 'himitsu'
+        }
 
-      const result = await api.post('/api/users').send(newUser).expect(400)
+        const result = await api.post('/api/users').send(newUser).expect(400)
 
-      const usersAtEnd = await helper.getUsers()
-      assert.strictEqual(usersAtEnd.length, usersAtBegin.length)
-      assert(result.body.error.includes('less than 3 chars'))
-    })
+        const usersAtEnd = await helper.getUsers()
+        assert.strictEqual(usersAtEnd.length, usersAtBegin.length)
+        assert(result.body.error.includes('less than 3 chars'))
+      })
 
-    test('fails when password less than 3 chars', async () => {
-      const usersAtBegin = await helper.getUsers()
+      test('when user is already taken (unique)', async () => {
+        const usersAtBegin = await helper.getUsers()
 
-      const newUser = {
-        username: 'himumi',
-        name: 'Himumi',
-        password: 'h'
-      }
+        const newUser = {
+          username: 'root',
+          name: 'Lesseruser',
+          password: 'lesssecret'
+        }
 
-      const result = await api.post('/api/users').send(newUser).expect(400)
+        const result = await api
+          .post('/api/users')
+          .send(newUser)
+          .expect(400)
+          .expect('Content-Type', /application\/json/)
 
-      const usersAtEnd = await helper.getUsers()
-      assert.strictEqual(usersAtEnd.length, usersAtBegin.length)
-      assert(result.body.error.includes('less than 3 chars'))
-    })
-
-    test('fails when user is already taken (unique)', async () => {
-      const usersAtBegin = await helper.getUsers()
-
-      const newUser = {
-        username: 'root',
-        name: 'Lesseruser',
-        password: 'lesssecret'
-      }
-
-      const result = await api
-        .post('/api/users')
-        .send(newUser)
-        .expect(400)
-        .expect('Content-Type', /application\/json/)
-
-      const usersAtEnd = await helper.getUsers()
-      assert.strictEqual(usersAtEnd.length, usersAtBegin.length)
-      assert(result.body.error.includes('unique'))
+        const usersAtEnd = await helper.getUsers()
+        assert.strictEqual(usersAtEnd.length, usersAtBegin.length)
+        assert(result.body.error.includes('unique'))
+      })
     })
   })
 
-  describe('getUsersHandler', () => {
-    test('succeeds fetching all users', async () => {
-      const usersAtBegin = await helper.getUsers()
+  describe('GET', () => {
+    describe('succeeds returning users', () => {
+      test('when data are correct', async () => {
+        const usersAtBegin = await helper.getUsers()
 
-      const result = await api
-        .get('/api/users')
-        .expect(200)
-        .expect('Content-Type', /application\/json/)
+        const result = await api
+          .get('/api/users')
+          .expect(200)
+          .expect('Content-Type', /application\/json/)
 
-      assert.strictEqual(result.body.length, usersAtBegin.length)
+        assert.strictEqual(result.body.length, usersAtBegin.length)
+      })
     })
   })
 
   after(async () => {
-    await removeAllInfo()
+    await helper.removeAllInfo()
     await mongoose.connection.close()
   })
 })
