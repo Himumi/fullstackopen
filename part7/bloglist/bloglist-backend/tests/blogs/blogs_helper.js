@@ -1,4 +1,6 @@
 const Blog = require('../../models/blog')
+const User = require('../../models/user')
+const usersHelper = require('../users/users_helper')
 
 const initialBlogs = [
   {
@@ -46,11 +48,6 @@ const newBlog = {
   likes: 0
 }
 
-const resetDB = async () => {
-  await Blog.deleteMany({})
-  await Blog.insertMany(initialBlogs)
-}
-
 const getBlogs = async () => {
   return await Blog.find({})
 }
@@ -69,10 +66,33 @@ const nonExistingId = async () => {
   return blog._id
 }
 
+const resetDB = async () => {
+  await usersHelper.resetDB()
+  await Blog.deleteMany({})
+
+  const user = await User.findOne({ username: 'erliansyah' })
+
+  const blogs = initialBlogs.map(blog => {
+    return { ...blog, user: user._id.toString() }
+  })
+  const savedBlogs = await Blog.insertMany(blogs)
+  
+  const blogIds = savedBlogs.map(blog => blog._id.toString())
+  user.blogs = user.blogs.concat(blogIds)
+
+  await user.save()
+}
+
+const removeAllInfo = async () => {
+  await usersHelper.removeAllInfo()
+  await Blog.deleteMany({})
+}
+
 module.exports = {
   initialBlogs,
   resetDB,
   getBlogs,
   nonExistingId,
-  newBlog
+  newBlog,
+  removeAllInfo,
 }
