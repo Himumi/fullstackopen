@@ -29,9 +29,21 @@ const update = async (blog) => {
   return response.data
 }
 
+const updateLikes = async (blog) => {
+  const response = await axios.put(`${baseUrl}/${blog.id}/likes`, blog, config())
+  return response.data
+}
+
 const remove = async (id) => {
   const response = await axios.delete(`${baseUrl}/${id}`, config())
   return response.data
 }
 
-export default { getAll, getById, create, update, remove, }
+export default { 
+  getAll, 
+  getById, 
+  create, 
+  update, 
+  remove, 
+  updateLikes,
+}
