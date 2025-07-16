@@ -20,13 +20,41 @@ const Blog = () => {
   }
 
   const blog = result.data
-  
-  const isBelong = (user) => {
-    return (blog) => {
-      if (!user.value) {
-        return false
+  console.log('blog', blog)
+
+  const handleUpdate = () => {
+    const updateBlog = {
+      ...blog,
+      likes: blog.likes + 1,
+      user: blog.user.id
+    }
+
+    blogsMutation.update.mutate(updateBlog, {
+      onSuccess: (result, variable, context) => {
+        setSuccessNotification(`Liked ${variable.title}`, 3)
+      },
+      onError: (error, variable, context) => {
+        console.log(error)
+        setErrorNotification(`Failed updating ${variable.title}`, 3)
       }
-      return user.value.username === blog.user.username
+    })
+  }
+
+  const handleDelete = () => {
+    const confirm = window.confirm(
+      `Remove blog ${blog.title} by ${blog.author}`
+    )
+
+    if (confirm) {
+      blogsMutation.delete.mutate(blog, {
+        onSuccess: (result, variable, context) => {
+          setSuccessNotification(`removed ${variable.title}`, 3)
+        },
+        onError: (error, variable, context) => {
+          console.log(error)
+          setErrorNotification(`Failed deleting ${variable.title}`, 3)
+        }
+      })
     }
   }
 
