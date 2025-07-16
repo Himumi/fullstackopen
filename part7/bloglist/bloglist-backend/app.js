@@ -18,7 +18,7 @@ app.use(middleware.tokenExtractor)
 
 // Routes
 app.use('/api/blogs', middleware.userExtractor, blogsRouter)
-app.use('/api/blogs', commentsRouter)
+app.use('/api/blogs', middleware.userExtractor, commentsRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
 
