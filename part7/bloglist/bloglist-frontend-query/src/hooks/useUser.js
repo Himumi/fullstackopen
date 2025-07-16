@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react'
 import ReducerContext from '../reducers/ReducerContext'
 
-import blogServices from '../services/blogs'
+import token from '../services/token'
 import loginServices from '../services/login'
 
 import useNotification from './useNotification'
@@ -31,7 +31,7 @@ const useUser = () => {
     if (loggedUser) {
       const user = JSON.parse(loggedUser)
       dispatch(setUser(user))
-      blogServices.setToken(user.token)
+      token.setToken(user.token)
     }
   }, [])
 
@@ -40,7 +40,7 @@ const useUser = () => {
       const user = await loginServices.login(credential)
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
       dispatch(setUser(user))
-      blogServices.setToken(user.token)
+      token.setToken(user.token)
       setSuccessNotification(`Logged in ${user.name}`, 3) 
     } catch (error) {
       setErrorNotification(`Failed login`, 3)
@@ -51,7 +51,7 @@ const useUser = () => {
     // delete all user information from app
     dispatch(removeUser())
     window.localStorage.removeItem('loggedBlogAppUser')
-    blogServices.deleteToken()
+    token.deleteToken()
 
     setSuccessNotification('Logged out', 3)
   }
