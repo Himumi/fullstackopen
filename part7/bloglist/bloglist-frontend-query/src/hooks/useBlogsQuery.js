@@ -39,6 +39,16 @@ export const useBlogsMutation = () => {
     }
   })
 
+  const updateLikesMutation = useMutation({
+    mutationFn: blogServices.updateLikes,
+    onSuccess: (result, variable, context) => {
+      // Update ['blogs', id] query
+      queryClient.setQueryData(['blogs', result.id],
+        (oldBlog) => result
+      )
+    }
+  })
+
   const deleteMutation = useMutation({
     mutationFn: blogServices.remove,
     onSuccess: (result, variable, context) => {
@@ -51,5 +61,6 @@ export const useBlogsMutation = () => {
     create: createMutation,
     update: updateMutation,
     delete: deleteMutation,
+    updateLikes: updateLikesMutation,
   }
 }
