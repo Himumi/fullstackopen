@@ -18,7 +18,7 @@ const createBlogCommentHandler = async (request, response, next) => {
     blog.comments = blog.comments.concat(savedComment._id)
     await blog.save()
 
-    response.status(201).json(comment)
+    response.status(201).json(savedComment)
   } catch (error) {
     next(error)
   }
