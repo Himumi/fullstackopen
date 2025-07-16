@@ -109,7 +109,42 @@ const updateBlogHandler = async (request, response, next) => {
     blog.url = body.url
     blog.likes = body.likes
 
-    const updatedBlog = await blog.save()
+    await blog.save()
+    const updatedBlog = await Blog
+      .findById(blog._id)
+      .populate('user', {
+        username: 1,
+        name: 1,
+        id:1,
+      })
+      .populate('comments', {
+        id: 1,
+        content: 1,
+      })
+
+    response.status(201).json(updatedBlog)
+  } catch (error) {
+    next(error)
+  }
+}
+
+const updateBlogLikesHandler = async (request, response, next) => {
+  try {
+    const blog = await Blog.findById(request.params.id)
+    blog.likes = blog.likes + 1
+
+    await blog.save()
+    const updatedBlog = await Blog
+      .findById(blog._id)
+      .populate('user', {
+        username: 1,
+        name: 1,
+        id:1,
+      })
+      .populate('comments', {
+        id: 1,
+        content: 1,
+      })
 
     response.status(201).json(updatedBlog)
   } catch (error) {
@@ -122,5 +157,6 @@ blogsRouter.get('/:id', getBlogHandler)
 blogsRouter.post('/', createBlogHandler)
 blogsRouter.delete('/:id', deleteBlogHandler)
 blogsRouter.put('/:id', updateBlogHandler)
+blogsRouter.put('/:id/likes', updateBlogLikesHandler)
 
 module.exports = blogsRouter

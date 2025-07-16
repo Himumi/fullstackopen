@@ -219,6 +219,18 @@ describe('blogs api', () => {
 
         assertEqual(result.body.likes, blog.likes + 1)
       })
+
+      test('when access /likes, any users can update any blog likes', async () => {
+        const blogs = await helper.getBlogs()
+        const blog = blogs[2]
+        const updatedLikes = await api
+          .put(`/api/blogs/${blog._id.toString()}/likes`)
+          .set('Authorization', `Bearer ${usersHelper.getToken()}`)
+          .expect(201)
+          .expect('Content-Type', /application\/json/)
+        
+        assertEqual(updatedLikes.body.likes, blog.likes + 1)
+      })
     })
 
     describe('fails updating', () => {
