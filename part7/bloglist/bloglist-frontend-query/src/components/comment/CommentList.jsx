@@ -1,18 +1,18 @@
+import { List, ListItem, Typography } from "@material-tailwind/react"
+
 const CommentList = ({ comments }) => {
   return (
-    <div>
-      <h3>comments</h3>
-      <ul>
+      <List className='my-2'>
         {comments.length === 0 
-          ? 
-            <li>no comment</li> 
-          : 
-            comments.map(comment => 
-              <li key={comment.id}>{comment.content}</li>
-            )
+          && <ListItem>no comment</ListItem> 
         }
-      </ul>
-    </div>
+        {comments.length !== 0
+          && comments.map(comment => 
+            <ListItem key={comment.id}>
+              {comment.content}
+            </ListItem>
+          )}
+      </List>
   )
 }
 
