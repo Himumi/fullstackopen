@@ -5,6 +5,15 @@ import { useBlogQuery } from '../../hooks/useBlogsQuery'
 import Comments from '../comment/Comments'
 import LikeButton from './LikeButton'
 import DeleteButton from './DeleteButton'
+  
+const isBelong = (user) => {
+  return (blog) => {
+    if (!user.value) {
+      return false
+    }
+    return user.value.username === blog.user.username
+  }
+}
 
 const Blog = () => {
   const loggedInUser = useHandleUser()
@@ -20,15 +29,6 @@ const Blog = () => {
   }
 
   const blog = result.data
-  
-  const isBelong = (user) => {
-    return (blog) => {
-      if (!user.value) {
-        return false
-      }
-      return user.value.username === blog.user.username
-    }
-  }
 
   return (
     <div className="blog">
