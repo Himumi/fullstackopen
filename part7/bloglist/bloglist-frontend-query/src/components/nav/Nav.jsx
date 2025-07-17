@@ -1,30 +1,21 @@
-import { Link } from "react-router-dom"
-import ButtonLogin from "./ButtonLogin"
+import { NavLink } from "react-router-dom"
 import UserLoggedIn from "./UserLoggedIn"
 import useHandleUser from "../../hooks/useHandleUser"
+
 
 const Nav = () => {
   const user = useHandleUser()
 
-  const navStyles = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 10,
-    height: 50,
-    paddingLeft: 15,
-    background: 'lightgray',
-  }
-
   return (
-    <div style={navStyles}>
-      <div>
-        <Link to='/blogs'>blogs</Link>
-      </div>
-      <div>
-        <Link to='/users'>users</Link>
-      </div>
+    <div className="flex items-center gap-6 h-12 pl-5 bg-slate-500">
+      <NavLink to='/blogs' end>
+        Blogs
+      </NavLink>
+      <NavLink to='/users' end>
+        Users
+      </NavLink>
       {user.value && <UserLoggedIn />}
-      {!user.value && <ButtonLogin />}
+      {!user.value && <NavLink to='/login' end>login</NavLink>}
     </div>
   )
 }
