@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom"
 import { useHandleLogout } from "../../hooks/useHandleUser"
 import useNotification from "../../hooks/useNotification"
 
-import { Button } from "@material-tailwind/react"
+import { Button, Typography } from "@material-tailwind/react"
 
 const LogoutButton = () => {
   const { setSuccessNotification } = useNotification()
@@ -19,7 +19,11 @@ const LogoutButton = () => {
   }
 
   return (
-    <Button onClick={handleLogout}>logout</Button>
+    <Button size="md" onClick={handleLogout}>
+      <Typography>
+        Log out
+      </Typography>
+    </Button>
   )
 }
 

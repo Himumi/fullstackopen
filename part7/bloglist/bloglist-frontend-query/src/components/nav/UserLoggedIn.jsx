@@ -1,5 +1,4 @@
 import useHandleUser from "../../hooks/useHandleUser"
-import LogoutButton from "./LogoutButton"
 
 const UserLoggedIn = () => {
   const user = useHandleUser()
@@ -12,9 +11,6 @@ const UserLoggedIn = () => {
     <div>
       <div>
         <span>{user.value.name} logged in</span>
-      </div>
-      <div>
-        <LogoutButton />
       </div>
     </div>
   )
