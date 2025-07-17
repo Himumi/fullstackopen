@@ -1,9 +1,7 @@
-import { Link } from "react-router-dom"
-import useUser from "../../hooks/useUser"
+import ButtonLogin from "./ButtonLogin"
+import UserLoggedIn from "./UserLoggedIn"
 
 const Nav = () => {
-  const user = useUser()
-
   const navStyles = {
     display: 'flex',
     alignItems: 'center',
@@ -21,12 +19,8 @@ const Nav = () => {
       <div>
         <Link to='/users'>users</Link>
       </div>
-      <div>
-        <span>{user.value.name} logged in</span>
-      </div>
-      <div>
-        <button onClick={user.handleLogout}>logout</button>
-      </div>
+      {user.value && <UserLoggedIn />}
+      {!user.value && <ButtonLogin />}
     </div>
   )
 }
