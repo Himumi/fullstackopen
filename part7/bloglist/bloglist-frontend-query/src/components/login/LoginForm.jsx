@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useHandleLogin } from '../../hooks/useHandleUser'
 import useInput from '../../hooks/useInput'
 import useNotification from '../../hooks/useNotification'
+import { Button, Card, Input, Typography } from '@material-tailwind/react'
 
 const LoginForm = ({ handleLogin }) => {
   const {reset: resetUsername, ...username} = useInput('text')
@@ -40,35 +41,44 @@ const LoginForm = ({ handleLogin }) => {
   }
 
   return (
-    <div>
-      <div>
-        <h1>log in to application</h1>
-      </div>
-      <form onSubmit={handleLogin}>
-        <div>
-          username
-          <input
-            data-testid="username"
-            className="username"
-            name="Username"
-            {...username}
-          />
-        </div>
-        <div>
-          password
-          <input
-            data-testid="password"
-            className="password"
-            name="Password"
-            {...password}
-          />
-        </div>
-        <div>
-          <button type="submit" className="loginButton">
-            login
-          </button>
-        </div>
-      </form>
+    <div className='flex justify-center'>
+      <Card className='bg-slate-50  w-1/3 m-12 py-40 px-36 '>
+        <Typography type='h4' >
+          Log In
+        </Typography>
+        <Typography className='mt-2 font-light -white'>
+          Please Input Username and Password
+        </Typography>
+        <form onSubmit={handleLogin} className='mt-8 w-80 max-w-screen-lg '>
+          <div className='mb-1 flex flex-col gap-6'>
+            <Typography type='h6' className='-mb-3'>
+              Username
+            </Typography>
+            <Input 
+              size='lg'
+              placeholder='username'
+              className='!border-t-blue-gray-200 focus:!border-t-gray-900'
+              {...username}
+            />
+            <Typography type='h6' className='-mb-3'>
+              Password
+            </Typography>
+            <Input 
+              size='lg'
+              placeholder='password'
+              className='!border-t-blue-gray-200 focus:!border-t-gray-900'
+              {...password}
+            />
+            <Button 
+              type='primary' 
+              onClick={handleLogin}
+              className='mt-3'
+            >
+              login
+            </Button>
+          </div>
+        </form>
+      </Card>
     </div>
   )
 }
