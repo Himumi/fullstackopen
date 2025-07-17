@@ -1,7 +1,11 @@
+import { Link } from "react-router-dom"
 import ButtonLogin from "./ButtonLogin"
 import UserLoggedIn from "./UserLoggedIn"
+import useHandleUser from "../../hooks/useHandleUser"
 
 const Nav = () => {
+  const user = useHandleUser()
+
   const navStyles = {
     display: 'flex',
     alignItems: 'center',
