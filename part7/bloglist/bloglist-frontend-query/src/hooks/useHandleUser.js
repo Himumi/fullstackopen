@@ -36,38 +36,38 @@ const useHandleUser = () => {
   }
 }
 
-export const useHandleLogin = (navigateTo) => {
+export const useHandleLogin = () => {
   const { state, dispatch } = useContext(ReducerContext)
-  const { 
-    setSuccessNotification,
-    setErrorNotification
-  } = useNotification()
 
-  return async credential => {
+  return async (credential, onSuccess = null, onError = null ) => {
     try {
       const user = await loginServices.login(credential)
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
       dispatch(setUser(user))
       token.setToken(user.token)
-      setSuccessNotification(`Logged in ${user.name}`, 3) 
-      navigateTo()
+      if (onSuccess) {
+        onSuccess()
+      }
     } catch (error) {
-      setErrorNotification(`Failed login`, 3)
+      if (onError) {
+        onError()
+      }
     }
   } 
 }
 
 export const useHandleLogout = () => {
   const { state, dispatch } = useContext(ReducerContext)
-  const { setSuccessNotification } = useNotification()
   
-  return () => {
+  return (onSuccess = null) => {
     // delete all user information from app
     dispatch(removeUser())
     window.localStorage.removeItem('loggedBlogAppUser')
     token.deleteToken()
 
-    setSuccessNotification('Logged out', 3)
+    if (onSuccess) {
+      onSuccess()
+    }
   }
 }
 
