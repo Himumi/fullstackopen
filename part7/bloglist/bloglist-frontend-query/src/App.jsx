@@ -15,6 +15,8 @@ import {
 
 import useHandleUser from './hooks/useHandleUser'
 
+import './App.css'
+
 const App = () => {
   // Get user from localStorage
   useHandleUser() 
