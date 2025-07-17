@@ -1,6 +1,8 @@
 import useNotification from "../../hooks/useNotification"
 import { useBlogsMutation } from "../../hooks/useBlogsQuery"
 
+import { Button } from "@material-tailwind/react"
+
 const DeleteButton = ({ blog }) => {
   const blogsMutation = useBlogsMutation()
   const { 
@@ -26,7 +28,7 @@ const DeleteButton = ({ blog }) => {
     }
   } 
 
-  return <button onClick={handleDelete}>delete blog</button>
+  return <Button onClick={handleDelete}>delete blog</Button>
 }
 
 export default DeleteButton
