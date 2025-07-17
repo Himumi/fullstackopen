@@ -1,12 +1,18 @@
 import { useNavigate } from 'react-router-dom'
 import { useHandleLogin } from '../../hooks/useHandleUser'
 import useInput from '../../hooks/useInput'
+import useNotification from '../../hooks/useNotification'
 
 const LoginForm = ({ handleLogin }) => {
   const {reset: resetUsername, ...username} = useInput('text')
   const {reset: resetPassword, ...password} = useInput('password')
+  const handleUserLogin = useHandleLogin()
   const navigate = useNavigate()
-  const handleUserLogin = useHandleLogin(navigate('/'))
+
+  const {
+    setSuccessNotification,
+    setErrorNotification
+  } = useNotification()
 
   const resetValues = () => {
     resetUsername()
@@ -16,10 +22,19 @@ const LoginForm = ({ handleLogin }) => {
   handleLogin ??= (event) => {
     event.preventDefault()
 
-    handleUserLogin({
-      username: username.value,
-      password: password.value
-    })
+    handleUserLogin(
+      {
+        username: username.value,
+        password: password.value
+      }, 
+      () => {
+        setSuccessNotification('success log in', 3)
+        navigate('/')
+      },
+      () => {
+        setErrorNotification('Fail log in', 3)
+      }
+    )
     
     resetValues()
   }
