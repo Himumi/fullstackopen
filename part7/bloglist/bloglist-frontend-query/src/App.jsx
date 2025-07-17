@@ -13,14 +13,11 @@ import {
   Routes,
 } from 'react-router-dom'
 
-import useUser from './hooks/useUser'
+import useHandleUser from './hooks/useHandleUser'
 
 const App = () => {
-  const user = useUser() 
-
-  if (!user.value) {
-    return <LoginForm />
-  }
+  // Get user from localStorage
+  useHandleUser() 
 
   return (
     <Router>
@@ -29,6 +26,7 @@ const App = () => {
 
       <Routes>
         <Route index element={<Blogs />} />
+        <Route path='/login' element={<LoginForm />} />
         <Route path='users' element={<Users />} >
           <Route index element={<UsersList />} />
           <Route path=':id' element={<User />} />
