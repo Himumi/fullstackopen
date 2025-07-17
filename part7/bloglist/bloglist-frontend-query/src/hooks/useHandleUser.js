@@ -36,7 +36,7 @@ const useHandleUser = () => {
   }
 }
 
-export const useHandleLogin = () => {
+export const useHandleLogin = (navigateTo) => {
   const { state, dispatch } = useContext(ReducerContext)
   const { 
     setSuccessNotification,
@@ -50,6 +50,7 @@ export const useHandleLogin = () => {
       dispatch(setUser(user))
       token.setToken(user.token)
       setSuccessNotification(`Logged in ${user.name}`, 3) 
+      navigateTo()
     } catch (error) {
       setErrorNotification(`Failed login`, 3)
     }

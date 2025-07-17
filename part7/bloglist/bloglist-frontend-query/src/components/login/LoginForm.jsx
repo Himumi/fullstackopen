@@ -1,10 +1,12 @@
-import useUser from '../../hooks/useUser'
+import { useNavigate } from 'react-router-dom'
+import { useHandleLogin } from '../../hooks/useHandleUser'
 import useInput from '../../hooks/useInput'
 
 const LoginForm = ({ handleLogin }) => {
   const {reset: resetUsername, ...username} = useInput('text')
   const {reset: resetPassword, ...password} = useInput('password')
-  const user = useUser()
+  const navigate = useNavigate()
+  const handleUserLogin = useHandleLogin(navigate('/'))
 
   const resetValues = () => {
     resetUsername()
@@ -14,11 +16,11 @@ const LoginForm = ({ handleLogin }) => {
   handleLogin ??= (event) => {
     event.preventDefault()
 
-    user.handleLogin({
+    handleUserLogin({
       username: username.value,
       password: password.value
     })
-
+    
     resetValues()
   }
 
