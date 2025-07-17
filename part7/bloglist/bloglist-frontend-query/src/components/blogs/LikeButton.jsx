@@ -15,7 +15,7 @@ const LikeButton = ({ blog }) => {
       user: blog.user.id
     }
 
-    blogsMutation.update.mutate(updateBlog, {
+    blogsMutation.updateLikes.mutate(updateBlog, {
       onSuccess: (result, variable, context) => {
         setSuccessNotification(`Liked ${variable.title}`, 3)
       },
