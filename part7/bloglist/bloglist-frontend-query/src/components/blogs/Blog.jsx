@@ -1,19 +1,15 @@
 import { useParams } from 'react-router-dom'
-import useUser from '../../hooks/useUser'
-import useNotification from '../../hooks/useNotification'
-import { useBlogQuery, useBlogsMutation } from '../../hooks/useBlogsQuery'
+import useHandleUser from '../../hooks/useHandleUser'
+import { useBlogQuery } from '../../hooks/useBlogsQuery'
 
 import Comments from '../comment/Comments'
+import LikeButton from './LikeButton'
+import DeleteButton from './DeleteButton'
 
 const Blog = () => {
-  const loggedUser = useUser()
+  const loggedInUser = useHandleUser()
+  const isBelongUser = isBelong(loggedInUser)
   const result = useBlogQuery(useParams().id)
-  const blogsMutation = useBlogsMutation()
-
-  const {
-    setSuccessNotification,
-    setErrorNotification,
-  } = useNotification()
 
   if (result.isLoading) {
     return <div>loading data</div>
@@ -24,41 +20,13 @@ const Blog = () => {
   }
 
   const blog = result.data
-  console.log('blog', blog)
-
-  const handleUpdate = () => {
-    const updateBlog = {
-      ...blog,
-      likes: blog.likes + 1,
-      user: blog.user.id
-    }
-
-    blogsMutation.update.mutate(updateBlog, {
-      onSuccess: (result, variable, context) => {
-        setSuccessNotification(`Liked ${variable.title}`, 3)
-      },
-      onError: (error, variable, context) => {
-        console.log(error)
-        setErrorNotification(`Failed updating ${variable.title}`, 3)
+  
+  const isBelong = (user) => {
+    return (blog) => {
+      if (!user.value) {
+        return false
       }
-    })
-  }
-
-  const handleDelete = () => {
-    const confirm = window.confirm(
-      `Remove blog ${blog.title} by ${blog.author}`
-    )
-
-    if (confirm) {
-      blogsMutation.delete.mutate(blog, {
-        onSuccess: (result, variable, context) => {
-          setSuccessNotification(`removed ${variable.title}`, 3)
-        },
-        onError: (error, variable, context) => {
-          console.log(error)
-          setErrorNotification(`Failed deleting ${variable.title}`, 3)
-        }
-      })
+      return user.value.username === blog.user.username
     }
   }
 
@@ -67,12 +35,9 @@ const Blog = () => {
       <h2>{blog.title}</h2>
       <div>
         <a href={blog.url}>{blog.url}</a> <br />
-        {blog.likes} likes <button onClick={handleUpdate}>like</button> <br />
+        {blog.likes} likes <LikeButton blog={blog} /> <br />
         Added by {blog.author} <br />
-        {loggedUser.value.username !== blog.user
-          ? null
-          : <button onClick={handleDelete}>delete</button>
-        }
+        {isBelongUser(blog) && <DeleteButton blog={blog} />}
       </div>
       <Comments blog={blog} />
     </div>
