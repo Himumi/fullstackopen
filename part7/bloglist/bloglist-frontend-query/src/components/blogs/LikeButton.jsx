@@ -1,5 +1,6 @@
 import { useBlogsMutation } from "../../hooks/useBlogsQuery"
 import useNotification from "../../hooks/useNotification"
+import { Button } from "@material-tailwind/react"
 
 const LikeButton = ({ blog }) => {
   const blogsMutation = useBlogsMutation()
@@ -27,7 +28,14 @@ const LikeButton = ({ blog }) => {
   }
 
   return (
-    <button onClick={handleUpdate}>like</button>
+    <Button
+      variant="outline"
+      size="sm"
+      onClick={handleUpdate}
+      className="ml-1"
+    >
+      like
+    </Button>
   )
 }
 
