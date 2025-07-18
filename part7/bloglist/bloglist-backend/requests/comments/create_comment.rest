@@ -1,0 +1,19 @@
+get http://localhost:3003/api/blogs
+
+###
+post http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+  "username": "root",
+  "password": "rahasia" 
+}
+
+###
+post http://localhost:3003/api/blogs/6860b243878c886d60c850a0/comments
+Content-Type: application/json
+Authorization: Bearer "logged in token"
+
+{
+  "content": "good blog"
+}
