@@ -4,7 +4,7 @@ import Nav from './components/nav/Nav'
 import User from './components/users/User'
 import Users from './components/users/Users'
 import UsersList from './components/users/UsersList'
-import Blogs from './components/blogs/Blogs'
+import BlogsList from './components/blogs/BlogsList'
 import Blog from './components/blogs/Blog'
 
 import {
@@ -27,14 +27,14 @@ const App = () => {
       <Nav />
 
       <Routes>
-        <Route index element={<Blogs />} />
+        <Route index element={<BlogsList />} />
         <Route path='/login' element={<LoginForm />} />
         <Route path='users' element={<Users />} >
           <Route index element={<UsersList />} />
           <Route path=':id' element={<User />} />
         </Route>
         <Route path='blogs' >
-          <Route index element={<Blogs />} />
+          <Route index element={<BlogsList />} />
           <Route path=':id' element={<Blog />} />
         </Route>
       </Routes>
