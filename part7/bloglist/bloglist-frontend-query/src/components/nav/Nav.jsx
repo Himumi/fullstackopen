@@ -1,10 +1,11 @@
 import { NavLink } from "react-router-dom"
 import UserLoggedIn from "./UserLoggedIn"
 import useHandleUser from "../../hooks/useHandleUser"
-import { Navbar, Typography } from "@material-tailwind/react"
+import { Button, Navbar, Typography } from "@material-tailwind/react"
 
 import LoginButton from "./LoginButton"
 import LogoutButton from "./LogoutButton"
+import CreateBlogDialog from "../blogs/CreateBlogDialog"
 
 const navLink = [
   {
@@ -45,6 +46,11 @@ const Nav = () => {
         <div className="ml-3 mr-3 block py-1 ">
           <Typography type="small" className='font-semibold italic underline' >
             {user.value && <UserLoggedIn />}
+          </Typography>
+        </div>
+        <div className='ml-3 mr-3 py-1 '>
+          <Typography type="small" className='font-medium'>
+            {user.value && <CreateBlogDialog />}
           </Typography>
         </div>
         <div className="ml-auto mr-2 inline-block">
