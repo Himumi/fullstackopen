@@ -2,10 +2,15 @@ import { useParams } from "react-router-dom"
 import useInput from "../../hooks/useInput"
 import { useCreateCommentsMutation } from "../../hooks/useCommentsMutation"
 import { Input, Button } from "@material-tailwind/react"
+import useNotification from "../../hooks/useNotification"
 
 const CommentForm = () => {
   const {reset: resetComment, ...comment} = useInput('text')
   const id = useParams().id
+  const {
+    setSuccessNotification,
+    setErrorNotification
+  } = useNotification()
 
   const createCommentMutation = useCreateCommentsMutation()
 
@@ -18,10 +23,10 @@ const CommentForm = () => {
 
     createCommentMutation.mutate(newComment, {
       onSuccess: (result, variable, context) => {
-        console.log('created comment')
+        setSuccessNotification('Created comment', 3)
       },
       onError: (error, variable, context) => {
-        console.error(error)
+        setErrorNotification('Error creating comment', 3)
       } 
     })
 
