@@ -1,4 +1,6 @@
 const _ = require('lodash')
+const { v1: uuid } = require('uuid')
+
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
 
@@ -129,6 +131,15 @@ const typeDefs = `#graphql
     ): [Book!]!
     allAuthors: [AllAuthors!]!
   }
+
+  type Mutation {
+    addBook(
+      title: String!
+      author: String!
+      published: Int!
+      genres: [String!]!
+    ): Book
+  }
 `
 
 const resolvers = {
@@ -161,6 +172,24 @@ const resolvers = {
         }
       }
       return _.map(authors, addBookCount) 
+    },
+  },
+  Mutation: {
+    addBook: (root, args) => {
+      const isExisted = _.find(authors, ['name', args.author])
+
+      if (!isExisted) {
+        authors = authors.concat({
+          name: args.author,
+          id: uuid()
+        })
+      }
+
+      const createdBook = {
+        ...args, id: uuid()
+      }
+      books = books.concat(createdBook)
+      return createdBook
     },
   }
 }
