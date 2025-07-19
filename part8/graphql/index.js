@@ -194,7 +194,9 @@ const resolvers = {
     addBook: (root, args) => {
       const isExisted = findAuthor(authors, args.author)
 
+      // When a new author is not in authors
       if (!isExisted) {
+        // Add a new author to authors
         authors = authors.concat({
           name: args.author,
           id: uuid()
@@ -210,6 +212,7 @@ const resolvers = {
     editAuthor: (root, args) => {
       const author = findAuthor(authors, args.name)
 
+      // When author is not found
       if (!author) {
         return null
       }
@@ -218,9 +221,11 @@ const resolvers = {
         ...author,
         born: args.setBornTo
       }
-      authors = authors.map(
-        (author) => author.name === updatedAuthor.name ? updatedAuthor : author
-      )
+
+      const updateAuthors = (author) =>  
+        author.name === updatedAuthor.name ? updatedAuthor : author
+      authors = authors.map(updateAuthors)
+
       return updatedAuthor
     },
   },
