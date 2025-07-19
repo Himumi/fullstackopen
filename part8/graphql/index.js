@@ -183,7 +183,7 @@ const resolvers = {
   },
   Mutation: {
     addBook: (root, args) => {
-      const isExisted = _.find(authors, ['name', args.author])
+      const isExisted = findAuthor(authors, args.author)
 
       if (!isExisted) {
         authors = authors.concat({
