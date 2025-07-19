@@ -1,3 +1,4 @@
+const _ = require('lodash')
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
 
@@ -112,10 +113,18 @@ const typeDefs = `#graphql
     genres: [String!]!
   }
 
+  type AllAuthors {
+    name: String!
+    id: ID!
+    born: Int
+    bookCount: Int!
+  }
+
   type Query {
     bookCount: Int!
     authorCount: Int!
     allBooks: [Book!]!
+    allAuthors: [AllAuthors!]!
   }
 `
 
@@ -124,6 +133,16 @@ const resolvers = {
     bookCount: () => books.length,
     authorCount: () => authors.length,
     allBooks: () => books,
+    allAuthors: () => {
+      const countBookByAuthor = _.countBy(books, 'author')
+      const addBookCount = (author) => {
+        return { 
+          ...author,
+          bookCount: countBookByAuthor[author.name] 
+        }
+      }
+      return _.map(authors, addBookCount) 
+    },
   }
 }
 
