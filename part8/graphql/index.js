@@ -172,12 +172,10 @@ const resolvers = {
     },
     allAuthors: () => {
       const countBookByAuthor = _.countBy(books, 'author')
-      const addBookCount = (author) => {
-        return { 
-          ...author,
-          bookCount: countBookByAuthor[author.name] 
-        }
-      }
+      const addBookCount = (author) => new Object({
+        ...author,
+        bookCount: countBookByAuthor[author.name] 
+      })
       return _.map(authors, addBookCount) 
     },
   },
