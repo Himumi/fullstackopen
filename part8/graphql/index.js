@@ -155,17 +155,26 @@ const resolvers = {
     authorCount: () => authors.length,
     allBooks: (root, args) => {
       switch (false) {
-        case _.every(args):
-          return _.filter(books, (book) => 
+        // Check both author & genre are given in args
+        case _.every(args): {
+          const authorAndGenreFilter = (book) => 
             _.includes(book.genres, args.genre) 
             && book.author === args.author
-          )
-        case !args.author:
+
+          return _.filter(books, authorAndGenreFilter)
+        }
+        // Check author is given
+        case !args.author: {
           return _.filter(books, ['author', args.author])
-        case !args.genre:
-          return _.filter(books, (book) => 
+        }
+        // Check genre is given
+        case !args.genre: {
+          const isGenreIncluded = (book) => 
             _.includes(book.genres, args.genre)
-          )
+
+          return _.filter(books, isGenreIncluded)
+        }
+        // Return all books
         default:
           return books
       }
