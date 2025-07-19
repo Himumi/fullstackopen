@@ -139,8 +139,15 @@ const typeDefs = `#graphql
       published: Int!
       genres: [String!]!
     ): Book
+    editAuthor(
+      name: String!
+      setBornTo: Int!
+    ): Author
   }
 `
+
+const findAuthor = (authors, author) => 
+  _.find(authors, ['name', author])
 
 const resolvers = {
   Query: {
@@ -191,7 +198,23 @@ const resolvers = {
       books = books.concat(createdBook)
       return createdBook
     },
-  }
+    editAuthor: (root, args) => {
+      const author = findAuthor(authors, args.name)
+
+      if (!author) {
+        return null
+      }
+
+      const updatedAuthor = {
+        ...author,
+        born: args.setBornTo
+      }
+      authors = authors.map(
+        (author) => author.name === updatedAuthor.name ? updatedAuthor : author
+      )
+      return updatedAuthor
+    },
+  },
 }
 
 const server = new ApolloServer({
