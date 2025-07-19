@@ -180,11 +180,13 @@ const resolvers = {
       }
     },
     allAuthors: () => {
+      // Group by author & count its books
       const countBookByAuthor = _.countBy(books, 'author')
       const addBookCount = (author) => new Object({
         ...author,
         bookCount: countBookByAuthor[author.name] 
       })
+      // Add bookCount to authors
       return _.map(authors, addBookCount) 
     },
   },
