@@ -149,85 +149,95 @@ const typeDefs = `#graphql
 const findAuthor = (authors, author) => 
   _.find(authors, ['name', author])
 
+// Queries
+const allBooksQuery = (root, args) => {
+  switch (false) {
+    // Check both author & genre are given in args
+    case _.every(args): {
+      const authorAndGenreFilter = (book) => 
+        book.genres.includes(args.genre)
+        && book.author === args.author
+
+      return books.filter(authorAndGenreFilter)
+    }
+    // Check author is given
+    case !args.author: {
+      return _.filter(books, ['author', args.author])
+    }
+    // Check genre is given
+    case !args.genre: {
+      const isGenreIncluded = (book) => 
+        book.genres.includes(args.genre)
+
+      return books.filter(isGenreIncluded)
+    }
+    // Return all books
+    default:
+      return books
+  }
+}
+
+const allAuthorsQuery = () => {
+  // Group by author & count its books
+  const countBookByAuthor = _.countBy(books, 'author')
+  const addBookCount = (author) => new Object({
+    ...author,
+    bookCount: countBookByAuthor[author.name] 
+  })
+  // Add bookCount to authors
+  return authors.map(addBookCount)
+}
+
+// Mutations
+const addBookMutation = (root, args) => {
+  const isExisted = findAuthor(authors, args.author)
+
+  // When a new author is not in authors
+  if (!isExisted) {
+  // Add a new author to authors
+  authors = authors.concat({
+    name: args.author,
+    id: uuid()
+  })
+  }
+
+  const createdBook = {
+  ...args, id: uuid()
+  }
+  books = books.concat(createdBook)
+  return createdBook
+}
+
+const editAuthorMutation = (root, args) => {
+  const author = findAuthor(authors, args.name)
+
+  // When author is not found
+  if (!author) {
+    return null
+  }
+
+  const updatedAuthor = {
+    ...author,
+    born: args.setBornTo
+  }
+
+  const updateAuthors = (author) =>  
+    author.name === updatedAuthor.name ? updatedAuthor : author
+  authors = authors.map(updateAuthors)
+
+  return updatedAuthor
+}
+
 const resolvers = {
   Query: {
     bookCount: () => books.length,
     authorCount: () => authors.length,
-    allBooks: (root, args) => {
-      switch (false) {
-        // Check both author & genre are given in args
-        case _.every(args): {
-          const authorAndGenreFilter = (book) => 
-            _.includes(book.genres, args.genre) 
-            && book.author === args.author
-
-          return _.filter(books, authorAndGenreFilter)
-        }
-        // Check author is given
-        case !args.author: {
-          return _.filter(books, ['author', args.author])
-        }
-        // Check genre is given
-        case !args.genre: {
-          const isGenreIncluded = (book) => 
-            _.includes(book.genres, args.genre)
-
-          return _.filter(books, isGenreIncluded)
-        }
-        // Return all books
-        default:
-          return books
-      }
-    },
-    allAuthors: () => {
-      // Group by author & count its books
-      const countBookByAuthor = _.countBy(books, 'author')
-      const addBookCount = (author) => new Object({
-        ...author,
-        bookCount: countBookByAuthor[author.name] 
-      })
-      // Add bookCount to authors
-      return _.map(authors, addBookCount) 
-    },
+    allBooks: allBooksQuery,
+    allAuthors: allAuthorsQuery,
   },
   Mutation: {
-    addBook: (root, args) => {
-      const isExisted = findAuthor(authors, args.author)
-
-      // When a new author is not in authors
-      if (!isExisted) {
-        // Add a new author to authors
-        authors = authors.concat({
-          name: args.author,
-          id: uuid()
-        })
-      }
-
-      const createdBook = {
-        ...args, id: uuid()
-      }
-      books = books.concat(createdBook)
-      return createdBook
-    },
-    editAuthor: (root, args) => {
-      const author = findAuthor(authors, args.name)
-
-      // When author is not found
-      if (!author) {
-        return null
-      }
-
-      const updatedAuthor = {
-        ...author,
-        born: args.setBornTo
-      }
-
-      const updateAuthors = (author) =>  
-        author.name === updatedAuthor.name ? updatedAuthor : author
-      authors = authors.map(updateAuthors)
-
-      return updatedAuthor
-    },
+    addBook: addBookMutation,
+    editAuthor: editAuthorMutation,
   },
 }
 
