@@ -1,8 +1,23 @@
+require('dotenv').config()
 const _ = require('lodash')
 const { v1: uuid } = require('uuid')
 
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
+
+const mongoose = require('mongoose')
+const Book = require('./models/book')
+const Author = require('./models/author')
+
+mongoose.set('strictQuery', false)
+
+const MONGODB_URI = process.env.MONGODB_URI
+
+console.log('connecting to MongoDB')
+
+mongoose.connect(MONGODB_URI)
+  .then(() => console.log('connected to MongoDB'))
+  .catch(error => console.log('failed to connecting to MongoDB', error))
 
 let authors = [
   {
