@@ -1,6 +1,6 @@
 const Book = require('../models/book')
 
-const bookCount = () => Book.collection.countDocuments()
+const bookCount = async () => Book.collection.countDocuments()
 
 module.exports = {
   bookCount,
