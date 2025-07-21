@@ -1,7 +1,9 @@
-const { bookCount } = require("../queries/books");
+const authorQueries = require("../queries/authors");
+const bookQueries = require("../queries/books");
 
 module.exports = {
   Query: {
-    bookCount: bookCount,
+    bookCount: bookQueries.bookCount,
+    authorCount: authorQueries.authorCount,
   }
 }
