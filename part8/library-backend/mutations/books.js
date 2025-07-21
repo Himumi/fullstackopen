@@ -1,38 +1,15 @@
-const { GraphQLError } = require('graphql')
 const Author = require('../models/author')
 const Book = require('../models/book')
 
-const isTitleLengthValid = (title) => {
-  if (title.length < 5) {
-    throw new GraphQLError('title length must be more than 5 letters', {
-      extensions: {
-        code: 'BAD_USER_INPUT',
-        invalidArgs: args.title,
-      }
-    })
-  }
-}
+const { hasValueTaken, isValueLengthValid } = require('./helper')
 
-const isTitleUnique = (title) => {
-  const isBookExisted = async (title) => {
-    const book = await Book.find({}) 
-    return book.map(b => b.title).includes(title)
-  } 
-
-  if (isBookExisted(title)) {
-    throw new GraphQLError('Title must be unique', {
-      extensions: {
-        code: 'BAD_USER_INPUT',
-        invalidArgs: args.title,
-      }
-    })
-  }
-}
+const isTitleLengthValid = isValueLengthValid(5, 'title length must be 5 letters or more')
+const hasBookTaken = hasValueTaken(Book, 'title has taken')
 
 const addBook = async (root, args) => {
-  // Validator
+  // Validators
   isTitleLengthValid(args.title)
-  isTitleUnique(args.title)
+  hasBookTaken(args.title)
 
   const author = await Author.findOne({ name: args.author })
 
