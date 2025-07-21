@@ -1,7 +1,8 @@
-const { GraphQLError } = require('graphql')
-const User = require('../models/user')
+require('dotenv').config()
 
-const { hasValueTaken, isValueLengthValid } = require('./helper')
+const User = require('../models/user')
+const jwt = require('jsonwebtoken')
+const { hasValueTaken, isValueLengthValid, graphqlError } = require('./helper')
 
 const isUsernameLengthValid = isValueLengthValid(5, 'username must be 5 letters or more')
 const hasUserTaken = hasValueTaken(User, 'Username has taken')
@@ -19,6 +20,25 @@ const createUser = async (root, args) => {
   return await user.save()
 }
 
+const login = async (root, args) => {
+  const user = await User.findOne({ username: args.username })
+
+  if (!user || args.password !== 'secret') {
+    graphqlError({
+      message: 'wrong credentials',
+      code: 'BAD_USER_INPUT'
+    }) 
+  }
+
+  const userForToken = {
+    username: user.username,
+    id: user._id
+  }
+
+  return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
+}
+
 module.exports = {
   createUser,
+  login,
 }
