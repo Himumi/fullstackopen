@@ -42,4 +42,5 @@ const isValueLengthValid = (length, message) => {
 module.exports = {
   hasValueTaken,
   isValueLengthValid,
+  graphqlError,
 }
