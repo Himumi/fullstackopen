@@ -16,5 +16,6 @@ module.exports = {
     addBook: bookMutation.addBook, 
     editAuthor: authorMutation.editAuthor,
     createUser: userMutation.createUser, 
+    login: userMutation.login,
   }
 }
