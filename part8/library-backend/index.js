@@ -125,7 +125,7 @@ const typeDefs = `#graphql
   type Book {
     title: String!
     published: Int!
-    author: String!
+    author: Author!
     id: ID!
     genres: [String!]!
   }
@@ -204,23 +204,17 @@ const allAuthorsQuery = () => {
 }
 
 // Mutations
-const addBookMutation = (root, args) => {
-  const isExisted = findAuthor(authors, args.author)
+const addBookMutation = async (root, args) => {
+  const author = await Author.findOne({ name: args.author })
 
-  // When a new author is not in authors
-  if (!isExisted) {
-  // Add a new author to authors
-  authors = authors.concat({
-    name: args.author,
-    id: uuid()
+  const book = new Book({
+    ...args,
+    author: author._id
   })
-  }
 
-  const createdBook = {
-  ...args, id: uuid()
-  }
-  books = books.concat(createdBook)
-  return createdBook
+  await book.save()
+
+  return await Book.findById(book._id).populate('author')
 }
 
 const editAuthorMutation = (root, args) => {
