@@ -39,8 +39,18 @@ const isValueLengthValid = (length, message) => {
   }
 }
 
+const isLoggedIn = (user) => {
+  if (!user) {
+    graphqlError({
+      message: 'wrong credentials',
+      code: 'BAD_USER_INPUT',
+    })
+  }
+}
+
 module.exports = {
   hasValueTaken,
   isValueLengthValid,
   graphqlError,
+  isLoggedIn,
 }

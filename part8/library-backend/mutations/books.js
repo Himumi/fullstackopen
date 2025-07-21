@@ -1,15 +1,16 @@
 const Author = require('../models/author')
 const Book = require('../models/book')
 
-const { hasValueTaken, isValueLengthValid } = require('./helper')
+const { hasValueTaken, isValueLengthValid, isLoggedIn } = require('./helper')
 
 const isTitleLengthValid = isValueLengthValid(5, 'title length must be 5 letters or more')
 const hasBookTaken = hasValueTaken(Book, 'title has taken')
 
-const addBook = async (root, args) => {
+const addBook = async (root, args, context) => {
   // Validators
   isTitleLengthValid(args.title)
   hasBookTaken(args.title)
+  isLoggedIn(context.currentUser)
 
   const author = await Author.findOne({ name: args.author })
 
