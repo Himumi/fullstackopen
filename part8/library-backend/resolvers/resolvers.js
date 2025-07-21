@@ -5,5 +5,6 @@ module.exports = {
   Query: {
     bookCount: bookQueries.bookCount,
     authorCount: authorQueries.authorCount,
+    allAuthors: authorQueries.allAuthors,
   }
 }
