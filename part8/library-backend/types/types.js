@@ -21,6 +21,16 @@ const typeDefs = `#graphql
     bookCount: Int!
   }
 
+  type User {
+    username: String!
+    favoriteGenre: String!
+    id: ID!
+  }
+
+  type Token {
+    value: String!
+  }
+
   # Queries
   type Query {
     bookCount: Int!
@@ -30,6 +40,7 @@ const typeDefs = `#graphql
       genre: String
     ): [Book!]!
     allAuthors: [AllAuthors!]!
+    me: User
   }
 
   # Mutations
@@ -44,6 +55,14 @@ const typeDefs = `#graphql
       name: String!
       setBornTo: Int!
     ): Author
+    createUser(
+      username: String!
+      favoriteGenre: String!
+    ): User
+    login(
+      username: String!
+      password: String!
+    ): Token
   }
 `
 
