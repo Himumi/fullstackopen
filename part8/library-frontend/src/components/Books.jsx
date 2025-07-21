@@ -1,11 +1,8 @@
 import { useQuery } from "@apollo/client"
 import { ALL_BOOKS_WITHOUT_GENRE } from '../queries/books'
 
-const Books = (props) => {
+const Books = () => {
   const result = useQuery(ALL_BOOKS_WITHOUT_GENRE)
-  if (!props.show) {
-    return null
-  }
 
   if (result.loading) {
     return <div>loading...</div>

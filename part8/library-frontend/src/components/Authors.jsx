@@ -2,12 +2,8 @@ import { useQuery } from "@apollo/client"
 import { ALL_AUTHORS } from '../queries/authors'
 import BirthForm from "./BirthForm"
 
-const Authors = (props) => {
+const Authors = () => {
   const result = useQuery(ALL_AUTHORS)
-
-  if (!props.show) {
-    return null
-  }
   
   if (result.loading) {
     return <div>loading...</div>
