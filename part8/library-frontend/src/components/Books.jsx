@@ -1,14 +1,14 @@
-import { useQuery } from "@apollo/client"
-import { ALL_BOOKS_WITHOUT_GENRE } from '../queries/books'
+import { useQuery } from "@apollo/client";
+import { ALL_BOOKS_WITHOUT_GENRE } from "../queries/books";
 
 const Books = () => {
-  const result = useQuery(ALL_BOOKS_WITHOUT_GENRE)
+  const result = useQuery(ALL_BOOKS_WITHOUT_GENRE);
 
   if (result.loading) {
-    return <div>loading...</div>
+    return <div>loading...</div>;
   }
 
-  const books = result.data.allBooks
+  const books = result.data.allBooks;
 
   return (
     <div>
@@ -31,7 +31,7 @@ const Books = () => {
         </tbody>
       </table>
     </div>
-  )
-}
+  );
+};
 
-export default Books
+export default Books;

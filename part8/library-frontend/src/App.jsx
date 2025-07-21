@@ -3,8 +3,8 @@ import {
   NavLink,
   Route,
   BrowserRouter as Router,
-  Routes
-} from 'react-router-dom'
+  Routes,
+} from "react-router-dom";
 import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
@@ -13,20 +13,26 @@ const App = () => {
   const [page, setPage] = useState("authors");
 
   const linkStyles = {
-    textDecoration: 'none',
-    color: 'black',
-  }
+    textDecoration: "none",
+    color: "black",
+  };
   return (
     <Router>
       <nav>
         <button>
-          <NavLink to='/' style={linkStyles}>authors</NavLink>
+          <NavLink to="/" style={linkStyles}>
+            authors
+          </NavLink>
         </button>
         <button>
-          <NavLink to='/books' style={linkStyles}>books</NavLink>
+          <NavLink to="/books" style={linkStyles}>
+            books
+          </NavLink>
         </button>
         <button>
-          <NavLink to='/books/new' style={linkStyles}>add book</NavLink>
+          <NavLink to="/books/new" style={linkStyles}>
+            add book
+          </NavLink>
         </button>
       </nav>
 

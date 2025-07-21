@@ -64,6 +64,6 @@ const typeDefs = `#graphql
       password: String!
     ): Token
   }
-`
+`;
 
-module.exports = typeDefs
+module.exports = typeDefs;

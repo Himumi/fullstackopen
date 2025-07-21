@@ -1,4 +1,4 @@
-const { GraphQLError } = require('graphql')
+const { GraphQLError } = require("graphql");
 
 const graphqlError = (error) => {
   throw new GraphQLError(error.message, {
@@ -6,41 +6,51 @@ const graphqlError = (error) => {
       code: error.code,
       invalidArgs: error.invalidArgs,
       error: error.error,
-    }
-  })
-}
+    },
+  });
+};
 
 const hasValueTaken = (model, message) => {
   return async (value) => {
     const hasTaken = async (value) => {
-      const data = await model.findOne({ value })
-      return !data
-    }
+      const data = await model.findOne({ value });
+      return !data;
+    };
 
     if (!hasTaken(value)) {
       graphqlError({
         message,
-        code: 'BAD_USER_INPUT',
+        code: "BAD_USER_INPUT",
         invalidArgs: value,
-      })
+      });
     }
-  }
-}
+  };
+};
 
 const isValueLengthValid = (length, message) => {
   return (value) => {
     if (value.length < length) {
       graphqlError({
         message,
-        code: 'BAD_USER_INPUT',
-        invalidArgs: value
-      })
+        code: "BAD_USER_INPUT",
+        invalidArgs: value,
+      });
     }
+  };
+};
+
+const isLoggedIn = (user) => {
+  if (!user) {
+    graphqlError({
+      message: "wrong credentials",
+      code: "BAD_USER_INPUT",
+    });
   }
-}
+};
 
 module.exports = {
   hasValueTaken,
   isValueLengthValid,
   graphqlError,
-}
+  isLoggedIn,
+};
