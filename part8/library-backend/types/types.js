@@ -41,6 +41,7 @@ const typeDefs = `#graphql
     ): [Book!]!
     allAuthors: [AllAuthors!]!
     me: User
+    getGenres: [String!]!
   }
 
   # Mutations
@@ -64,6 +65,6 @@ const typeDefs = `#graphql
       password: String!
     ): Token
   }
-`
+`;
 
-module.exports = typeDefs
+module.exports = typeDefs;

@@ -1,37 +1,30 @@
-import { useQuery } from "@apollo/client"
-import { ALL_BOOKS_WITHOUT_GENRE } from '../queries/books'
+import { useQuery } from '@apollo/client';
+import { ALL_BOOKS, GET_GENRES } from '../queries/books';
+import { useState } from 'react';
+import BooksTable from './BooksTable';
+import GenreButtons from './GenreButtons';
 
 const Books = () => {
-  const result = useQuery(ALL_BOOKS_WITHOUT_GENRE)
+  const [genre, setGenre] = useState(null);
+  const result = useQuery(ALL_BOOKS, {
+    variables: {
+      genre,
+    },
+  });
 
   if (result.loading) {
-    return <div>loading...</div>
+    return <div>loading...</div>;
   }
 
-  const books = result.data.allBooks
+  const books = result.data.allBooks;
 
   return (
     <div>
       <h2>books</h2>
-
-      <table>
-        <tbody>
-          <tr>
-            <th></th>
-            <th>author</th>
-            <th>published</th>
-          </tr>
-          {books.map((a) => (
-            <tr key={a.title}>
-              <td>{a.title}</td>
-              <td>{a.author}</td>
-              <td>{a.published}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <BooksTable books={books} />
+      <GenreButtons setGenre={setGenre} />
     </div>
-  )
-}
+  );
+};
 
-export default Books
+export default Books;

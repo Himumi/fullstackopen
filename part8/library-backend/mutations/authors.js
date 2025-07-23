@@ -1,15 +1,15 @@
-const Author = require('../models/author')
-const { isLoggedIn } = require('./helper')
+const Author = require('../models/author');
+const { isLoggedIn } = require('./helper');
 
 const editAuthor = async (root, args, context) => {
-  isLoggedIn(context.currentUser)
+  isLoggedIn(context.currentUser);
 
-  const author = await Author.findOne({ name: args.name })
-  author.born = args.setBornTo
+  const author = await Author.findOne({ name: args.name });
+  author.born = args.setBornTo;
 
-  return author.save()
-}
+  return author.save();
+};
 
 module.exports = {
   editAuthor,
-}
+};

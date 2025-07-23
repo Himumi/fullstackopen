@@ -1,7 +1,7 @@
 const me = (root, args, context) => {
-  return context.currentUser
-}
+  return context.currentUser;
+};
 
 module.exports = {
-  me
-}
+  me,
+};

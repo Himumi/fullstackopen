@@ -1,10 +1,10 @@
 const authorQueries = require("../queries/authors");
 const bookQueries = require("../queries/books");
-const userQuery = require('../queries/user')
+const userQuery = require("../queries/user");
 
-const bookMutation = require('../mutations/books')
-const authorMutation = require('../mutations/authors')
-const userMutation = require('../mutations/user')
+const bookMutation = require("../mutations/books");
+const authorMutation = require("../mutations/authors");
+const userMutation = require("../mutations/user");
 
 module.exports = {
   Query: {
@@ -13,11 +13,12 @@ module.exports = {
     authorCount: authorQueries.authorCount,
     allAuthors: authorQueries.allAuthors,
     me: userQuery.me,
+    getGenres: bookQueries.getGenres,
   },
   Mutation: {
-    addBook: bookMutation.addBook, 
+    addBook: bookMutation.addBook,
     editAuthor: authorMutation.editAuthor,
-    createUser: userMutation.createUser, 
+    createUser: userMutation.createUser,
     login: userMutation.login,
-  }
-}
+  },
+};

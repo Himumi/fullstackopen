@@ -1,33 +1,64 @@
-import { useState } from "react";
-import {
-  NavLink,
-  Route,
-  BrowserRouter as Router,
-  Routes
-} from 'react-router-dom'
-import Authors from "./components/Authors";
-import Books from "./components/Books";
-import NewBook from "./components/NewBook";
+import { useState } from 'react';
+import { NavLink, Route, Routes } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import Authors from './components/Authors';
+import Books from './components/Books';
+import NewBook from './components/NewBook';
+import LoginForm from './components/LoginForm';
+import { useApolloClient } from '@apollo/client';
+import { useEffect } from 'react';
+import RecommendedBooks from './components/RecommendedBooks';
 
 const App = () => {
-  const [page, setPage] = useState("authors");
+  const [page, setPage] = useState('authors');
+  const [token, setToken] = useState(null);
+  const apolloClient = useApolloClient();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('book-user-token');
+    if (token) {
+      setToken(token);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    setToken(null);
+    localStorage.clear();
+    apolloClient.clearStore();
+    navigate('/');
+  };
 
   const linkStyles = {
     textDecoration: 'none',
     color: 'black',
-  }
+  };
   return (
-    <Router>
+    <div>
       <nav>
         <button>
-          <NavLink to='/' style={linkStyles}>authors</NavLink>
+          <NavLink to="/" style={linkStyles}>
+            authors
+          </NavLink>
         </button>
         <button>
-          <NavLink to='/books' style={linkStyles}>books</NavLink>
+          <NavLink to="/books" style={linkStyles}>
+            books
+          </NavLink>
         </button>
         <button>
-          <NavLink to='/books/new' style={linkStyles}>add book</NavLink>
+          <NavLink to={token ? '/books/new' : '/login'} style={linkStyles}>
+            {token ? 'add book' : 'login'}
+          </NavLink>
         </button>
+        {token && (
+          <button>
+            <NavLink to="/recommend" style={linkStyles}>
+              recommend
+            </NavLink>
+          </button>
+        )}
+        {token && <button onClick={handleLogout}>logout</button>}
       </nav>
 
       <Routes>
@@ -36,8 +67,10 @@ const App = () => {
           <Route index element={<Books />} />
           <Route path="new" element={<NewBook />} />
         </Route>
+        <Route path="login" element={<LoginForm setToken={setToken} />} />
+        <Route path="recommend" element={<RecommendedBooks />} />
       </Routes>
-    </Router>
+    </div>
   );
 };
 
