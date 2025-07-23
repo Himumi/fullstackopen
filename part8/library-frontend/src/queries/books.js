@@ -33,6 +33,7 @@ export const ADD_BOOK = gql`
         born
       }
       published
+      genres
     }
   }
 `;
