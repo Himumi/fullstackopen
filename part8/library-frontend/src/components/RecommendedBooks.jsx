@@ -17,7 +17,7 @@ const RecommendedBooks = () => {
     },
   });
 
-  if (books.loading) {
+  if (user.loading || books.loading) {
     return <div>loading</div>;
   }
 
