@@ -41,6 +41,7 @@ const typeDefs = `#graphql
     ): [Book!]!
     allAuthors: [AllAuthors!]!
     me: User
+    getGenres: [String!]!
   }
 
   # Mutations

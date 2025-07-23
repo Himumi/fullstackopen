@@ -13,6 +13,7 @@ module.exports = {
     authorCount: authorQueries.authorCount,
     allAuthors: authorQueries.allAuthors,
     me: userQuery.me,
+    getGenres: bookQueries.getGenres,
   },
   Mutation: {
     addBook: bookMutation.addBook,

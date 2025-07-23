@@ -27,7 +27,18 @@ const allBooks = async (root, args) => {
   }
 };
 
+const getGenres = async () => {
+  const books = await Book.find({});
+  const genres = books.reduce((accu, book) => {
+    const genres = new Set(book.genres);
+    return accu.union(genres);
+  }, new Set());
+
+  return [...genres];
+};
+
 module.exports = {
   bookCount,
   allBooks,
+  getGenres,
 };
