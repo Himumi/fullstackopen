@@ -1,14 +1,25 @@
-import { useMutation, useQuery } from "@apollo/client";
-import { useState } from "react";
-import { ALL_AUTHORS, EDIT_AUTHOR_BIRTH } from "../queries/authors";
+import { useMutation, useQuery } from '@apollo/client';
+import { useState } from 'react';
+import { ALL_AUTHORS, EDIT_AUTHOR_BIRTH } from '../queries/authors';
 
 const BirthForm = () => {
-  const [name, setName] = useState("");
-  const [born, setBorn] = useState("");
+  const [name, setName] = useState('');
+  const [born, setBorn] = useState('');
 
   const result = useQuery(ALL_AUTHORS);
   const [changeBirth] = useMutation(EDIT_AUTHOR_BIRTH, {
-    refetchQueries: [{ query: ALL_AUTHORS }],
+    update: (cache, response) => {
+      const update = ({ allAuthors }) => {
+        const updatedAuthor = response.data.editAuthor;
+        const updatedAuthors = allAuthors.map((author) =>
+          author.name === updatedAuthor.name ? updatedAuthor : author,
+        );
+        return {
+          allAuthors: updatedAuthors,
+        };
+      };
+      cache.updateQuery({ query: ALL_AUTHORS }, update);
+    },
   });
 
   const setValue =
@@ -19,8 +30,8 @@ const BirthForm = () => {
   const handleBorn = setValue(setBorn);
 
   const resetNameAndBorn = () => {
-    setName("");
-    setBorn("");
+    setName('');
+    setBorn('');
   };
 
   const handleUpdate = (event) => {
@@ -35,17 +46,17 @@ const BirthForm = () => {
 
   const handleSelect = (author) => {
     return () => {
-      setBorn(author.born ? author.born.toString() : "");
+      setBorn(author.born ? author.born.toString() : '');
       setName(author.name);
     };
   };
 
   const selectStyles = {
-    width: "20%",
+    width: '20%',
     padding: 5,
     paddingLeft: 10,
-    fontSize: "0.7em",
-    color: "gray",
+    fontSize: '0.7em',
+    color: 'gray',
   };
 
   return (
