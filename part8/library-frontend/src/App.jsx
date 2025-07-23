@@ -7,6 +7,7 @@ import NewBook from './components/NewBook';
 import LoginForm from './components/LoginForm';
 import { useApolloClient } from '@apollo/client';
 import { useEffect } from 'react';
+import RecommendedBooks from './components/RecommendedBooks';
 
 const App = () => {
   const [page, setPage] = useState('authors');
@@ -17,7 +18,7 @@ const App = () => {
   useEffect(() => {
     const token = localStorage.getItem('book-user-token');
     if (token) {
-      setToken(token)
+      setToken(token);
     }
   }, []);
 
@@ -50,7 +51,14 @@ const App = () => {
             {token ? 'add book' : 'login'}
           </NavLink>
         </button>
-        {!token ? null : <button onClick={handleLogout}>logout</button>}
+        {token && (
+          <button>
+            <NavLink to="/recommend" style={linkStyles}>
+              recommend
+            </NavLink>
+          </button>
+        )}
+        {token && <button onClick={handleLogout}>logout</button>}
       </nav>
 
       <Routes>
@@ -60,6 +68,7 @@ const App = () => {
           <Route path="new" element={<NewBook />} />
         </Route>
         <Route path="login" element={<LoginForm setToken={setToken} />} />
+        <Route path="recommend" element={<RecommendedBooks />} />
       </Routes>
     </div>
   );
