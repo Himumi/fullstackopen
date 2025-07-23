@@ -6,12 +6,20 @@ import Books from './components/Books';
 import NewBook from './components/NewBook';
 import LoginForm from './components/LoginForm';
 import { useApolloClient } from '@apollo/client';
+import { useEffect } from 'react';
 
 const App = () => {
   const [page, setPage] = useState('authors');
   const [token, setToken] = useState(null);
   const apolloClient = useApolloClient();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('book-user-token');
+    if (token) {
+      setToken(token)
+    }
+  }, []);
 
   const handleLogout = () => {
     setToken(null);
