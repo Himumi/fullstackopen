@@ -9,6 +9,7 @@ export const ALL_BOOKS = gql`
         name
         born
       }
+      genres
     }
   }
 `;
@@ -33,5 +34,11 @@ export const ADD_BOOK = gql`
       }
       published
     }
+  }
+`;
+
+export const GET_GENRES = gql`
+  query {
+    getGenres
   }
 `;
