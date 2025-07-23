@@ -15,12 +15,22 @@ const addBook = async (root, args, context) => {
   hasBookTaken(args.title);
   isLoggedIn(context.currentUser);
 
-  const author = await Author.findOne({ name: args.author });
-
   const book = new Book({
     ...args,
-    author: author._id,
   });
+
+  const author = await Author.findOne({ name: args.author });
+  console.log(author)
+
+  if (author) {
+    book.author = author._id;
+  } else {
+    const newAuthor = new Author({
+      name: args.author
+    });
+    const savedAuthor = await newAuthor.save();
+    book.author = savedAuthor._id;
+  }
 
   await book.save();
 
