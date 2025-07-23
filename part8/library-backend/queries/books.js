@@ -5,11 +5,7 @@ const Author = require("../models/author");
 const findBooks = async (query) => Book.find(query).populate("author");
 const findAuthor = async (query) => Author.findOne(query);
 
-<<<<<<< HEAD
-const bookCount = () => Book.collection.countDocuments()
-=======
 const bookCount = async () => Book.collection.countDocuments();
->>>>>>> 52e0bc9 (add semicolons by using prettier & create .prettierignore files)
 
 const allBooks = async (root, args) => {
   switch (false) {
