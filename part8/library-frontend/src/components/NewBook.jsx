@@ -12,9 +12,7 @@ const NewBook = () => {
 
   const navigate = useNavigate();
 
-  const [addBook] = useMutation(ADD_BOOK, {
-    refetchQueries: [{ query: ALL_BOOKS }],
-  });
+  const [addBook] = useMutation(ADD_BOOK);
 
   const submit = async (event) => {
     event.preventDefault();
