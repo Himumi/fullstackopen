@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { ALL_BOOKS, GET_GENRES } from '../queries/books';
+import { ALL_BOOKS } from '../queries/books';
 import { useState } from 'react';
 import BooksTable from './BooksTable';
 import GenreButtons from './GenreButtons';
