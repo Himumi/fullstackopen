@@ -5,13 +5,17 @@ import Authors from './components/Authors';
 import Books from './components/Books';
 import NewBook from './components/NewBook';
 import LoginForm from './components/LoginForm';
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient, useSubscription } from '@apollo/client';
 import { useEffect } from 'react';
 import RecommendedBooks from './components/RecommendedBooks';
+import Notify from './components/Notify';
+
+import { BOOK_ADDED } from './queries/books';
 
 const App = () => {
   const [page, setPage] = useState('authors');
   const [token, setToken] = useState(null);
+  const [message, setMessage] = useState(null);
   const apolloClient = useApolloClient();
   const navigate = useNavigate();
 
@@ -21,6 +25,17 @@ const App = () => {
       setToken(token);
     }
   }, []);
+
+  const handleNotify = (message) => {
+    setMessage(message);
+    setTimeout(() => setMessage(null), 3000);
+  };
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      handleNotify(`${data.data.bookAdded.title} added`);
+    },
+  });
 
   const handleLogout = () => {
     setToken(null);
@@ -35,6 +50,7 @@ const App = () => {
   };
   return (
     <div>
+      <Notify message={message} />
       <nav>
         <button>
           <NavLink to="/" style={linkStyles}>
