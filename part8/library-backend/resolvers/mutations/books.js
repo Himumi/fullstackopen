@@ -1,13 +1,17 @@
-const Author = require("../models/author");
-const Book = require("../models/book");
+const Author = require('../../models/author');
+const Book = require('../../models/book');
 
-const { hasValueTaken, isValueLengthValid, isLoggedIn } = require("./helper");
+const hasValueTaken = require('../helpers/hasValueTaken');
+const isValueLengthValid = require('../helpers/isValueLengthValid');
+const isLoggedIn = require('../helpers/isLoggedIn');
 
 const isTitleLengthValid = isValueLengthValid(
   5,
-  "title length must be 5 letters or more",
+  'title length must be 5 letters or more',
 );
-const hasBookTaken = hasValueTaken(Book, "title has taken");
+const hasBookTaken = hasValueTaken(Book, 'title has taken');
+
+// Mutations
 
 const addBook = async (root, args, context) => {
   // Validators
@@ -20,13 +24,13 @@ const addBook = async (root, args, context) => {
   });
 
   const author = await Author.findOne({ name: args.author });
-  console.log(author)
+  console.log(author);
 
   if (author) {
     book.author = author._id;
   } else {
     const newAuthor = new Author({
-      name: args.author
+      name: args.author,
     });
     const savedAuthor = await newAuthor.save();
     book.author = savedAuthor._id;
@@ -34,7 +38,7 @@ const addBook = async (root, args, context) => {
 
   await book.save();
 
-  return await Book.findById(book._id).populate("author");
+  return await Book.findById(book._id).populate('author');
 };
 
 module.exports = {

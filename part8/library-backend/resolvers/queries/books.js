@@ -1,8 +1,8 @@
-const Book = require("../models/book");
-const Author = require("../models/author");
+const Book = require('../../models/book');
+const Author = require('../../models/author');
 
 // Helpers
-const findBooks = async (query) => Book.find(query).populate("author");
+const findBooks = async (query) => Book.find(query).populate('author');
 const findAuthor = async (query) => Author.findOne(query);
 
 const bookCount = async () => Book.collection.countDocuments();

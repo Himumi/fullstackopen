@@ -1,5 +1,5 @@
-const Author = require('../models/author');
-const { isLoggedIn } = require('./helper');
+const Author = require('../../models/author');
+const isLoggedIn = require('../helpers/isLoggedIn');
 
 const editAuthor = async (root, args, context) => {
   isLoggedIn(context.currentUser);
