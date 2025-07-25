@@ -45,3 +45,12 @@ export const GET_GENRES = gql`
     getGenres
   }
 `;
+
+export const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      ...BookDetails
+    }
+  }
+  ${BOOK_DETAILS}
+`;
