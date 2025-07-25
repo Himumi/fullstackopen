@@ -1,14 +1,33 @@
 import { useQuery } from '@apollo/client';
-import { ALL_BOOKS } from '../queries/books';
+import { ALL_BOOKS, BOOK_ADDED } from '../queries/books';
 import { useState } from 'react';
 import BooksTable from './BooksTable';
 import GenreButtons from './GenreButtons';
 
-const Books = () => {
+import { useSubscription } from '@apollo/client';
+
+const Books = ({ handleNotify }) => {
   const [genre, setGenre] = useState(null);
+
   const result = useQuery(ALL_BOOKS, {
     variables: {
       genre,
+    },
+  });
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data, client }) => {
+      const addedBook = data.data.bookAdded;
+      handleNotify(`${addedBook.title} added`);
+
+      client.cache.modify({
+        fields: {
+          allBooks(prevAllBooks = []) {
+            const allBooks = new Set([...prevAllBooks, addedBook]);
+            return [...allBooks];
+          },
+        },
+      });
     },
   });
 
