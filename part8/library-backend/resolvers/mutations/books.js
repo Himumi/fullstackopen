@@ -5,6 +5,8 @@ const hasValueTaken = require('../helpers/hasValueTaken');
 const isValueLengthValid = require('../helpers/isValueLengthValid');
 const isLoggedIn = require('../helpers/isLoggedIn');
 
+const pubsub = require('../helpers/pubsub');
+
 const isTitleLengthValid = isValueLengthValid(
   5,
   'title length must be 5 letters or more',
@@ -37,8 +39,10 @@ const addBook = async (root, args, context) => {
   }
 
   await book.save();
+  const addedBook = await Book.findById(book._id).populate('author');
 
-  return await Book.findById(book._id).populate('author');
+  pubsub.publish('BOOK_ADDED', { bookAdded: addedBook });
+  return addedBook;
 };
 
 module.exports = {
