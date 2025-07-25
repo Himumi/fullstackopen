@@ -6,6 +6,8 @@ const bookMutation = require('./mutations/books');
 const authorMutation = require('./mutations/authors');
 const userMutation = require('./mutations/user');
 
+const subscription = require('./subscriptions/subscriptions');
+
 module.exports = {
   Query: {
     ...authorQueries,
@@ -16,5 +18,8 @@ module.exports = {
     ...bookMutation,
     ...authorMutation,
     ...userMutation,
+  },
+  Subscription: {
+    ...subscription,
   },
 };
