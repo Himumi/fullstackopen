@@ -10,8 +10,6 @@ import { useEffect } from 'react';
 import RecommendedBooks from './components/RecommendedBooks';
 import Notify from './components/Notify';
 
-import { BOOK_ADDED } from './queries/books';
-
 const App = () => {
   const [page, setPage] = useState('authors');
   const [token, setToken] = useState(null);
@@ -30,12 +28,6 @@ const App = () => {
     setMessage(message);
     setTimeout(() => setMessage(null), 3000);
   };
-
-  useSubscription(BOOK_ADDED, {
-    onData: ({ data }) => {
-      handleNotify(`${data.data.bookAdded.title} added`);
-    },
-  });
 
   const handleLogout = () => {
     setToken(null);
@@ -80,7 +72,7 @@ const App = () => {
       <Routes>
         <Route index element={<Authors />} />
         <Route path="books">
-          <Route index element={<Books />} />
+          <Route index element={<Books handleNotify={handleNotify} />} />
           <Route path="new" element={<NewBook />} />
         </Route>
         <Route path="login" element={<LoginForm setToken={setToken} />} />
