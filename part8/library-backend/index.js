@@ -1,26 +1,12 @@
-const { startStandaloneServer } = require("@apollo/server/standalone");
+const apolloServer = require('./server/apollo');
+const mongoServer = require('./server/mongo');
 
-require("dotenv").config();
-const jwt = require("jsonwebtoken");
-const User = require("./models/user");
+const { httpServer } = require('./server/express');
 
-const server = require("./server");
+mongoServer();
+apolloServer();
 
-startStandaloneServer(server, {
-  listen: { port: 4000 },
-  context: async ({ req, res }) => {
-    const auth = req ? req.headers.authorization : null;
-
-    if (auth && auth.startsWith("Bearer ")) {
-      const decodedToken = jwt.verify(
-        auth.substring(7),
-        process.env.JWT_SECRET,
-      );
-
-      const currentUser = await User.findById(decodedToken.id);
-      return { currentUser };
-    }
-  },
-}).then(({ url }) => {
-  console.log("server is ready at", url);
-});
+const PORT = 4000;
+httpServer.listen(PORT, () =>
+  console.log(`Server is now running at http://localhost:${PORT}`),
+);
