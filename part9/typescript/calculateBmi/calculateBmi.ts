@@ -1,3 +1,5 @@
+import { checksArguments } from '../helpers/helper';
+
 const calculateBmi = (weight: number, height: number): number => {
   return weight / (height / 100) ** 2;
 };
@@ -32,10 +34,22 @@ const bmiCategory = (bmi: number): string => {
   }
 };
 
-const weight: number = Number(process.argv[2]);
-const height: number = Number(process.argv[3]);
+try {
+  checksArguments(process.argv.slice(2), 'Arguments must numbers');
 
-const bmi: number = calculateBmi(weight, height);
-const category: string = bmiCategory(bmi);
+  const weight: number = Number(process.argv[2]);
+  const height: number = Number(process.argv[3]);
 
-console.log(category);
+  const bmi: number = calculateBmi(weight, height);
+  const category: string = bmiCategory(bmi);
+
+  console.log(category);
+} catch (error: unknown) {
+  let errorMessage = 'Something bad happenned.';
+
+  if (error instanceof Error) {
+    errorMessage += ` Error: ${error.message}`;
+  }
+
+  console.log(errorMessage);
+}

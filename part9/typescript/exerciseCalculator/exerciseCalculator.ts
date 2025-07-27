@@ -1,3 +1,5 @@
+import { checksArguments } from '../helpers/helper';
+
 interface Result {
   periodLength: number;
   trainingDays: number;
@@ -65,9 +67,20 @@ const calculateExercises = (days: number[], target: number): Result => {
   };
 };
 
-const target: number = Number(process.argv[2]);
-const days: number[] = process.argv.slice(3).map((n) => Number(n));
+try {
+  checksArguments(process.argv.slice(2), 'Arguments must numbers');
 
-const exercisesReport: Result = calculateExercises(days, target);
+  const target: number = Number(process.argv[2]);
+  const days: number[] = process.argv.slice(3).map((n) => Number(n));
+  const exercisesReport: Result = calculateExercises(days, target);
 
-console.log(exercisesReport);
+  console.log(exercisesReport);
+} catch (error: unknown) {
+  let errorMessage = 'Something bad happenned.';
+
+  if (error instanceof Error) {
+    errorMessage += ` Error: ${error.message}`;
+  }
+
+  console.log(errorMessage);
+}
