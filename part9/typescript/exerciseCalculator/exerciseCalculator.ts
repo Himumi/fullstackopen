@@ -1,0 +1,73 @@
+interface Result {
+  periodLength: number;
+  trainingDays: number;
+  success: boolean;
+  rating: number;
+  ratingDescription: string;
+  target: number;
+  average: number;
+}
+
+const countExercisesDays = (days: number[]): number => {
+  const countDays = (counter: number, day: number) =>
+    day === 0 ? counter : counter + 1;
+
+  return days.reduce(countDays, 0);
+};
+
+const totalHours = (days: number[]): number => {
+  return days.reduce((accu, day) => accu + day, 0);
+};
+
+const calAverage = (total: number, length: number): number => {
+  return total / length;
+};
+
+const calTrainingAverage = (days: number[]): number => {
+  return calAverage(totalHours(days), days.length);
+};
+
+const rateExercises = (totalHours: number): number => {
+  if (totalHours <= 10) {
+    return 1;
+  } else if (totalHours <= 20) {
+    return 2;
+  }
+  return 3;
+};
+
+const descibeRating = (rate: number): string => {
+  switch (rate) {
+    case 1:
+      return 'you need more sweat';
+    case 2:
+      return 'not too bad, but you could do more';
+    default:
+      return 'marvelous';
+  }
+};
+
+const calculateExercises = (days: number[], target: number): Result => {
+  const trainingDays = countExercisesDays(days);
+  const average = calTrainingAverage(days);
+  const total = totalHours(days);
+  const rating = rateExercises(total);
+  const ratingDescription = descibeRating(rating);
+
+  return {
+    periodLength: days.length,
+    trainingDays,
+    success: average > target,
+    rating,
+    ratingDescription,
+    target,
+    average,
+  };
+};
+
+const target: number = Number(process.argv[2]);
+const days: number[] = process.argv.slice(3).map((n) => Number(n));
+
+const exercisesReport: Result = calculateExercises(days, target);
+
+console.log(exercisesReport);
