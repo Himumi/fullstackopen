@@ -49,7 +49,7 @@ const describeRating = (rate: number): string => {
   }
 };
 
-const calculateExercises = (days: number[], target: number): Result => {
+export const calculateExercises = (days: number[], target: number): Result => {
   const trainingDays = countExercisesDays(days);
   const average = calTrainingAverage(days);
   const total = totalHours(days);

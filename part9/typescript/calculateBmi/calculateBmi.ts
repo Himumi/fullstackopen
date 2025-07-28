@@ -1,6 +1,6 @@
 import {checksArguments} from '../helpers/helper';
 
-const calculateBmi = (weight: number, height: number): number => {
+export const calculateBmi = (weight: number, height: number): number => {
   return weight / (height / 100) ** 2;
 };
 
@@ -12,7 +12,7 @@ const isOverweight = (bmi: number): boolean => bmi >= 25 && bmi < 30;
 const isObeseI = (bmi: number): boolean => bmi >= 30 && bmi < 35;
 const isObeseII = (bmi: number): boolean => bmi >= 35 && bmi < 40;
 
-const bmiCategory = (bmi: number): string => {
+export const bmiCategory = (bmi: number): string => {
   switch (true) {
     case isSevereThinness(bmi):
       return 'Underweight (Severe thinness)';
