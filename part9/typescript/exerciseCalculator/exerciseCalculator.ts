@@ -18,7 +18,7 @@ const countExercisesDays = (days: number[]): number => {
 };
 
 const totalHours = (days: number[]): number => {
-  return days.reduce((accu, day) => accu + day, 0);
+  return days.reduce((accumulator, day) => accumulator + day, 0);
 };
 
 const calAverage = (total: number, length: number): number => {
@@ -38,7 +38,7 @@ const rateExercises = (totalHours: number): number => {
   return 3;
 };
 
-const descibeRating = (rate: number): string => {
+const describeRating = (rate: number): string => {
   switch (rate) {
     case 1:
       return 'you need more sweat';
@@ -54,7 +54,7 @@ const calculateExercises = (days: number[], target: number): Result => {
   const average = calTrainingAverage(days);
   const total = totalHours(days);
   const rating = rateExercises(total);
-  const ratingDescription = descibeRating(rating);
+  const ratingDescription = describeRating(rating);
 
   return {
     periodLength: days.length,
@@ -71,12 +71,12 @@ try {
   checksArguments(process.argv.slice(2), 'Arguments must numbers');
 
   const target: number = Number(process.argv[2]);
-  const days: number[] = process.argv.slice(3).map((n) => Number(n));
+  const days: number[] = process.argv.slice(3).map(n => Number(n));
   const exercisesReport: Result = calculateExercises(days, target);
 
   console.log(exercisesReport);
 } catch (error: unknown) {
-  let errorMessage = 'Something bad happenned.';
+  let errorMessage = 'Something bad happened.';
 
   if (error instanceof Error) {
     errorMessage += ` Error: ${error.message}`;
