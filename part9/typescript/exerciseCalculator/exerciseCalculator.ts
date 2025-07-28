@@ -76,13 +76,15 @@ export const calculateExercises = (
 };
 
 try {
-  checksArguments(process.argv.slice(2), 'Arguments must numbers');
+  if (require.main === module) {
+    checksArguments(process.argv.slice(2), 'Arguments must numbers');
 
-  const target: number = Number(process.argv[2]);
-  const days: number[] = process.argv.slice(3).map((n) => Number(n));
-  const exercisesReport: ExercisesResult = calculateExercises(days, target);
+    const target: number = Number(process.argv[2]);
+    const days: number[] = process.argv.slice(3).map((n) => Number(n));
+    const exercisesReport: ExercisesResult = calculateExercises(days, target);
 
-  console.log(exercisesReport);
+    console.log(exercisesReport);
+  }
 } catch (error: unknown) {
   let errorMessage = 'Something bad happened.';
 

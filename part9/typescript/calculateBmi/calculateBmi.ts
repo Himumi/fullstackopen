@@ -34,15 +34,17 @@ export const bmiCategory = (bmi: number): string => {
 };
 
 try {
-  checksArguments(process.argv.slice(2), 'Arguments must numbers');
+  if (require.main === module) {
+    checksArguments(process.argv.slice(2), 'Arguments must numbers');
 
-  const weight: number = Number(process.argv[2]);
-  const height: number = Number(process.argv[3]);
+    const weight: number = Number(process.argv[2]);
+    const height: number = Number(process.argv[3]);
 
-  const bmi: number = calculateBmi(weight, height);
-  const category: string = bmiCategory(bmi);
+    const bmi: number = calculateBmi(weight, height);
+    const category: string = bmiCategory(bmi);
 
-  console.log(category);
+    console.log(category);
+  }
 } catch (error: unknown) {
   let errorMessage = 'Something bad happened.';
 
