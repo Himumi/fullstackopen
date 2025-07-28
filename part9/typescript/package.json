@@ -9,7 +9,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "calculateBmi": "ts-node ./calculateBmi/calculateBmi.ts",
-    "calculateExercises": "ts-node ./exerciseCalculator/exerciseCalculator.ts"
+    "calculateExercises": "ts-node ./exerciseCalculator/exerciseCalculator.ts",
+    "start": "ts-node index.ts",
+    "dev": "ts-node-dev index.ts"
   },
   "devDependencies": {
     "@types/express": "^5.0.3",
