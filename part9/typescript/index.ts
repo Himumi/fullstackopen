@@ -2,18 +2,13 @@ import express from 'express';
 
 import { calculateBmi, bmiCategory } from './calculateBmi/calculateBmi';
 
-const app = express();
-
-type Weight = number;
-type Height = number;
-type Bmi = number;
-type BmiCategory = string;
-
 interface BmiReport {
-  weight: Weight;
-  height: Height;
-  bmi: BmiCategory;
+  weight: number;
+  height: number;
+  bmi: string;
 }
+
+const app = express();
 
 app.get('/hello', (_req, res) => {
   res.send('Hello Full Stack');
@@ -21,8 +16,8 @@ app.get('/hello', (_req, res) => {
 
 app.get('/bmi', (request, response) => {
   // Take weight and heigth from query parameters
-  const weight: Weight = Number(request.query.weight);
-  const height: Height = Number(request.query.height);
+  const weight: number = Number(request.query.weight);
+  const height: number = Number(request.query.height);
 
   if (isNaN(weight) || isNaN(height)) {
     // Response error with malformatted parameters message
@@ -31,8 +26,8 @@ app.get('/bmi', (request, response) => {
     });
   } else {
     // Calculate Bmi
-    const bmi: Bmi = calculateBmi(weight, height);
-    const category: BmiCategory = bmiCategory(bmi);
+    const bmi: number = calculateBmi(weight, height);
+    const category: string = bmiCategory(bmi);
 
     const report: BmiReport = {
       weight,
