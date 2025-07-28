@@ -1,6 +1,11 @@
 import express from 'express';
 
 import { calculateBmi, bmiCategory } from './calculateBmi/calculateBmi';
+import {
+  calculateExercises,
+  ExercisesResult,
+  Exercises,
+} from './exerciseCalculator/exerciseCalculator';
 
 interface BmiReport {
   weight: number;
@@ -9,6 +14,8 @@ interface BmiReport {
 }
 
 const app = express();
+
+app.use(express.json());
 
 app.get('/hello', (_req, res) => {
   res.send('Hello Full Stack');
@@ -37,6 +44,28 @@ app.get('/bmi', (request, response) => {
 
     // Response with BMI report
     response.status(200).json(report);
+  }
+});
+
+const isExercisesValid = (days: number[], target: number): boolean => {
+  return (
+    days !== undefined &&
+    target !== undefined &&
+    Array.isArray(days) &&
+    typeof target === 'number'
+  );
+};
+
+app.post('/exercises', (request, response) => {
+  const { days, target } = request.body as Exercises;
+
+  if (!isExercisesValid(days, target)) {
+    response.status(400).json({
+      error: 'malformatted parameters',
+    });
+  } else {
+    const result: ExercisesResult = calculateExercises(days, target);
+    response.status(201).json(result);
   }
 });
 
