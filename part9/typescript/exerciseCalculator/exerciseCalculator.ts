@@ -1,6 +1,6 @@
 import { checksArguments } from '../helpers/helper';
 
-interface Result {
+export interface ExercisesResult {
   periodLength: number;
   trainingDays: number;
   success: boolean;
@@ -8,6 +8,11 @@ interface Result {
   ratingDescription: string;
   target: number;
   average: number;
+}
+
+export interface Exercises {
+  days: number[];
+  target: number;
 }
 
 const countExercisesDays = (days: number[]): number => {
@@ -49,7 +54,10 @@ const describeRating = (rate: number): string => {
   }
 };
 
-export const calculateExercises = (days: number[], target: number): Result => {
+export const calculateExercises = (
+  days: number[],
+  target: number,
+): ExercisesResult => {
   const trainingDays = countExercisesDays(days);
   const average = calTrainingAverage(days);
   const total = totalHours(days);
@@ -71,8 +79,8 @@ try {
   checksArguments(process.argv.slice(2), 'Arguments must numbers');
 
   const target: number = Number(process.argv[2]);
-  const days: number[] = process.argv.slice(3).map(n => Number(n));
-  const exercisesReport: Result = calculateExercises(days, target);
+  const days: number[] = process.argv.slice(3).map((n) => Number(n));
+  const exercisesReport: ExercisesResult = calculateExercises(days, target);
 
   console.log(exercisesReport);
 } catch (error: unknown) {
