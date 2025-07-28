@@ -1,4 +1,4 @@
-import {checksArguments} from '../helpers/helper';
+import { checksArguments } from '../helpers/helper';
 
 export const calculateBmi = (weight: number, height: number): number => {
   return weight / (height / 100) ** 2;
