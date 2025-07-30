@@ -1,6 +1,6 @@
 import { Router, Response } from "express";
 import { DiagnoseEntry } from "../types";
-import { getDiagnoses } from "../services/diagnosesService";
+import { getDiagnoses } from "../services/diagnoses";
 
 const router = Router();
 

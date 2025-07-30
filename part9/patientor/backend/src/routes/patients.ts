@@ -1,6 +1,6 @@
 import { Router, Response } from "express";
 import { PatientEntryWithoutSsn } from "../types";
-import { getPatients } from "../services/patientServices";
+import { getPatients } from "../services/patients";
 
 const router = Router();
 

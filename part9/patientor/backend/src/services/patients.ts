@@ -1,4 +1,4 @@
-import patients from '../../data/patientEntries';
+import patients from '../../data/patients';
 import { PatientEntryWithoutSsn } from '../types';
 
 export const getPatients = (): PatientEntryWithoutSsn[] => {
