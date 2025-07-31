@@ -1,0 +1,10 @@
+# Ignore artifacts:
+build
+coverage
+node_modules
+.gitignore
+.prettierrc.json
+eslint.config.mjs
+package.json
+package-lock.json
+tsconfig.json
