@@ -1,10 +1,10 @@
-import express from 'express';
 import cors from 'cors';
+import express from 'express';
 const app = express();
 
-import pingRouter from './src/routes/ping';
 import diagnosesRouter from './src/routes/diagnoses';
 import patientRouter from './src/routes/patients';
+import pingRouter from './src/routes/ping';
 import { errorMiddleware } from './src/utils/errorMiddleware';
 
 app.use(cors());

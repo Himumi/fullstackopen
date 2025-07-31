@@ -1,10 +1,10 @@
-import { Router, Request, Response } from 'express';
+import { Request, Response, Router } from 'express';
+import patientServices from '../services/patients';
 import {
   NewPatientEntry,
   PatientEntry,
   PatientEntryWithoutSsn,
 } from '../types';
-import patientServices from '../services/patients';
 import { newPatientParser } from '../utils/newPatientParser';
 
 const router = Router();
