@@ -1,23 +1,29 @@
-export interface DiagnoseEntry {
-  code: string;
-  name: string;
-  latin?: string;
-}
+import { z } from 'zod';
+
+export const DiagnoseSchema = z.object({
+  code: z.string(),
+  name: z.string(),
+  latin: z.string().optional(),
+});
+
+export type DiagnoseEntry = z.infer<typeof DiagnoseSchema>;
 
 export enum Gender {
   Male = 'male',
   Female = 'female',
-  Other = 'other'
+  Other = 'other',
 }
 
-export interface PatientEntry {
+export const NewPatientSchema = z.object({
+  name: z.string(),
+  dateOfBirth: z.iso.date(),
+  ssn: z.string().regex(/\d{6}-\d{2,3}[\d\w]?/),
+  gender: z.enum(Gender),
+  occupation: z.string(),
+});
+
+export type NewPatientEntry = z.infer<typeof NewPatientSchema>;
+export interface PatientEntry extends NewPatientEntry {
   id: string;
-  name: string;
-  dateOfBirth: string;
-  ssn: string;
-  gender: Gender;
-  occupation: string
 }
-
 export type PatientEntryWithoutSsn = Omit<PatientEntry, 'ssn'>;
-export type NewPatientEntry = Omit<PatientEntry, 'id'>;
