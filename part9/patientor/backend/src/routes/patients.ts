@@ -9,9 +9,13 @@ import { newPatientParser } from '../utils/newPatientParser';
 
 const router = Router();
 
-router.get('/', (_request, response: Response<PatientEntryWithoutSsn[]>) => {
-  response.status(200).json(patientServices.getPatients());
-});
+const getPatients = (
+  _request: Request,
+  response: Response<PatientEntryWithoutSsn[]>
+) => {
+  const patients = patientServices.getPatients();
+  response.json(patients);
+};
 
 const addPatient = (
   request: Request<unknown, unknown, NewPatientEntry>,
@@ -21,6 +25,7 @@ const addPatient = (
   response.json(addedPatient);
 };
 
+router.get('/', getPatients);
 router.post('/', newPatientParser, addPatient);
 
 export default router;
