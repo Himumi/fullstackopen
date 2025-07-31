@@ -9,11 +9,11 @@ const isDate = (date: string): boolean => {
 };
 
 const isSsn = (ssn: string): boolean => {
-  return Boolean(ssn.match(/\d{6}-\d{3}[\w \d]?/g));
+  return Boolean(ssn.match(/\d{6}-\d{2,3}[\w \d]?/g));
 };
 
 const isGender = (gender: string): gender is Gender => {
-  return ['male', 'female', 'other'].includes(gender);
+  return Object.values(Gender).map(g => g.toString()).includes(gender);
 };
 
 const parseName = (name: unknown): string => {
@@ -75,6 +75,5 @@ const toNewPatientEntry = (body: unknown): NewPatientEntry => {
 
   throw new Error('Incorrect data: some fields are missing');
 };
-
 
 export default toNewPatientEntry;
