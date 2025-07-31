@@ -1,28 +1,26 @@
-import { Router, Response } from "express";
-import { PatientEntryWithoutSsn } from "../types";
-import { addPatient, getPatients } from "../services/patients";
-import toNewPatientEntry from "../utils/toNewPatientEntry";
+import { Router, Request, Response } from 'express';
+import {
+  NewPatientEntry,
+  PatientEntry,
+  PatientEntryWithoutSsn,
+} from '../types';
+import patientServices from '../services/patients';
+import { newPatientParser } from '../utils/newPatientParser';
 
 const router = Router();
 
 router.get('/', (_request, response: Response<PatientEntryWithoutSsn[]>) => {
-  response.status(200).json(getPatients());
+  response.status(200).json(patientServices.getPatients());
 });
 
-router.post('/', (request, response) => {
-  try {
-    const newPatient = toNewPatientEntry(request.body);
-    const addedPatient = addPatient(newPatient);
+const addPatient = (
+  request: Request<unknown, unknown, NewPatientEntry>,
+  response: Response<PatientEntry>
+) => {
+  const addedPatient = patientServices.addPatient(request.body);
+  response.json(addedPatient);
+};
 
-    response.json(addedPatient);
-  } catch (error: unknown) {
-    let errorMessage = 'Something went wrong:';
-    if (error instanceof Error) {
-      errorMessage += ` Error: ${error.message}`;
-    }
-
-    response.status(404).send(errorMessage);
-  }
-});
+router.post('/', newPatientParser, addPatient);
 
 export default router;
