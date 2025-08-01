@@ -3,6 +3,7 @@ import GroupCourse from './GroupCourse';
 import BackgroundCourse from './BackgroundCourse';
 
 import type { CourseListProps } from '../props';
+import SpecialCourse from './SpecialCourse';
 
 const CourseList = (props: CourseListProps) => {
   const { courses } = props;
@@ -17,6 +18,8 @@ const CourseList = (props: CourseListProps) => {
             return <GroupCourse course={course} />;
           case 'background':
             return <BackgroundCourse course={course} />;
+          case 'special':
+            return <SpecialCourse course={course} />;
         }
       })}
     </div>
