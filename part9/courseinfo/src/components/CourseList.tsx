@@ -1,21 +1,24 @@
-interface Course {
-  name: string;
-  exerciseCount: number;
-}
+import BasicCourse from './BasicCourse';
+import GroupCourse from './GroupCourse';
+import BackgroundCourse from './BackgroundCourse';
 
-interface CourseListProps {
-  courses: Course[];
-}
+import type { CourseListProps } from '../props';
+
 const CourseList = (props: CourseListProps) => {
   const { courses } = props;
 
   return (
     <div>
-      {courses.map((course: Course) => (
-        <p>
-          {course.name} {course.exerciseCount}
-        </p>
-      ))}
+      {courses.map((course) => {
+        switch (course.kind) {
+          case 'basic':
+            return <BasicCourse course={course} />;
+          case 'group':
+            return <GroupCourse course={course} />;
+          case 'background':
+            return <BackgroundCourse course={course} />;
+        }
+      })}
     </div>
   );
 };
