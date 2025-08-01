@@ -1,5 +1,6 @@
 import Header from './components/Header';
 import CourseList from './components/CourseList';
+import TotalExercises from './components/TotalExercises';
 
 const App = () => {
   const courseName = 'Half Stack application development';
@@ -27,7 +28,7 @@ const App = () => {
     <div>
       <Header title={courseName} />
       <CourseList courses={courseParts} />
-      <p>Number of exercises {totalExercises}</p>
+      <TotalExercises total={totalExercises} />
     </div>
   );
 };
