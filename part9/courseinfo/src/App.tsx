@@ -1,4 +1,5 @@
 import Header from './components/Header';
+import CourseList from './components/CourseList';
 
 const App = () => {
   const courseName = 'Half Stack application development';
@@ -25,12 +26,7 @@ const App = () => {
   return (
     <div>
       <Header title={courseName} />
-      {courseParts.map((part) => (
-        <p key={part.name}>
-          {part.name} {part.exerciseCount}
-        </p>
-      ))}
-
+      <CourseList courses={courseParts} />
       <p>Number of exercises {totalExercises}</p>
     </div>
   );
