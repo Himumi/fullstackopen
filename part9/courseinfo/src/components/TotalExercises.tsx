@@ -1,6 +1,4 @@
-interface TotalExercisesProps {
-  total: number;
-}
+import type { TotalExercisesProps } from '../props';
 
 const TotalExercises = (props: TotalExercisesProps) => {
   return (
