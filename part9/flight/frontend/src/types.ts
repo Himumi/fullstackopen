@@ -9,3 +9,4 @@ export interface Diary {
 }
 
 export type DiaryWithoutComment = Omit<Diary, 'comment'>;
+export type NewDiary = Omit<Diary, 'id'>;
