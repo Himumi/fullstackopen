@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import type { NewDiary, Visibility, Weather } from '../types';
 
-interface NewDiaryFormProps {
-  handleCreate: (newDiary: NewDiary) => void;
-}
+import type { Visibility, Weather } from '../types';
+import type { NewDiaryFormProps } from '../props';
 
 const NewDiaryForm = (props: NewDiaryFormProps) => {
   const [date, setDate] = useState('');
