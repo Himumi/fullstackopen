@@ -1,7 +1,17 @@
 import { useState } from 'react';
 
-import type { Visibility, Weather } from '../types';
+import { Visibility, Weather } from '../types';
+import type {
+  StringState,
+  InputEventChange,
+  SelectEventChange,
+} from '../types';
 import type { NewDiaryFormProps } from '../props';
+
+type EventChange = InputEventChange | SelectEventChange;
+
+// Components
+import Select from './Select';
 
 const NewDiaryForm = (props: NewDiaryFormProps) => {
   const [date, setDate] = useState('');
@@ -9,8 +19,8 @@ const NewDiaryForm = (props: NewDiaryFormProps) => {
   const [weather, setWeather] = useState('');
   const [comment, setComment] = useState('');
 
-  const handleChange = (f: React.Dispatch<React.SetStateAction<string>>) => {
-    return (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (f: StringState) => {
+    return (event: EventChange) => {
       const value = event.currentTarget.value;
       f.call(null, value);
     };
@@ -43,28 +53,18 @@ const NewDiaryForm = (props: NewDiaryFormProps) => {
         date: <input type="date" value={date} onChange={handleDate} />
       </div>
       <div>
-        visibility:
-        <select
+        <Select
           name="visibility"
-          id="visibility-select"
-          onChange={handleVisibility}
-        >
-          <option value="">--Please choose an option</option>
-          <option value="great">Great</option>
-          <option value="good">Good</option>
-          <option value="poor">Poor</option>
-        </select>
+          options={Object.values(Visibility)}
+          handleChange={handleVisibility}
+        />
       </div>
       <div>
-        weather:
-        <select name="weather" id="weather-select" onChange={handleWeather}>
-          <option value="">--Please choose an option</option>
-          <option value="sunny">Sunny</option>
-          <option value="rainy">Rainy</option>
-          <option value="cloudy">Cloudy</option>
-          <option value="stormy">Stormy</option>
-          <option value="windy">Windy</option>
-        </select>
+        <Select
+          name="weather"
+          options={Object.values(Weather)}
+          handleChange={handleWeather}
+        />
       </div>
       <div>
         comment: <input type="text" value={comment} onChange={handleComment} />
