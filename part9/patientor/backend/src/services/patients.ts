@@ -2,6 +2,7 @@ import { v1 as uuid } from 'uuid';
 import patients from '../../data/patients';
 import {
   NewPatientEntry,
+  Patient,
   PatientEntry,
   PatientEntryWithoutSsn,
 } from '../types';
@@ -26,7 +27,21 @@ const addPatient = (entry: NewPatientEntry): PatientEntry => {
   return newPatientEntry;
 };
 
+const getPatient = (id: string): Patient | [] => {
+  const patient = patients.find((p) => p.id === id);
+
+  if (patient !== undefined) {
+    return {
+      ...patient,
+      entries: [],
+    };
+  } else {
+    return [];
+  }
+};
+
 export default {
   getPatients,
   addPatient,
+  getPatient,
 };
