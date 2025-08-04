@@ -1,17 +1,21 @@
 import { useState } from 'react';
 
+// Components
+import Select from './Select';
+
 import { Visibility, Weather } from '../types';
 import type {
   StringState,
   InputEventChange,
   SelectEventChange,
+  NewDiary,
 } from '../types';
-import type { NewDiaryFormProps } from '../props';
 
 type EventChange = InputEventChange | SelectEventChange;
 
-// Components
-import Select from './Select';
+interface NewDiaryFormProps {
+  handleCreate: (newDiary: NewDiary) => void;
+}
 
 const NewDiaryForm = (props: NewDiaryFormProps) => {
   const [date, setDate] = useState('');
