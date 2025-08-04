@@ -1,17 +1,14 @@
 import { useState } from 'react';
 
 // Components
-import Select from './Select';
+import RadioInputs from './RadioInputs';
 
 import { Visibility, Weather } from '../types';
 import type {
   StringState,
   InputEventChange,
-  SelectEventChange,
   NewDiary,
 } from '../types';
-
-type EventChange = InputEventChange | SelectEventChange;
 
 interface NewDiaryFormProps {
   handleCreate: (newDiary: NewDiary) => void;
@@ -24,7 +21,7 @@ const NewDiaryForm = (props: NewDiaryFormProps) => {
   const [comment, setComment] = useState('');
 
   const handleChange = (f: StringState) => {
-    return (event: EventChange) => {
+    return (event: InputEventChange) => {
       const value = event.currentTarget.value;
       f.call(null, value);
     };
@@ -57,15 +54,15 @@ const NewDiaryForm = (props: NewDiaryFormProps) => {
         date: <input type="date" value={date} onChange={handleDate} />
       </div>
       <div>
-        <Select
-          name="visibility"
+        <RadioInputs
+          name="Visibility"
           options={Object.values(Visibility)}
           handleChange={handleVisibility}
         />
       </div>
       <div>
-        <Select
-          name="weather"
+        <RadioInputs
+          name="Weather"
           options={Object.values(Weather)}
           handleChange={handleWeather}
         />
