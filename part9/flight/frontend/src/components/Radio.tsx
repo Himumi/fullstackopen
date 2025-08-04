@@ -6,7 +6,7 @@ interface RadioInputsProps {
   handleChange: (event: InputEventChange) => void;
 }
 
-const RadioInputs = (props: RadioInputsProps) => {
+const Radio = (props: RadioInputsProps) => {
   const { name, options, handleChange } = props;
   return (
     <div>
@@ -27,4 +27,4 @@ const RadioInputs = (props: RadioInputsProps) => {
   );
 };
 
-export default RadioInputs;
+export default Radio;

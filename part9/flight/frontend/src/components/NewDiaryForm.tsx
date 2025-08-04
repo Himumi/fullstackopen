@@ -1,14 +1,10 @@
 import { useState } from 'react';
 
 // Components
-import RadioInputs from './RadioInputs';
+import Radio from './Radio';
 
 import { Visibility, Weather } from '../types';
-import type {
-  StringState,
-  InputEventChange,
-  NewDiary,
-} from '../types';
+import type { StringState, InputEventChange, NewDiary } from '../types';
 
 interface NewDiaryFormProps {
   handleCreate: (newDiary: NewDiary) => void;
@@ -54,14 +50,14 @@ const NewDiaryForm = (props: NewDiaryFormProps) => {
         date: <input type="date" value={date} onChange={handleDate} />
       </div>
       <div>
-        <RadioInputs
+        <Radio
           name="Visibility"
           options={Object.values(Visibility)}
           handleChange={handleVisibility}
         />
       </div>
       <div>
-        <RadioInputs
+        <Radio
           name="Weather"
           options={Object.values(Weather)}
           handleChange={handleWeather}
