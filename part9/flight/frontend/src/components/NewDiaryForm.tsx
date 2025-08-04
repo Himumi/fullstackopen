@@ -10,8 +10,7 @@ const NewDiaryForm = (props: NewDiaryFormProps) => {
   const [comment, setComment] = useState('');
 
   const handleChange = (f: React.Dispatch<React.SetStateAction<string>>) => {
-    return (event: React.FormEvent<HTMLInputElement>) => {
-      console.log(event.currentTarget.value);
+    return (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const value = event.currentTarget.value;
       f.call(null, value);
     };
@@ -41,14 +40,31 @@ const NewDiaryForm = (props: NewDiaryFormProps) => {
   return (
     <form onSubmit={handleCreate}>
       <div>
-        date: <input type="text" value={date} onChange={handleDate} />
+        date: <input type="date" value={date} onChange={handleDate} />
       </div>
       <div>
-        visibility:{' '}
-        <input type="text" value={visibility} onChange={handleVisibility} />
+        visibility:
+        <select
+          name="visibility"
+          id="visibility-select"
+          onChange={handleVisibility}
+        >
+          <option value="">--Please choose an option</option>
+          <option value="great">Great</option>
+          <option value="good">Good</option>
+          <option value="poor">Poor</option>
+        </select>
       </div>
       <div>
-        weather: <input type="text" value={weather} onChange={handleWeather} />
+        weather:
+        <select name="weather" id="weather-select" onChange={handleWeather}>
+          <option value="">--Please choose an option</option>
+          <option value="sunny">Sunny</option>
+          <option value="rainy">Rainy</option>
+          <option value="cloudy">Cloudy</option>
+          <option value="stormy">Stormy</option>
+          <option value="windy">Windy</option>
+        </select>
       </div>
       <div>
         comment: <input type="text" value={comment} onChange={handleComment} />
