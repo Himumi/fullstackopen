@@ -2,19 +2,31 @@ import { Request, Response, Router } from 'express';
 import patientServices from '../services/patients';
 import {
   NewPatientEntry,
+  NonSensitivePatient,
+  Patient,
   PatientEntry,
-  PatientEntryWithoutSsn,
 } from '../types';
 import { newPatientParser } from '../utils/newPatientParser';
 
 const router = Router();
 
+interface UserParams {
+  id: string;
+}
+
 const getPatients = (
   _request: Request,
-  response: Response<PatientEntryWithoutSsn[]>
+  response: Response<NonSensitivePatient[]>
 ) => {
   const patients = patientServices.getPatients();
   response.json(patients);
+};
+
+const getPatient = (
+  request: Request<UserParams>,
+  response: Response<Patient | []>
+) => {
+  response.json(patientServices.getPatient(request.params.id));
 };
 
 const addPatient = (
@@ -26,6 +38,7 @@ const addPatient = (
 };
 
 router.get('/', getPatients);
+router.get('/:id', getPatient);
 router.post('/', newPatientParser, addPatient);
 
 export default router;
