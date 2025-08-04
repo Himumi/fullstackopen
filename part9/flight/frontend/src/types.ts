@@ -1,5 +1,18 @@
-export type Weather = 'sunny' | 'rainy' | 'cloudy' | 'stormy' | 'windy';
-export type Visibility = 'great' | 'good' | 'ok' | 'poor';
+export enum Weather {
+  Sunny = 'sunny',
+  Rainy = 'rainy',
+  Cloudy = 'cloudy',
+  Stormy = 'stormy',
+  Windy = 'windy',
+}
+
+export enum Visibility {
+  Great = 'great',
+  Good = 'good',
+  Ok = 'Ok',
+  Poor = 'poor',
+}
+
 export interface Diary {
   id: string;
   date: string;
@@ -10,3 +23,7 @@ export interface Diary {
 
 export type DiaryWithoutComment = Omit<Diary, 'comment'>;
 export type NewDiary = Omit<Diary, 'id'>;
+
+export type StringState = React.Dispatch<React.SetStateAction<string>>;
+export type InputEventChange = React.ChangeEvent<HTMLInputElement>;
+export type SelectEventChange = React.ChangeEvent<HTMLSelectElement>;
