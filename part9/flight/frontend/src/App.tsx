@@ -5,6 +5,7 @@ import type { DiaryWithoutComment, NewDiary } from './types';
 import diaryServices from './services/diaries';
 
 import NewDiaryForm from './components/NewDiaryForm';
+import Diaries from './components/Diaries';
 
 const App = () => {
   const [diaries, setDiaries] = useState<DiaryWithoutComment[]>([]);
@@ -46,17 +47,10 @@ const App = () => {
   return (
     <div>
       <div style={notifStyles}>{notif}</div>
+      <h2>Add new entry</h2>
       <NewDiaryForm handleCreate={handleCreate} />
-      {diaries.map((d) => (
-        <div
-          key={d.id}
-          style={{ border: '1px solid black', marginBottom: 10, padding: 5 }}
-        >
-          weather: {d.weather} <br />
-          visibility: {d.visibility} <br />
-          {d.date}
-        </div>
-      ))}
+      <h2>Diary entries</h2>
+      <Diaries diaries={diaries} />
     </div>
   );
 };
