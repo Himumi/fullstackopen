@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import type { DiaryWithoutComment } from './types';
+import type { DiaryWithoutComment, NewDiary } from './types';
 import diaryServices from './services/diaries';
+
+import NewDiaryForm from './components/NewDiaryForm';
 
 const App = () => {
   const [diaries, setDiaries] = useState<DiaryWithoutComment[]>([]);
@@ -10,8 +12,16 @@ const App = () => {
     diaryServices.getDiaries().then((diaries) => setDiaries(diaries));
   }, []);
 
+  const handleCreate = async (newDiary: NewDiary) => {
+    const diary = await diaryServices.createDiary(newDiary);
+    delete diary.comment;
+
+    setDiaries([...diaries, diary]);
+  };
+
   return (
     <div>
+      <NewDiaryForm handleCreate={handleCreate} />
       {diaries.map((d) => (
         <div
           key={d.id}
