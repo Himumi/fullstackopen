@@ -3,6 +3,10 @@ import { EntryProps } from "./props";
 interface DiagnosisCodeListProps extends EntryProps {}
 
 const DiagnosisCodeList = ({ entry, diagnosis }: DiagnosisCodeListProps) => {
+  if (entry.diagnosisCodes === undefined) {
+    return null;
+  }
+
   return (
     <ul>
       {entry.diagnosisCodes?.map((d) => (

@@ -12,7 +12,7 @@ const HealthCheck = ({ entry, diagnosis }: HealthCheckProps) => {
   }
 
   return (
-    <div>
+    <div className="patientEntry">
       <Typography>
         {entry.date}
         <MedicalInformationIcon />

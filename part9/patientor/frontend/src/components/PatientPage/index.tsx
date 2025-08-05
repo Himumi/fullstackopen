@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import _ from "lodash";
+import "./index.css";
 
 import type { Patient, DiagnosisMap } from "../../types";
 

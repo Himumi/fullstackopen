@@ -11,7 +11,7 @@ const Hospital = ({ entry, diagnosis }: HospitalProps) => {
   }
 
   return (
-    <div>
+    <div className="patientEntry">
       <Typography>
         {entry.date}
         <LocalHospitalIcon />
