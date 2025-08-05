@@ -1,4 +1,4 @@
-import { EntryProps } from "./props";
+import { EntryProps } from "../props";
 
 interface DiagnosisCodeListProps extends EntryProps {}
 

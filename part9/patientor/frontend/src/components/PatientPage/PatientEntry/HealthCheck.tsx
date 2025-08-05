@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import MedicalInformationIcon from "@mui/icons-material/MedicalInformation";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { EntryProps } from "./props";
+import { EntryProps } from "../props";
 import DiagnosisCodeList from "./DiagnosisCodeList";
 
 interface HealthCheckProps extends EntryProps {}

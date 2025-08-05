@@ -1,12 +1,15 @@
-import { EntryProps } from "./props";
+import { EntryProps } from "../props";
 import { Typography } from "@mui/material";
-import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
+import WorkIcon from "@mui/icons-material/Work";
 import DiagnosisCodeList from "./DiagnosisCodeList";
 
-interface HospitalProps extends EntryProps {}
+interface OccupationalHealthcareProps extends EntryProps {}
 
-const Hospital = ({ entry, diagnosis }: HospitalProps) => {
-  if (entry.type !== "Hospital") {
+const OccupationalHealthcare = ({
+  entry,
+  diagnosis,
+}: OccupationalHealthcareProps) => {
+  if (entry.type !== "OccupationalHealthcare") {
     return null;
   }
 
@@ -14,7 +17,8 @@ const Hospital = ({ entry, diagnosis }: HospitalProps) => {
     <div className="patientEntry">
       <Typography>
         {entry.date}
-        <LocalHospitalIcon />
+        <WorkIcon />
+        {entry.employerName}
       </Typography>
       <Typography>{entry.description}</Typography>
       <Typography>Diagnose by {entry.specialist}</Typography>
@@ -23,4 +27,4 @@ const Hospital = ({ entry, diagnosis }: HospitalProps) => {
   );
 };
 
-export default Hospital;
+export default OccupationalHealthcare;
