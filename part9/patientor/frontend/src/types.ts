@@ -4,6 +4,10 @@ export interface Diagnosis {
   latin?: string;
 }
 
+export interface DiagnosisMap {
+  [key: string]: Diagnosis; // or a more specific type like string | number
+}
+
 export enum Gender {
   Male = "male",
   Female = "female",
