@@ -3,6 +3,7 @@ import MedicalInformationIcon from "@mui/icons-material/MedicalInformation";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { EntryProps } from "../props";
 import DiagnosisCodeList from "./DiagnosisCodeList";
+import { healthRatingColor } from "./constants";
 
 interface HealthCheckProps extends EntryProps {}
 
@@ -19,7 +20,9 @@ const HealthCheck = ({ entry, diagnosis }: HealthCheckProps) => {
       </Typography>
       <Typography>{entry.description}</Typography>
       <Typography>
-        <FavoriteIcon />
+        <FavoriteIcon
+          sx={{ color: healthRatingColor[entry.healthCheckRating] }}
+        />
       </Typography>
       <Typography>Diagnose by {entry.specialist}</Typography>
       <DiagnosisCodeList entry={entry} diagnosis={diagnosis} />
