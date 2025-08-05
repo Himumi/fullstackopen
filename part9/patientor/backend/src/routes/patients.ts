@@ -1,11 +1,6 @@
 import { Request, Response, Router } from 'express';
 import patientServices from '../services/patients';
-import {
-  NewPatientEntry,
-  NonSensitivePatient,
-  Patient,
-  PatientEntry,
-} from '../types';
+import { NewPatientEntry, NonSensitivePatient, Patient } from '../types';
 import { newPatientParser } from '../utils/newPatientParser';
 
 const router = Router();
@@ -31,7 +26,7 @@ const getPatient = (
 
 const addPatient = (
   request: Request<unknown, unknown, NewPatientEntry>,
-  response: Response<PatientEntry>
+  response: Response<Patient>
 ) => {
   const addedPatient = patientServices.addPatient(request.body);
   response.json(addedPatient);
