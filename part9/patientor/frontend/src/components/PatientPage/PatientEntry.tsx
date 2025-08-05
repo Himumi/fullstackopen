@@ -1,19 +1,24 @@
 import { Typography } from "@mui/material";
 import { EntryProps } from "./props";
 
-import DiagnosisCodeList from "./DiagnosisCodeList";
-
 interface PatientEntryProps extends EntryProps {}
 
 const PatientEntry = (props: PatientEntryProps) => {
-  const { entry } = props;
+  const { entry, diagnosis } = props;
   return (
     <div>
       <Typography>
         {entry.date}
         {entry.description}
       </Typography>
-      <DiagnosisCodeList entry={entry} />
+      <ul>
+        {entry.diagnosisCodes?.map((d) => (
+          <li key={d}>
+            {d}
+            {diagnosis[d] && diagnosis[d].name}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
