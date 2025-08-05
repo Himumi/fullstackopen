@@ -48,7 +48,11 @@ const PatientPage = () => {
       </Typography>
       <div style={marginStyle}>
         {patient.entries.map((e) => (
-          <PatientEntry key={e.id} entry={e} diagnosis={diagnosis} />
+          <PatientEntry
+            key={e.id}
+            entry={e}
+            diagnosis={diagnosis}
+          />
         ))}
       </div>
     </div>
