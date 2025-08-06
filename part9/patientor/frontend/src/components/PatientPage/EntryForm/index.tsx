@@ -7,6 +7,7 @@ import patientServices from "../../../services/patients";
 import { NewEntry, Patient } from "../../../types";
 import Notif from "../../Notif";
 import HealthCheckForm from "./HealthCheckForm";
+import HospitalForm from "./HospitalForm";
 
 interface Props {
   setPatient: React.Dispatch<React.SetStateAction<Patient | null>>;
@@ -46,6 +47,7 @@ const EntryForm = (props: Props) => {
     <div style={{ margin: "20px 0" }}>
       <Notif message={notif} />
       <HealthCheckForm onSubmit={handleCreate} />
+      <HospitalForm onSubmit={handleCreate} />
     </div>
   );
 };
