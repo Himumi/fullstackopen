@@ -1,14 +1,13 @@
 import { useState } from "react";
 
 import { NewEntry } from "../../../types";
+import { FormProps } from "./props";
 import { Typography } from "@mui/material";
 import EntryInput from "./EntryInput";
 import EntryButtons from "./EntryButtons";
 import FormContainer from "./FormContainer";
 
-interface Props {
-  onSubmit: (entry: NewEntry) => void;
-}
+interface Props extends FormProps {}
 
 const HealthCheckForm = ({ onSubmit }: Props) => {
   const [description, setDescription] = useState<string>("");

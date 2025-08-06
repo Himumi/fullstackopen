@@ -1,14 +1,13 @@
 import { useState } from "react";
 
 import { NewEntry } from "../../../types";
+import { FormProps } from "./props";
 import { Typography } from "@mui/material";
 import FormContainer from "./FormContainer";
 import EntryInput from "./EntryInput";
 import EntryButtons from "./EntryButtons";
 
-interface Props {
-  onSubmit: (entry: NewEntry) => void;
-}
+interface Props extends FormProps {}
 
 const OccupationalForm = ({ onSubmit }: Props) => {
   const [description, setDescription] = useState<string>("");
