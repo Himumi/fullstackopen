@@ -49,7 +49,7 @@ const HospitalForm = ({ onSubmit }: Props) => {
   return (
     <FormContainer onSubmit={handleSubmit}>
       <Typography variant="h5" fontWeight="bold">
-        Hospital Entry Form
+        Hospital Entry
       </Typography>
       <EntryInput
         label="Description"

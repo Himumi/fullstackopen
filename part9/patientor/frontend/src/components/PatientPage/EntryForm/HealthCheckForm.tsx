@@ -49,7 +49,7 @@ const HealthCheckForm = ({ onSubmit }: Props) => {
   return (
     <FormContainer onSubmit={handleSubmit}>
       <Typography variant="h5" fontWeight="bold">
-        New HealthCheck entry
+        Health Check Entry
       </Typography>
       <EntryInput
         label="Description"

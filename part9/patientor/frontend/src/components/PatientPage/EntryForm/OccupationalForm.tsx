@@ -53,7 +53,7 @@ const OccupationalForm = ({ onSubmit }: Props) => {
   return (
     <FormContainer onSubmit={handleSubmit}>
       <Typography variant="h5" fontWeight="bold">
-        New HealthCheck entry
+        Occupational Healthcare
       </Typography>
       <EntryInput
         label="Description"
