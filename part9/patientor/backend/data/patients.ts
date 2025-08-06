@@ -1,4 +1,4 @@
-import { Patient, Gender } from '../src/types';
+import { Gender, Patient } from '../src/types';
 
 const patients: Patient[] = [
   {
@@ -111,5 +111,9 @@ const patients: Patient[] = [
     ],
   },
 ];
+
+export const updatePatients = (patient: Patient): void => {
+  patients.map((p) => (p.id === patient.id ? patient : p));
+};
 
 export default patients;
