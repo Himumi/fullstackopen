@@ -5,10 +5,13 @@ import { isAxiosError } from "axios";
 import patientServices from "../../../services/patients";
 
 import { NewEntry, Patient } from "../../../types";
+
+import { SelectChangeEvent } from "@mui/material";
 import Notif from "../../Notif";
 import HealthCheckForm from "./HealthCheckForm";
 import HospitalForm from "./HospitalForm";
 import OccupationalForm from "./OccupationalForm";
+import SelectEntry from "./SelectEntry";
 
 interface Props {
   setPatient: React.Dispatch<React.SetStateAction<Patient | null>>;
@@ -18,6 +21,7 @@ interface Props {
 const EntryForm = (props: Props) => {
   const id = useParams().id as string;
   const [notif, setNotif] = useState<string | null>(null);
+  const [entry, setEntry] = useState<string>("HealthCheck");
 
   const handleCreate = async (newEntry: NewEntry) => {
     // Append a new entry to patient's entries
@@ -44,12 +48,19 @@ const EntryForm = (props: Props) => {
     setTimeout(() => setNotif(null), 3000);
   };
 
+  const handleChange = (event: SelectChangeEvent) => {
+    setEntry(event.target.value);
+  };
+
   return (
     <div style={{ margin: "20px 0" }}>
       <Notif message={notif} />
-      <HealthCheckForm onSubmit={handleCreate} />
-      <HospitalForm onSubmit={handleCreate} />
-      <OccupationalForm onSubmit={handleCreate} />
+      <SelectEntry entry={entry} onChange={handleChange} />
+      {entry === "HealthCheck" && <HealthCheckForm onSubmit={handleCreate} />}
+      {entry === "Hospital" && <HospitalForm onSubmit={handleCreate} />}
+      {entry === "OccupationalHealthcare" && (
+        <OccupationalForm onSubmit={handleCreate} />
+      )}
     </div>
   );
 };
