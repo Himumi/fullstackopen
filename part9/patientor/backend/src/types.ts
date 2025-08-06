@@ -8,59 +8,7 @@ export const DiagnoseSchema = z.object({
 
 export type DiagnoseEntry = z.infer<typeof DiagnoseSchema>;
 
-type Date = string;
-
-export enum HealthCheckRating {
-  'Healthy' = 0,
-  'LowRisk' = 1,
-  'HighRisk' = 2,
-  'CriticalRisk' = 3,
-}
-
-interface Discharge {
-  date: Date;
-  criteria: string;
-}
-
-interface SickLeave {
-  startDate: Date;
-  endDate: Date;
-}
-
-interface BaseEntry {
-  id: string;
-  date: Date;
-  description: string;
-  specialist: string;
-  diagnosisCodes?: Array<DiagnoseEntry['code']>;
-}
-
-interface HealthCheckEntry extends BaseEntry {
-  type: 'HealthCheck';
-  healthCheckRating: HealthCheckRating;
-}
-
-interface HospitalEntry extends BaseEntry {
-  type: 'Hospital';
-  discharge: Discharge;
-}
-
-interface OccupationalHealthcareEntry extends BaseEntry {
-  type: 'OccupationalHealthcare';
-  employerName: string;
-  sickLeave?: SickLeave;
-}
-
-export type Entry =
-  | HealthCheckEntry
-  | HospitalEntry
-  | OccupationalHealthcareEntry;
-
-type UnionOmit<T, K extends string | number | symbol> = T extends unknown
-  ? Omit<T, K>
-  : never;
-
-export type EntryWithoutId = UnionOmit<Entry, 'id'>;
+// Patient types
 
 export enum Gender {
   Male = 'male',
@@ -89,8 +37,57 @@ export const NewPatientSchema = z.object({
   occupation: z.string(),
 });
 
-// export type NewPatientEntry = z.infer<typeof NewPatientSchema>;
-// export interface PatientEntry extends NewPatientEntry {
-//   id: string;
-// }
-// export type PatientEntryWithoutSsn = Omit<PatientEntry, 'ssn'>;
+// Entry types
+
+interface BaseEntry {
+  id: string;
+  date: Date;
+  description: string;
+  specialist: string;
+  diagnosisCodes?: Array<DiagnoseEntry['code']>;
+}
+
+export type Entry =
+  | HealthCheckEntry
+  | HospitalEntry
+  | OccupationalHealthcareEntry;
+
+interface HealthCheckEntry extends BaseEntry {
+  type: 'HealthCheck';
+  healthCheckRating: HealthCheckRating;
+}
+
+interface HospitalEntry extends BaseEntry {
+  type: 'Hospital';
+  discharge: Discharge;
+}
+
+interface OccupationalHealthcareEntry extends BaseEntry {
+  type: 'OccupationalHealthcare';
+  employerName: string;
+  sickLeave?: SickLeave;
+}
+
+type Date = string;
+export enum HealthCheckRating {
+  'Healthy' = 0,
+  'LowRisk' = 1,
+  'HighRisk' = 2,
+  'CriticalRisk' = 3,
+}
+
+interface Discharge {
+  date: Date;
+  criteria: string;
+}
+
+interface SickLeave {
+  startDate: Date;
+  endDate: Date;
+}
+
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown
+  ? Omit<T, K>
+  : never;
+
+export type EntryWithoutId = UnionOmit<Entry, 'id'>;
