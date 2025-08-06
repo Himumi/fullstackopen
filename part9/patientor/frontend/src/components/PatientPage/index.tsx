@@ -13,6 +13,7 @@ import GenderIcon from "./GenderIcon";
 import PatientEntry from "./PatientEntry";
 
 import { convertToDiagnosis } from "./utils";
+import EntryForm from "./EntryForm";
 
 const PatientPage = () => {
   const id = useParams().id;
@@ -47,6 +48,7 @@ const PatientPage = () => {
         ssh: {patient.ssn} <br />
         occupation: {patient.occupation}
       </Typography>
+      <EntryForm patient={patient} setPatient={setPatient} />
       <div style={marginStyle}>
         {patient.entries.map((e) => (
           <PatientEntry key={e.id} entry={e} diagnosis={diagnosis} />
