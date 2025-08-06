@@ -58,7 +58,7 @@ const BaseEntrySchema = z.object({
 });
 
 const HealthCheckEntrySchema = BaseEntrySchema.extend({
-  type: z.string('HealthCheck'),
+  type: z.literal('HealthCheck'),
   healthCheckRating: z.enum(HealthCheckRating),
 });
 
@@ -68,7 +68,7 @@ const DischargeSchema = z.object({
 });
 
 const HospitalEntrySchema = BaseEntrySchema.extend({
-  type: z.string('Hospital'),
+  type: z.literal('Hospital'),
   discharge: DischargeSchema,
 });
 
@@ -78,12 +78,12 @@ const SickLeaveSchema = z.object({
 });
 
 const OccupationalHealthcareEntrySchema = BaseEntrySchema.extend({
-  type: z.string('OccupationalHealthcare'),
+  type: z.literal('OccupationalHealthcare'),
   employerName: z.string(),
   sickLeave: z.optional(SickLeaveSchema),
 });
 
-export const NewEntrySchema = z.union([
+export const NewEntrySchema = z.discriminatedUnion('type', [
   HealthCheckEntrySchema,
   HospitalEntrySchema,
   OccupationalHealthcareEntrySchema,
