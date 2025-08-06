@@ -26,8 +26,8 @@ export interface Patient {
   entries: Entry[];
 }
 
-export type NewPatientEntry = Omit<Patient, 'id'>;
-export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;
+export type NewPatientEntry = Omit<Patient, 'id' | 'entries'>;
+export type NonSensitivePatient = Omit<Patient, 'ssn'>;
 
 export const NewPatientSchema = z.object({
   name: z.string(),
@@ -39,36 +39,6 @@ export const NewPatientSchema = z.object({
 
 // Entry types
 
-interface BaseEntry {
-  id: string;
-  date: Date;
-  description: string;
-  specialist: string;
-  diagnosisCodes?: Array<DiagnoseEntry['code']>;
-}
-
-export type Entry =
-  | HealthCheckEntry
-  | HospitalEntry
-  | OccupationalHealthcareEntry;
-
-interface HealthCheckEntry extends BaseEntry {
-  type: 'HealthCheck';
-  healthCheckRating: HealthCheckRating;
-}
-
-interface HospitalEntry extends BaseEntry {
-  type: 'Hospital';
-  discharge: Discharge;
-}
-
-interface OccupationalHealthcareEntry extends BaseEntry {
-  type: 'OccupationalHealthcare';
-  employerName: string;
-  sickLeave?: SickLeave;
-}
-
-type Date = string;
 export enum HealthCheckRating {
   'Healthy' = 0,
   'LowRisk' = 1,
@@ -76,18 +46,54 @@ export enum HealthCheckRating {
   'CriticalRisk' = 3,
 }
 
-interface Discharge {
-  date: Date;
-  criteria: string;
-}
-
-interface SickLeave {
-  startDate: Date;
-  endDate: Date;
-}
-
-type UnionOmit<T, K extends string | number | symbol> = T extends unknown
+export type UnionOmit<T, K extends string | number | symbol> = T extends unknown
   ? Omit<T, K>
   : never;
 
-export type EntryWithoutId = UnionOmit<Entry, 'id'>;
+const BaseEntrySchema = z.object({
+  date: z.iso.date(),
+  description: z.string(),
+  specialist: z.string(),
+  diagnosisCodes: z.optional(z.array(z.string())),
+});
+
+const HealthCheckEntrySchema = BaseEntrySchema.extend({
+  type: z.string('HealthCheck'),
+  healthCheckRating: z.enum(HealthCheckRating),
+});
+
+const DischargeSchema = z.object({
+  date: z.iso.date(),
+  criteria: z.string(),
+});
+
+const HospitalEntrySchema = BaseEntrySchema.extend({
+  type: z.string('Hospital'),
+  discharge: DischargeSchema,
+});
+
+const SickLeaveSchema = z.object({
+  startDate: z.iso.date(),
+  endDate: z.iso.date(),
+});
+
+const OccupationalHealthcareEntrySchema = BaseEntrySchema.extend({
+  type: z.string('OccupationalHealthcare'),
+  employerName: z.string(),
+  sickLeave: z.optional(SickLeaveSchema),
+});
+
+export const NewEntrySchema = z.union([
+  HealthCheckEntrySchema,
+  HospitalEntrySchema,
+  OccupationalHealthcareEntrySchema,
+]);
+
+const EntryId = z.object({
+  id: z.string(),
+});
+
+export const EntrySchema = z.intersection(EntryId, NewEntrySchema);
+
+export type NewEntry = z.infer<typeof NewEntrySchema>;
+export type Entry = z.infer<typeof EntrySchema>;
