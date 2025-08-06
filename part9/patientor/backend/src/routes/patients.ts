@@ -1,6 +1,13 @@
 import { Request, Response, Router } from 'express';
 import patientServices from '../services/patients';
-import { NewPatientEntry, NonSensitivePatient, Patient } from '../types';
+import {
+  Entry,
+  NewEntry,
+  NewPatientEntry,
+  NonSensitivePatient,
+  Patient,
+} from '../types';
+import { newEntryParser } from '../utils/newEntryParser';
 import { newPatientParser } from '../utils/newPatientParser';
 
 const router = Router();
@@ -32,8 +39,18 @@ const addPatient = (
   response.json(addedPatient);
 };
 
+const addPatientEntry = (
+  request: Request<{ id: string }, unknown, NewEntry>,
+  response: Response<Entry>
+) => {
+  const id = request.params.id;
+  const entry = patientServices.updatePatient(id, request.body);
+  response.json(entry);
+};
+
 router.get('/', getPatients);
 router.get('/:id', getPatient);
 router.post('/', newPatientParser, addPatient);
+router.post('/:id/entries', newEntryParser, addPatientEntry);
 
 export default router;
