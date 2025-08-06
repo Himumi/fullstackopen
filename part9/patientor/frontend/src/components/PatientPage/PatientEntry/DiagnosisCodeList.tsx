@@ -10,7 +10,7 @@ const DiagnosisCodeList = ({ entry, diagnosis }: DiagnosisCodeListProps) => {
   return (
     <ul>
       {entry.diagnosisCodes?.map((d) => (
-        <li>
+        <li key={d}>
           {d} {diagnosis[d] && diagnosis[d].name}
         </li>
       ))}
