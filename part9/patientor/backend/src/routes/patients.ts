@@ -7,8 +7,7 @@ import {
   NonSensitivePatient,
   Patient,
 } from '../types';
-import { newEntryParser } from '../utils/newEntryParser';
-import { newPatientParser } from '../utils/newPatientParser';
+import { newEntryParser, newPatientParser } from '../utils/parser';
 
 const router = Router();
 
