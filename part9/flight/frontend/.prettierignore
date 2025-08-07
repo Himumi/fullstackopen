@@ -1,0 +1,7 @@
+node_modules/
+build/
+eslint.config.js
+.prettierrc.json
+tsconfig.*
+package*
+.gitignore
