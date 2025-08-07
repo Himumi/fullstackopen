@@ -63,6 +63,7 @@ const OccupationalForm = ({ onSubmit }: Props) => {
       <EntryInput
         label="Date"
         value={date}
+        type="date"
         onChange={({ target }) => setDate(target.value)}
       />
       <EntryInput
@@ -76,7 +77,7 @@ const OccupationalForm = ({ onSubmit }: Props) => {
         onChange={({ target }) => setDiagnosisCodes(target.value)}
       />
       <EntryInput
-        label="Employer name"
+        label="Employee"
         value={employerName}
         onChange={({ target }) => setEmployerName(target.value)}
       />
@@ -85,11 +86,13 @@ const OccupationalForm = ({ onSubmit }: Props) => {
         <EntryInput
           label="Start date"
           value={sickStartDate}
+          type="date"
           onChange={({ target }) => setSickStartDate(target.value)}
         />
         <EntryInput
           label="End date"
           value={sickEndDate}
+          type="date"
           onChange={({ target }) => setSickEndDate(target.value)}
         />
       </div>

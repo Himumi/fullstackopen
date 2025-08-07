@@ -13,7 +13,7 @@ const HealthCheckForm = ({ onSubmit }: Props) => {
   const [description, setDescription] = useState<string>("");
   const [date, setDate] = useState<string>("");
   const [specialist, setSpecialist] = useState<string>("");
-  const [healthCheckRating, setHealthCheckRating] = useState<string>("");
+  const [healthCheckRating, setHealthCheckRating] = useState<string>("0");
   const [diagnosisCodes, setDiagnosisCodes] = useState<string>("");
 
   const handleCreate = onSubmit;
@@ -59,6 +59,7 @@ const HealthCheckForm = ({ onSubmit }: Props) => {
       <EntryInput
         label="Date"
         value={date}
+        type="date"
         onChange={({ target }) => setDate(target.value)}
       />
       <EntryInput
@@ -69,6 +70,8 @@ const HealthCheckForm = ({ onSubmit }: Props) => {
       <EntryInput
         label="HealthCheck rating"
         value={healthCheckRating}
+        type="number"
+        inputProps={{ min: 0, max: 3, step: 1 }}
         onChange={({ target }) => setHealthCheckRating(target.value)}
       />
       <EntryInput

@@ -59,6 +59,7 @@ const HospitalForm = ({ onSubmit }: Props) => {
       <EntryInput
         label="Date"
         value={date}
+        type="date"
         onChange={({ target }) => setDate(target.value)}
       />
       <EntryInput
@@ -76,6 +77,7 @@ const HospitalForm = ({ onSubmit }: Props) => {
         <EntryInput
           label="Date"
           value={dischargeDate}
+          type="date"
           onChange={({ target }) => setDischargeDate(target.value)}
         />
         <EntryInput
