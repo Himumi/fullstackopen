@@ -16,6 +16,7 @@ import SelectEntry from "./SelectEntry";
 interface Props {
   setPatient: React.Dispatch<React.SetStateAction<Patient | null>>;
   patient: Patient;
+  options: string[];
 }
 
 const EntryForm = (props: Props) => {
@@ -56,10 +57,14 @@ const EntryForm = (props: Props) => {
     <div style={{ margin: "20px 0" }}>
       <Notif message={notif} />
       <SelectEntry entry={entry} onChange={handleChange} />
-      {entry === "HealthCheck" && <HealthCheckForm onSubmit={handleCreate} />}
-      {entry === "Hospital" && <HospitalForm onSubmit={handleCreate} />}
+      {entry === "HealthCheck" && (
+        <HealthCheckForm onSubmit={handleCreate} options={props.options} />
+      )}
+      {entry === "Hospital" && (
+        <HospitalForm onSubmit={handleCreate} options={props.options} />
+      )}
       {entry === "OccupationalHealthcare" && (
-        <OccupationalForm onSubmit={handleCreate} />
+        <OccupationalForm onSubmit={handleCreate} options={props.options} />
       )}
     </div>
   );

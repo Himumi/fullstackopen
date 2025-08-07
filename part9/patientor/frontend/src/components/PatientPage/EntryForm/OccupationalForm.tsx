@@ -6,14 +6,15 @@ import { Typography } from "@mui/material";
 import FormContainer from "./FormContainer";
 import EntryInput from "./EntryInput";
 import EntryButtons from "./EntryButtons";
+import MultipleSelect from "../../Reusable/MultipleSelect";
 
 interface Props extends FormProps {}
 
-const OccupationalForm = ({ onSubmit }: Props) => {
+const OccupationalForm = ({ onSubmit, options }: Props) => {
   const [description, setDescription] = useState<string>("");
   const [date, setDate] = useState<string>("");
   const [specialist, setSpecialist] = useState<string>("");
-  const [diagnosisCodes, setDiagnosisCodes] = useState<string>("");
+  const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
   const [employerName, setEmployerName] = useState<string>("");
   const [sickStartDate, setSickStartDate] = useState<string>("");
   const [sickEndDate, setSickEndDate] = useState<string>("");
@@ -28,7 +29,7 @@ const OccupationalForm = ({ onSubmit }: Props) => {
       description,
       date,
       specialist,
-      diagnosisCodes: diagnosisCodes.split(", "),
+      diagnosisCodes,
       employerName,
       sickLeave: {
         startDate: sickStartDate,
@@ -45,7 +46,7 @@ const OccupationalForm = ({ onSubmit }: Props) => {
     setDescription("");
     setDate("");
     setSpecialist("");
-    setDiagnosisCodes("");
+    setDiagnosisCodes([]);
   };
 
   const handleCancel = resetValues;
@@ -71,11 +72,14 @@ const OccupationalForm = ({ onSubmit }: Props) => {
         value={specialist}
         onChange={({ target }) => setSpecialist(target.value)}
       />
-      <EntryInput
-        label="Diagnosis codes"
-        value={diagnosisCodes}
-        onChange={({ target }) => setDiagnosisCodes(target.value)}
-      />
+      <div>
+        <Typography margin="10px 0">Diagnosis Codes</Typography>
+        <MultipleSelect
+          label="Codes"
+          names={options}
+          onSelect={setDiagnosisCodes}
+        />
+      </div>
       <EntryInput
         label="Employee"
         value={employerName}

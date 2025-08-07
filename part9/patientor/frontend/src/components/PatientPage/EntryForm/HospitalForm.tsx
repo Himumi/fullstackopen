@@ -6,14 +6,15 @@ import { Typography } from "@mui/material";
 import EntryInput from "./EntryInput";
 import EntryButtons from "./EntryButtons";
 import FormContainer from "./FormContainer";
+import MultipleSelect from "../../Reusable/MultipleSelect";
 
 interface Props extends FormProps {}
 
-const HospitalForm = ({ onSubmit }: Props) => {
+const HospitalForm = ({ onSubmit, options }: Props) => {
   const [description, setDescription] = useState<string>("");
   const [date, setDate] = useState<string>("");
   const [specialist, setSpecialist] = useState<string>("");
-  const [diagnosisCodes, setDiagnosisCodes] = useState<string>("");
+  const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
   const [dischargeDate, setDischargeDate] = useState<string>("");
   const [dischargeCriteria, setDischargeCriteria] = useState<string>("");
 
@@ -27,7 +28,7 @@ const HospitalForm = ({ onSubmit }: Props) => {
       description,
       date,
       specialist,
-      diagnosisCodes: diagnosisCodes.split(", "),
+      diagnosisCodes,
       discharge: {
         date: dischargeDate,
         criteria: dischargeCriteria,
@@ -41,7 +42,7 @@ const HospitalForm = ({ onSubmit }: Props) => {
     setDescription("");
     setDate("");
     setSpecialist("");
-    setDiagnosisCodes("");
+    setDiagnosisCodes([]);
   };
 
   const handleCancel = resetValues;
@@ -67,11 +68,14 @@ const HospitalForm = ({ onSubmit }: Props) => {
         value={specialist}
         onChange={({ target }) => setSpecialist(target.value)}
       />
-      <EntryInput
-        label="Diagnosis codes"
-        value={diagnosisCodes}
-        onChange={({ target }) => setDiagnosisCodes(target.value)}
-      />
+      <div>
+        <Typography margin="10px 0">Diagnosis Codes</Typography>
+        <MultipleSelect
+          label="Codes"
+          names={options}
+          onSelect={setDiagnosisCodes}
+        />
+      </div>
       <div style={{ margin: "10px 0 0 20px" }}>
         <Typography fontWeight="bold">Discharge</Typography>
         <EntryInput

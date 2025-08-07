@@ -6,15 +6,16 @@ import { Typography } from "@mui/material";
 import EntryInput from "./EntryInput";
 import EntryButtons from "./EntryButtons";
 import FormContainer from "./FormContainer";
+import MultipleSelect from "../../Reusable/MultipleSelect";
 
 interface Props extends FormProps {}
 
-const HealthCheckForm = ({ onSubmit }: Props) => {
+const HealthCheckForm = ({ onSubmit, options }: Props) => {
   const [description, setDescription] = useState<string>("");
   const [date, setDate] = useState<string>("");
   const [specialist, setSpecialist] = useState<string>("");
   const [healthCheckRating, setHealthCheckRating] = useState<string>("0");
-  const [diagnosisCodes, setDiagnosisCodes] = useState<string>("");
+  const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
 
   const handleCreate = onSubmit;
 
@@ -27,7 +28,7 @@ const HealthCheckForm = ({ onSubmit }: Props) => {
       specialist,
       healthCheckRating: Number(healthCheckRating),
       type: "HealthCheck",
-      diagnosisCodes: diagnosisCodes.split(", "),
+      diagnosisCodes,
     };
 
     // Add new entry to server
@@ -41,7 +42,7 @@ const HealthCheckForm = ({ onSubmit }: Props) => {
     setDate("");
     setSpecialist("");
     setHealthCheckRating("");
-    setDiagnosisCodes("");
+    setDiagnosisCodes([]);
   };
 
   const handleCancel = resetValues;
@@ -74,11 +75,14 @@ const HealthCheckForm = ({ onSubmit }: Props) => {
         inputProps={{ min: 0, max: 3, step: 1 }}
         onChange={({ target }) => setHealthCheckRating(target.value)}
       />
-      <EntryInput
-        label="Diagnosis codes"
-        value={diagnosisCodes}
-        onChange={({ target }) => setDiagnosisCodes(target.value)}
-      />
+      <div>
+        <Typography margin="10px 0">Diagnosis Codes</Typography>
+        <MultipleSelect
+          label="Codes"
+          names={options}
+          onSelect={setDiagnosisCodes}
+        />
+      </div>
       <EntryButtons onCancel={handleCancel} />
     </FormContainer>
   );

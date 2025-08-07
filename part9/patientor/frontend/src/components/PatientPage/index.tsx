@@ -48,7 +48,11 @@ const PatientPage = () => {
         ssh: {patient.ssn} <br />
         occupation: {patient.occupation}
       </Typography>
-      <EntryForm patient={patient} setPatient={setPatient} />
+      <EntryForm
+        patient={patient}
+        setPatient={setPatient}
+        options={Object.keys(diagnosis)}
+      />
       <div style={marginStyle}>
         {patient.entries.map((e) => (
           <PatientEntry key={e.id} entry={e} diagnosis={diagnosis} />
